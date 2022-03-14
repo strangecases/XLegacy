@@ -1,19 +1,24 @@
 import express from "express";
 import morgan from "morgan";
 import connectDB from "./config/db.js";
+import test from "./routes/test.js";
 
 connectDB();
 
 const app = express();
 
-// body-parser for parsing req.body
+/* body-parser for parsing req.body, 
+   morgan for logging requests
+*/
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
-app.get("/", (req, res) => {
-    res.send("bye");
-});
+app.use("/", test);
 
-app.listen(3000, () => {
+// app.get("/", (req, res) => {
+//     res.send("bye");
+// });
+
+app.listen(8000, () => {
     console.log("Listening at port:3000");
 });
