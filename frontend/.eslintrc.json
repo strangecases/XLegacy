@@ -16,7 +16,11 @@
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
         "react/jsx-props-no-spreading": "off",
         "import/no-unresolved": "off",
-        "no-console": "off"
+        "no-console": "off",
+        "arrow-body-style": "off",
+        "react/function-component-definition": "off",
+        "jsx-a11y/anchor-is-valid": "off"
+        // "react-hooks/exhaustive-deps": "off"
     },
     "root": true
 }

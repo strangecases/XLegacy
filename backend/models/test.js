@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
-const TestSchema = new Schema({
+const testSchema = new Schema({
     title: {
         type: String,
         required: true,
@@ -19,4 +19,4 @@ const TestSchema = new Schema({
     ],
 });
 
-export default mongoose.model("Test", TestSchema);
+export default mongoose.model("Test", testSchema);

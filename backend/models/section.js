@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
-const SectionSchema = new Schema({
+const sectionSchema = new Schema({
     subject: {
         type: String,
         required: true,
@@ -31,4 +31,4 @@ const SectionSchema = new Schema({
     ],
 });
 
-export default mongoose.model("Section", SectionSchema);
+export default mongoose.model("Section", sectionSchema);
