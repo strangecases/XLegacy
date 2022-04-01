@@ -1,11 +1,8 @@
-import { useContext } from "react";
-import { Context } from "../../context";
+import { useSelector } from "react-redux";
 import UserRoute from "../../components/routes/UserRoute";
 
 const UserIndex = () => {
-    const {
-        state: { user },
-    } = useContext(Context);
+    const { user } = useSelector((state) => state.auth);
 
     return (
         <UserRoute>

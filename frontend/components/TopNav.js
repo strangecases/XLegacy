@@ -1,4 +1,5 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Menu } from "antd";
 import Link from "next/link";
 import {
@@ -11,15 +12,16 @@ import {
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-import { Context } from "../context";
+import allActions from "../store/actions";
 
 const { Item, SubMenu, ItemGroup } = Menu;
 
 const TopNav = () => {
     const [current, setCurrent] = useState("");
 
-    const { state, dispatch } = useContext(Context);
-    const { user } = state;
+    const { user } = useSelector((state) => state.auth);
+
+    const dispatch = useDispatch();
 
     const router = useRouter();
 
@@ -29,10 +31,9 @@ const TopNav = () => {
     }, [process.browser && window.location.pathname]);
 
     const logout = async () => {
-        dispatch({ type: "LOGOUT" });
-        window.localStorage.removeItem("user");
         const { data } = await axios.get("/api/logout");
         toast(data.message);
+        dispatch(allActions.userActions.logOut());
         router.push("/login");
     };
 
