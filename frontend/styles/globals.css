@@ -1,1 +1,54 @@
+html {
+    font-size: 20px !important;
+}
 
+body {
+    font-family: "Roboto" !important;
+    font-weight: 400 !important;
+}
+
+#components-layout-demo-fixed-sider .logo {
+    height: 32px;
+    margin: 16px;
+    background: rgba(255, 255, 255, 0.2);
+}
+.site-layout .site-layout-background {
+    padding: 30px;
+    background: #fff;
+}
+.margin-left-auto {
+    margin-left: auto !important;
+}
+
+.logo {
+    width: 50%;
+    height: 24px;
+    margin: auto;
+    display: block;
+}
+
+/* .hover-icon-delete {
+    font-size: 20px !important;
+    color: #939090 !important;
+} */
+
+.hover-icon-delete:hover {
+    font-size: 22px;
+    color: #f20202 !important;
+}
+
+.background-section {
+    background-color: #e1e1e1;
+}
+
+@media only screen and (max-width: 520px) {
+    .display-register {
+        display: none !important;
+    }
+}
+
+@media only screen and (max-width: 769px) {
+    .display-question-bar {
+        display: none !important;
+    }
+}

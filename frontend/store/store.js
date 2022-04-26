@@ -11,6 +11,7 @@ const initialState = {};
 const persistConfig = {
     key: "persistStore",
     storage,
+    whitelist: ["auth", "custom", "questions"],
 };
 
 const middleware = [thunk];

@@ -13,7 +13,7 @@
 //     const [loading, setLoading] = useState(false);
 
 //     // state
-//     const { user } = useSelector((state) => state.auth);
+//     const { admin } = useSelector((state) => state.auth);
 
 //     const dispatch = useDispatch();
 
@@ -21,10 +21,10 @@
 //     const router = useRouter();
 
 //     useEffect(() => {
-//         if (user !== null) {
+//         if (admin !== null) {
 //             router.push("/");
 //         }
-//     }, [user, router]);
+//     }, [admin, router]);
 
 //     const handleSubmit = async (e) => {
 //         e.preventDefault();
@@ -109,7 +109,9 @@ import { useRouter } from "next/router";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
+import { Button, Form } from "antd";
 import allActions from "../store/actions";
+import FormItem from "../components/FormItem";
 
 const schema = yup
     .object()
@@ -128,7 +130,7 @@ const schema = yup
 
 const Login = () => {
     // state
-    const { user } = useSelector((state) => state.auth);
+    const { admin } = useSelector((state) => state.auth);
 
     const dispatch = useDispatch();
 
@@ -137,7 +139,7 @@ const Login = () => {
 
     const {
         handleSubmit,
-        register,
+        control,
         formState: { errors, isDirty, isSubmitting },
     } = useForm({
         mode: "onBlur",
@@ -145,10 +147,11 @@ const Login = () => {
     });
 
     useEffect(() => {
-        if (user !== null) {
+        console.log(admin);
+        if (admin !== null) {
             router.push("/");
         }
-    }, [user, router]);
+    }, [admin, router]);
 
     const onSubmit = async ({ email, password }) => {
         try {
@@ -158,11 +161,11 @@ const Login = () => {
             });
 
             // dispactch login action
-            dispatch(allActions.userActions.logIn(data));
+            dispatch(allActions.adminActions.logIn(data));
 
             // save in local storage
 
-            toast.success("Registration Successful, Please login");
+            toast.success("Login Successful, Please login");
             // redirect
             router.push("/");
         } catch (err) {
@@ -176,43 +179,30 @@ const Login = () => {
             <h1 className="jumbotron text-center bg-primary">Login</h1>
 
             <div className="container col-md-4 offset-md-4 pb-5">
-                <form
-                    onSubmit={handleSubmit(onSubmit)}
-                    noValidate
-                    autoComplete="off"
-                >
-                    <input
-                        type="email"
-                        className="form-control mt-4 p-2"
-                        {...register("email")}
+                <Form onFinish={handleSubmit(onSubmit)}>
+                    <FormItem
+                        control={control}
+                        errors={errors}
+                        name="email"
                         placeholder="Enter email"
-                        required
+                        type="email"
                     />
-                    {!!errors.email && (
-                        <div className="text-danger ps-2">
-                            {errors?.email?.message}
-                        </div>
-                    )}
-                    <input
-                        type="password"
-                        className="form-control mt-4 p-2"
-                        {...register("password")}
+                    <FormItem
+                        control={control}
+                        errors={errors}
+                        name="password"
                         placeholder="Enter password"
-                        required
+                        type="password"
                     />
-                    {!!errors.password && (
-                        <div className="text-danger ps-2">
-                            {errors?.password?.message}
-                        </div>
-                    )}
-                    <button
-                        type="submit"
+                    <Button
+                        type="primary"
+                        htmlType="submit"
                         className="btn btn-primary mt-4 col-12"
                         disabled={!isDirty || isSubmitting}
                     >
                         {isSubmitting ? <SyncOutlined spin /> : "Submit"}
-                    </button>
-                </form>
+                    </Button>
+                </Form>
 
                 <p className="text-center pt-3">
                     Not Yet registered?

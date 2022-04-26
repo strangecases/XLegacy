@@ -4,22 +4,28 @@ import {
     register,
     login,
     logout,
-    currentUser,
+    currentAdmin,
     // sendTestEmail,
     forgotPassword,
     resetPassword,
+    adminIsAuthor,
 } from "../controllers/auth.js";
 
 // middleware
-import { requireSignin } from "../middlewares/index.js";
+import { requireSignin, isAuthor } from "../middlewares/index.js";
 
 const router = express.Router();
 
 router.post("/register", catchAsync(register));
 router.post("/login", catchAsync(login));
 router.get("/logout", catchAsync(logout));
-router.get("/current-user", requireSignin, catchAsync(currentUser));
-// router.get("/send-email", sendTestEmail);
+router.get("/current-admin", requireSignin, catchAsync(currentAdmin));
+router.get(
+    "/admin-is-author/:id",
+    requireSignin,
+    catchAsync(isAuthor),
+    catchAsync(adminIsAuthor)
+);
 router.post("/forgot-password", catchAsync(forgotPassword));
 router.post("/reset-password", catchAsync(resetPassword));
 

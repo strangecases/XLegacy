@@ -103,6 +103,8 @@ import { useRouter } from "next/router";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
+import { Form, Button } from "antd";
+import FormItem from "../components/FormItem";
 
 const schema = yup
     .object()
@@ -117,17 +119,18 @@ const schema = yup
             .min(6, "password should be minimum 6 characters long")
             .max(16)
             .required("password is required"),
+        adminCode: yup.string().required("Admin code is required"),
     })
     .required();
 
 const Register = () => {
-    const { user } = useSelector((state) => state.auth);
+    const { admin } = useSelector((state) => state.auth);
 
     const router = useRouter();
 
     const {
         handleSubmit,
-        register,
+        control,
         formState: { errors, isDirty, isSubmitting },
     } = useForm({
         mode: "onBlur",
@@ -135,19 +138,20 @@ const Register = () => {
     });
 
     useEffect(() => {
-        if (user !== null) {
+        if (admin !== null) {
             router.push("/");
         }
-    }, [user, router]);
+    }, [admin, router]);
 
     const onSubmit = async (data) => {
-        const { name, email, password } = data;
+        const { name, email, password, adminCode } = data;
 
         try {
             await axios.post("/api/register", {
                 name,
                 email,
                 password,
+                adminCode,
             });
 
             toast.success("Registration Successful, Please login");
@@ -161,12 +165,36 @@ const Register = () => {
             <h1 className="jumbotron text-center bg-primary">register</h1>
 
             <div className="container col-md-4 offset-md-4 pb-5">
-                <form
-                    onSubmit={handleSubmit(onSubmit)}
-                    autoComplete="off"
-                    noValidate
-                >
-                    <input
+                <Form onFinish={handleSubmit(onSubmit)}>
+                    <FormItem
+                        control={control}
+                        errors={errors}
+                        name="name"
+                        placeholder="Enter name"
+                        type="text"
+                    />
+                    <FormItem
+                        control={control}
+                        errors={errors}
+                        name="email"
+                        placeholder="Enter email"
+                        type="email"
+                    />
+                    <FormItem
+                        control={control}
+                        errors={errors}
+                        name="password"
+                        placeholder="Enter password"
+                        type="password"
+                    />
+                    <FormItem
+                        control={control}
+                        errors={errors}
+                        name="adminCode"
+                        placeholder="Enter admin code"
+                        type="text"
+                    />
+                    {/* <input
                         type="text"
                         className="form-control mt-4 p-2"
                         {...register("name")}
@@ -202,14 +230,27 @@ const Register = () => {
                             {errors?.password?.message}
                         </div>
                     )}
-                    <button
-                        type="submit"
-                        className="btn btn-primary mt-4 col-12"
+                    <input
+                        type="text"
+                        className="form-control mt-4 p-2"
+                        {...register("adminCode")}
+                        placeholder="Enter admin code"
+                        required
+                    />
+                    {!!errors.adminCode && (
+                        <div className="text-danger ps-2 mt-1">
+                            {errors?.adminCode?.message}
+                        </div>
+                    )} */}
+                    <Button
+                        type="primary"
+                        htmlType="submit"
+                        className="btn btn-primary col-12"
                         disabled={!isDirty || isSubmitting}
                     >
                         {isSubmitting ? <SyncOutlined spin /> : "Submit"}
-                    </button>
-                </form>
+                    </Button>
+                </Form>
 
                 <p className="text-center p-3">
                     Already registered?

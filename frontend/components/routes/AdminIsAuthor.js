@@ -1,28 +1,33 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useRouter } from "next/router";
 import { SyncOutlined } from "@ant-design/icons";
+import axios from "axios";
 
-const UserRoute = ({ children }) => {
-    const [ok, setOk] = useState(false);
+const AdminIsAuthor = ({ children }) => {
+    const [ok, setOk] = useState(true);
 
     const router = useRouter();
+    const { id } = router.query;
 
     useEffect(() => {
-        const fetchUser = async () => {
+        const fetchAdmin = async () => {
             try {
-                const { data } = await axios.get("/api/current-user");
-                if (data.ok) {
-                    setOk(true);
+                if (id !== undefined) {
+                    const { data } = await axios.get(
+                        `/api/admin-is-author/${id}`
+                    );
+                    if (data.ok) {
+                        setOk(true);
+                    }
                 }
             } catch (err) {
                 console.log(err);
                 setOk(false);
-                router.push("/login");
+                router.push("/admin");
             }
         };
-        fetchUser();
-    }, [router, ok]);
+        fetchAdmin();
+    }, [router, ok, id]);
 
     return (
         <div>
@@ -38,4 +43,4 @@ const UserRoute = ({ children }) => {
     );
 };
 
-export default UserRoute;
+export default AdminIsAuthor;

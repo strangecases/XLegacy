@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import AWS from "aws-sdk";
 import { nanoid } from "nanoid";
-import User from "../models/user.js";
+import Admin from "../models/admin.js";
 import { hashPassword, comparePassword } from "../utils/auth.js";
 import ExpressError from "../utils/ExpressError.js";
 
@@ -15,7 +15,7 @@ const awsConfig = {
 const SES = new AWS.SES(awsConfig);
 
 export const register = async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, adminCode } = req.body;
 
     // validation
 
@@ -38,8 +38,14 @@ export const register = async (req, res) => {
         );
     }
 
-    const userExist = await User.findOne({ email }).exec();
-    if (userExist) {
+    console.log(adminCode, process.env.ADMIN_SECRET);
+
+    if (adminCode !== process.env.ADMIN_SECRET) {
+        throw new ExpressError("admin code is wrong", 400);
+    }
+
+    const adminExist = await Admin.findOne({ email }).exec();
+    if (adminExist) {
         // return res.status(400).send("Email is taken");
         throw new ExpressError("Email is taken", 400);
     }
@@ -49,8 +55,13 @@ export const register = async (req, res) => {
 
     // register
 
-    const user = new User({ name, email, password: hashedPassword });
-    await user.save();
+    const admin = new Admin({
+        name,
+        email,
+        password: hashedPassword,
+        isAdmin: true,
+    });
+    await admin.save();
 
     return res.json({ ok: true });
 };
@@ -58,23 +69,23 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
     const { email, password } = req.body;
 
-    // check if our db has user with that email
-    const user = await User.findOne({ email }).exec();
-    // if (!user) return res.status(400).send("No user found");
-    if (!user) throw new ExpressError("No user found", 400);
+    // check if our db has admin with that email
+    const admin = await Admin.findOne({ email }).exec();
+    // if (!admin) return res.status(400).send("No admin found");
+    if (!admin) throw new ExpressError("No admin found", 400);
 
     // compare password
-    const match = await comparePassword(password, user.password);
+    const match = await comparePassword(password, admin.password);
     // if (!match) return res.status(400).send("Wrong Password");
     if (!match) throw new ExpressError("Wrong Password", 400);
 
     // create signed JWT
-    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ _id: admin._id }, process.env.JWT_SECRET, {
         expiresIn: "7d",
     });
 
-    // return user and token to client, exclude hashed password
-    user.password = undefined;
+    // return admin and token to client, exclude hashed password
+    admin.password = undefined;
 
     // send token in cookie
     res.cookie("token", token, {
@@ -82,8 +93,8 @@ export const login = async (req, res) => {
         // secure: true, // only works on https
     });
 
-    // send user as json response
-    return res.json(user);
+    // send admin as json response
+    return res.json(admin);
 };
 
 export const logout = async (req, res) => {
@@ -91,9 +102,17 @@ export const logout = async (req, res) => {
     return res.json({ message: "signout success" });
 };
 
-export const currentUser = async (req, res) => {
-    const user = await User.findById(req.user._id).select("-password").exec();
-    console.log("current user", user);
+export const currentAdmin = async (req, res) => {
+    const admin = await Admin.findById(req.user._id).select("-password").exec();
+
+    if (!admin.isAdmin) {
+        throw new ExpressError("Only admin can access this route", 400);
+    }
+
+    return res.json({ ok: true });
+};
+
+export const adminIsAuthor = async (req, res) => {
     return res.json({ ok: true });
 };
 
@@ -146,11 +165,11 @@ export const forgotPassword = async (req, res) => {
 
     // creating short code for password reset
     const shortCode = nanoid(6).toUpperCase();
-    const user = await User.findOneAndUpdate(
+    const admin = await Admin.findOneAndUpdate(
         { email },
         { passwordResetCode: shortCode }
     );
-    if (!user) throw new ExpressError("No user found", 400);
+    if (!admin) throw new ExpressError("No admin found", 400);
 
     // prepare params for email
     const params = {
@@ -193,11 +212,11 @@ export const resetPassword = async (req, res) => {
     console.log(hashedPassword);
 
     // checking secret code and updating hashed password
-    const user = await User.findOneAndUpdate(
+    const admin = await Admin.findOneAndUpdate(
         { email, passwordResetCode: code },
         { password: hashedPassword, passwordResetCode: "" }
     );
-    if (!user) throw new ExpressError("Wrong user or code!", 400);
+    if (!admin) throw new ExpressError("Wrong admin or code!", 400);
 
     return res.json({ ok: true });
 };

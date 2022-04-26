@@ -1,9 +1,9 @@
 import * as types from "../types";
 
-const logIn = (user) => {
+const logIn = (admin) => {
     return {
         type: types.LOGIN,
-        payload: user,
+        payload: admin,
     };
 };
 
@@ -13,9 +13,9 @@ const logOut = () => {
     };
 };
 
-const userActions = {
+const adminActions = {
     logIn,
     logOut,
 };
 
-export default userActions;
+export default adminActions;

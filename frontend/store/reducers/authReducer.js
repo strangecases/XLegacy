@@ -1,15 +1,15 @@
 import * as types from "../types";
 
 const initialState = {
-    user: null,
+    admin: null,
 };
 
 const authReducer = (state = initialState, action) => {
     switch (action.type) {
         case types.LOGIN:
-            return { ...state, user: action.payload };
+            return { ...state, admin: action.payload };
         case types.LOGOUT:
-            return { ...state, user: null };
+            return { ...state, admin: null };
         default:
             return state;
     }
