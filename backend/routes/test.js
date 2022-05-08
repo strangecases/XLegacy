@@ -12,12 +12,12 @@ import catchAsync from "../utils/catchAsync.js";
 const router = express.Router();
 
 router
-    .route("/tests")
+    .route("/")
     .get(requireSignin, catchAsync(index))
     .post(catchAsync(createTest));
 
 router
-    .route("/tests/:id")
+    .route("/:id")
     .get(catchAsync(getOneTest))
     .patch(requireSignin, catchAsync(isAuthor), catchAsync(editTest))
     .delete(requireSignin, catchAsync(isAuthor), catchAsync(deleteTest));

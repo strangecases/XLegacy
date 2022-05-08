@@ -1,8 +1,15 @@
-import { Form } from "antd";
+import { Form, Input } from "antd";
 import Link from "next/link";
+import { Controller } from "react-hook-form";
 import FormItem from "../../FormItem";
 
-const SectionFormGroup = ({ control, errors, id }) => {
+const SectionFormGroup = ({
+    control,
+    errors,
+    id,
+    setValue = () => {},
+    secNum = "",
+}) => {
     return (
         <div className="container col-md-10 offset-md-1 pb-5">
             <Form>
@@ -13,13 +20,21 @@ const SectionFormGroup = ({ control, errors, id }) => {
                     placeholder="Enter subject"
                     type="text"
                 />
-                <FormItem
+                {/* <FormItem
                     control={control}
                     errors={errors}
                     name="sectionNo"
                     placeholder="Enter section number"
                     type="number"
-                />
+                /> */}
+                <Form.Item>
+                    <Controller
+                        value={setValue("sectionNo", secNum)}
+                        control={control}
+                        name="sectionNo"
+                        render={({ field }) => <Input {...field} readOnly />}
+                    />
+                </Form.Item>
                 <FormItem
                     control={control}
                     errors={errors}

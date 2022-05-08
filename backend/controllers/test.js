@@ -19,10 +19,14 @@ export const getOneTest = async (req, res) => {
 };
 
 export const editTest = async (req, res) => {
-    const test = await Test.findByIdAndUpdate(req.params.id, req.body, {
-        upsert: true,
-        new: true,
-    });
+    const test = await Test.findByIdAndUpdate(
+        req.params.id,
+        { ...req.body, sectionData: [] },
+        {
+            upsert: true,
+            new: true,
+        }
+    );
     return res.json({ test });
 };
 

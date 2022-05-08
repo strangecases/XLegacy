@@ -7,6 +7,8 @@ const initialState = {
     popSectionVisible: false,
     selectedSectionId: null,
     selectedQuestion: 1,
+    selectedSectionNo: 1,
+    examId: "",
 };
 
 const customizeReducer = (state = initialState, action) => {
@@ -31,6 +33,10 @@ const customizeReducer = (state = initialState, action) => {
             return { ...state, selectedSectionId: action.payload };
         case types.SELECTED_QUESTION:
             return { ...state, selectedQuestion: action.payload };
+        case types.SELECTED_SECTION_NO:
+            return { ...state, selectedSectionNo: action.payload };
+        case types.EXAM_ID:
+            return { ...state, examId: action.payload };
         default:
             return state;
     }

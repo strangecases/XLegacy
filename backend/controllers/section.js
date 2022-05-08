@@ -6,7 +6,7 @@ export const index = (req, res) => {
     res.send("Hiiii");
 };
 
-export const createTest = async (req, res) => {
+export const createSection = async (req, res) => {
     const section = await new Section(req.body);
     const test = await Test.findByIdAndUpdate(
         req.params.id,
@@ -21,6 +21,7 @@ export const createTest = async (req, res) => {
             new: true,
         }
     );
+    console.log("create section", test);
     await section.save();
     return res.json({ test });
 };
@@ -30,12 +31,12 @@ export const showSection = async (req, res) => {
         req.params.sectionId,
         "questions -_id"
     );
-    console.log(section);
     if (!section) throw new ExpressError("No section Found", 400);
     res.json(section);
 };
 
 export const editSection = async (req, res) => {
+    console.log(req.body);
     const section = await Section.findByIdAndUpdate(
         req.params.sectionId,
         req.body,
@@ -46,12 +47,43 @@ export const editSection = async (req, res) => {
     );
     let test;
     if (req.body.subject || req.body.sectionNo || req.body.sectionDescription) {
-        test = await Test.findByIdAndUpdate(req.params.id, req.body, {
+        test = await Test.findOneAndUpdate(
+            {
+                _id: req.params.id,
+            },
+            {
+                $set: {
+                    "sectionData.$[el].subject": req.body.subject,
+                    "sectionData.$[el].sectionNo": req.body.sectionNo,
+                    "sectionData.$[el].sectionDescription":
+                        req.body.sectionDescription,
+                    "sectionData.$[el].sectionId": req.params.sectionId,
+                },
+            },
+            {
+                arrayFilters: [{ "el.sectionId": req.params.sectionId }],
+                upsert: true,
+                new: true,
+            }
+        );
+    }
+    res.json({ ok: true });
+};
+
+export const deleteSection = async (req, res) => {
+    const test = await Test.findByIdAndUpdate(
+        req.params.id,
+        {
+            $pull: {
+                sections: req.params.sectionId,
+                sectionData: { sectionId: req.params.sectionId },
+            },
+        },
+        {
             upsert: true,
             new: true,
-        });
-    }
-
-    console.log(section, test);
-    res.json({ ok: true });
+        }
+    );
+    const section = await Section.findByIdAndDelete(req.params.sectionId);
+    res.json(section);
 };

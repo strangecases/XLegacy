@@ -1,5 +1,5 @@
-import ExamNav from "../../components/nav/ExamNav";
-import Questions from "../../components/Questions/Questions";
+import ExamNav from "../../../components/nav/ExamNav";
+import Questions from "../../../components/questions/Questions";
 
 const ExamsId = () => {
     return <Questions />;

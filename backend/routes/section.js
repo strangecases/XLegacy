@@ -1,9 +1,10 @@
 import express from "express";
 import {
     index,
-    createTest,
+    createSection,
     showSection,
     editSection,
+    deleteSection,
 } from "../controllers/section.js";
 import { arrayLimitForSection } from "../middlewares/index.js";
 import catchAsync from "../utils/catchAsync.js";
@@ -11,13 +12,14 @@ import catchAsync from "../utils/catchAsync.js";
 const router = express.Router();
 
 router
-    .route("/tests/:id/sections")
+    .route("/:id/sections")
     .get(catchAsync(index))
-    .post(catchAsync(arrayLimitForSection), catchAsync(createTest));
+    .post(catchAsync(arrayLimitForSection), catchAsync(createSection));
 
 router
-    .route("/tests/:id/sections/:sectionId")
+    .route("/:id/sections/:sectionId")
     .get(catchAsync(showSection))
-    .patch(catchAsync(editSection));
+    .patch(catchAsync(editSection))
+    .delete(catchAsync(deleteSection));
 
 export default router;

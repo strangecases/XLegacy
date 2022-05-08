@@ -2,6 +2,26 @@ html {
     font-size: 20px !important;
 }
 
+html::-webkit-scrollbar {
+    width: 0.6vw;
+    background-color: #f5f5f5;
+}
+
+html::-webkit-scrollbar-thumb {
+    background-color: #585757;
+    border-radius: 4px;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+    background-color: #282626;
+    border-radius: 4px;
+}
+
+html::-webkit-scrollbar-track {
+    background-color: #f5f5f5;
+    border-radius: 4px;
+}
+
 body {
     font-family: "Roboto" !important;
     font-weight: 400 !important;
@@ -27,18 +47,117 @@ body {
     display: block;
 }
 
-/* .hover-icon-delete {
-    font-size: 20px !important;
-    color: #939090 !important;
-} */
-
-.hover-icon-delete:hover {
-    font-size: 22px;
-    color: #f20202 !important;
-}
-
 .background-section {
     background-color: #e1e1e1;
+}
+
+.ant-form .ant-card {
+    margin: 1vh 0.5vh;
+    overflow: hidden;
+    padding: 0px;
+}
+
+.ant-col .question-list-card {
+    margin: 1vh 0.5vh;
+    overflow-y: auto;
+}
+
+.ant-card .ant-card-body {
+    padding: 14px;
+    margin: 5px;
+}
+
+.ant-card-body .ant-card .ant-card-body {
+    padding: 14px;
+    margin: 5px;
+}
+
+.ant-card .ant-card-body .ant-card {
+    padding: 2.5vh;
+    background: #f0efed;
+    border-radius: 6px;
+}
+
+.ant-card .ant-card-body .inner-card-padding {
+    padding: 0;
+    margin: 0;
+    background: #f0efed;
+    border-radius: 6px;
+}
+
+.ant-card .ant-card-body .inner-card-padding-two {
+    padding: 1vh;
+    margin: 0;
+    background: #f0efed;
+    border-radius: 6px;
+}
+
+.ant-card .ant-card-body .exam-detail-inner-card {
+    padding: 0;
+    margin: 0;
+    background: #eeff82;
+    overflow: hidden;
+    border-radius: 0;
+}
+
+.ant-col .ant-card .option-card {
+    padding: 0;
+    background: #fff;
+    border-radius: 0;
+}
+
+.ant-radio-wrapper {
+    width: 30vw;
+}
+
+.ant-col .test-submit-delete {
+    font-size: 20px;
+    color: rgb(147, 144, 144);
+}
+
+.ant-col .test-submit-delete-small {
+    font-size: 16px;
+    color: rgb(147, 144, 144);
+}
+
+.ant-col .test-submit-delete-edit {
+    font-size: 22px;
+    color: rgb(147, 144, 144);
+}
+
+.ant-col .hover-icon-submit:hover {
+    font-size: 22px;
+    color: rgb(6, 184, 27);
+}
+
+.ant-col .hover-icon-submit-small:hover {
+    font-size: 22px;
+    color: rgb(6, 184, 27);
+}
+
+.ant-col .hover-icon-next:hover {
+    font-size: 22px;
+    color: #fd9400;
+}
+
+.ant-col .hover-icon-delete:hover {
+    font-size: 22px;
+    color: rgb(240, 41, 41);
+}
+
+.ant-col .hover-icon-delete-small:hover {
+    font-size: 19px;
+    color: rgb(240, 41, 41);
+}
+
+.ant-col .hover-icon-edit:hover {
+    font-size: 22px;
+    color: rgb(59, 56, 244);
+}
+
+.ant-col .hover-icon-edit-test:hover {
+    font-size: 22px;
+    color: #20f540;
 }
 
 @media only screen and (max-width: 520px) {
@@ -47,7 +166,7 @@ body {
     }
 }
 
-@media only screen and (max-width: 769px) {
+@media only screen and (max-width: 767px) {
     .display-question-bar {
         display: none !important;
     }

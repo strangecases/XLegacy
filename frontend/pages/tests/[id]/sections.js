@@ -1,6 +1,6 @@
 import { Layout, Col, Row, Card, Button, Badge } from "antd";
 import { useRouter } from "next/router";
-import Questions from "../../../components/Questions/Questions";
+import Questions from "../../../components/questions/Questions";
 
 import AdminRoute from "../../../components/routes/AdminRoute";
 

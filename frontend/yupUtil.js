@@ -94,3 +94,44 @@ export const questionSchema = yup.object().shape({
 
     answer: yup.string().required("Answer is required"),
 });
+
+export const examSchema = yup
+    .object()
+    .shape({
+        studentName: yup.string().required("name is required"),
+        schoolCode: yup.string().required("school code is required"),
+        classNo: yup
+            .number()
+            .min(1, "class number can start with 1")
+            .max(12, "class number can not be more than 12")
+            .required("password is required"),
+        classGroup: yup.string(),
+    })
+    .required();
+
+export const schoolSchema = yup.object().shape({
+    schoolName: yup
+        .string()
+        .max(150, "school name should be maximum 150 characters long")
+        .required("school name is required"),
+    schoolCode: yup
+        .string()
+        .max(10, "school code should be maximum 10 characters long")
+        .required("school code is required"),
+    classes: yup.array().of(
+        yup
+            .object()
+            .shape({
+                classNo: yup
+                    .number("class number is required")
+                    .typeError("class number must be a number")
+                    .required("class number is required"),
+                groups: yup.array().of(
+                    yup.object().shape({
+                        group: yup.string().required("required"),
+                    })
+                ),
+            })
+            .required("class number is required")
+    ),
+});

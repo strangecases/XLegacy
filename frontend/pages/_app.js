@@ -9,6 +9,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { wrapper, store, persistor } from "../store/store";
 import TopNav from "../components/nav/TopNav";
 
+require("../styles/variables.less");
+
 function MyApp({ Component, pageProps }) {
     const getLayout =
         Component.getLayout || ((page) => <TopNav>{page}</TopNav>);

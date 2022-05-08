@@ -40,17 +40,10 @@ const DeleteTestForm = () => {
     return (
         <>
             <Tooltip title="Delete Test" placement="topLeft" color="red">
-                <Button
-                    style={{ borderStyle: "none" }}
-                    shape="circle"
+                <CloseCircleFilled
                     onClick={showPopConfirm}
-                    icon={
-                        <CloseCircleFilled
-                            style={{ fontSize: 20, color: "#939090" }}
-                            className="hover-icon-delete"
-                        />
-                    }
-                    size="small"
+                    // style={{ fontSize: 20, color: "#939090" }}
+                    className="hover-icon-delete test-submit-delete"
                 />
             </Tooltip>
             <ModalCreateTest

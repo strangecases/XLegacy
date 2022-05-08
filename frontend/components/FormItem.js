@@ -3,12 +3,23 @@ import { Form, Input } from "antd";
 
 const { TextArea } = Input;
 
-const FormItem = ({ errors, name, control, placeholder, type, width = "" }) => {
+const FormItem = ({
+    errors = {},
+    name,
+    control,
+    placeholder,
+    type,
+    width = "",
+    label = "",
+}) => {
     return (
         <Form.Item
-            hasFeedback={errors[name]}
+            // hasFeedback={errors[name]}
             help={errors[name] ? errors[name]?.message : ""}
-            validateStatus={errors[name] ? "error" : "success"}
+            validateStatus={
+                errors[name] && errors[name].message ? "error" : "success"
+            }
+            label={label}
         >
             <Controller
                 render={({ field }) =>

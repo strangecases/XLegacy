@@ -1,7 +1,8 @@
 import { useSelector } from "react-redux";
+import CustomLayout from "../../components/nav/CustomLayout";
 import AdminRoute from "../../components/routes/AdminRoute";
 
-const UserIndex = () => {
+const AdminIndex = () => {
     const { user } = useSelector((state) => state.auth);
 
     return (
@@ -13,4 +14,6 @@ const UserIndex = () => {
     );
 };
 
-export default UserIndex;
+AdminIndex.getLayout = (page) => <CustomLayout>{page}</CustomLayout>;
+
+export default AdminIndex;

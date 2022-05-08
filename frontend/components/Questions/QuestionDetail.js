@@ -9,28 +9,30 @@ import {
     Input,
     Col,
     Tooltip,
-    Alert,
+    message,
 } from "antd";
 import {
     CloseCircleFilled,
     RightOutlined,
     LeftOutlined,
+    CheckCircleFilled,
 } from "@ant-design/icons";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, set, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { toast } from "react-toastify";
 import FormItem from "../FormItem";
 import { questionSchema } from "../../yupUtil";
 import allActions from "../../store/actions";
 import DeleteSectionForm from "../modal/modalSection/DeleteSectionForm";
 import EditSectionForm from "../modal/modalSection/EditSectionForm";
+import styles from "../../styles/modules/TopNav.module.css";
+import FormOption from "../FormOption";
 
 const QuestionDetail = () => {
-    const [question, setQuestion] = useState({});
     const { selectedQuestion, selectedSectionId } = useSelector(
         (state) => state.custom
     );
@@ -54,6 +56,7 @@ const QuestionDetail = () => {
         formState: { errors, isDirty, isSubmitting },
         control,
         setValue,
+        setError,
     } = useForm({
         mode: "onBlur",
         defaultValues: {},
@@ -72,15 +75,29 @@ const QuestionDetail = () => {
             questions[selectedQuestion].answer &&
             questions[selectedQuestion].question
         ) {
-            setQuestion(questions[selectedQuestion]);
+            setError("question", "");
+            setError("answer", "");
+            setError("options", "");
+
             setValue("options", {
-                a: question.options ? question.options.a : "",
-                b: question.options ? question.options.b : "",
-                c: question.options ? question.options.c : "",
-                d: question.options ? question.options.d : "",
+                a: questions[selectedQuestion].options
+                    ? questions[selectedQuestion].options.a
+                    : "",
+                b: questions[selectedQuestion].options
+                    ? questions[selectedQuestion].options.b
+                    : "",
+                c: questions[selectedQuestion].options
+                    ? questions[selectedQuestion].options.c
+                    : "",
+                d: questions[selectedQuestion].options
+                    ? questions[selectedQuestion].options.d
+                    : "",
             });
-            setValue("answer", question.answer);
-            setValue("question", question.question);
+
+            setValue("answer", questions[selectedQuestion].answer);
+            setValue("question", questions[selectedQuestion].question);
+
+            console.log(questions[selectedQuestion]);
         } else {
             setValue("options", {
                 a: "",
@@ -91,12 +108,13 @@ const QuestionDetail = () => {
             setValue("answer", "");
             setValue("question", "");
         }
-    }, [selectedQuestion, question, questions]);
+    }, [selectedQuestion, questions]);
 
     useEffect(() => {
         const elements = document.getElementsByClassName("hiii");
         for (let i = 0; i < elements.length; i += 1) {
             elements[i].addEventListener("change", handleSubmit(onSubmit));
+            console.log("gggg");
         }
 
         return () => {
@@ -120,12 +138,11 @@ const QuestionDetail = () => {
     }, []);
 
     const onAddQuestion = () => {
-        handleSubmit(onSubmit);
         const questionLength = Object.values(questions).length;
+        console.log(questions[selectedQuestion]);
         if (questionLength >= 25) {
             console.log("cant add more than 25 questions");
         } else {
-            console.log(questionLength);
             dispatch(
                 allActions.questionActions.editQuestion({
                     questionNo: questionLength + 1,
@@ -148,16 +165,14 @@ const QuestionDetail = () => {
                 return d;
             });
             console.log("2", questionList);
-            await dispatch(
-                allActions.questionActions.upOnDeletion(questionList)
-            );
-            await dispatch(
+            dispatch(allActions.questionActions.upOnDeletion(questionList));
+            dispatch(
                 allActions.questionActions.deleteQuestion(
                     Object.values(questions).length
                 )
             );
             console.log(questions);
-            await dispatch(
+            dispatch(
                 allActions.customActions.selectedQuestion(selectedQuestion - 1)
             );
             console.log(selectedQuestion);
@@ -179,33 +194,30 @@ const QuestionDetail = () => {
     const showPopConfirm = () => {
         dispatch(allActions.customActions.visibleDeleteSectionYes());
     };
-    // const showSectionModal = () => {
-    //     dispatch(allActions.customActions.visibleSectionYes());
-    // };
 
     return (
         <>
+            {console.log("ree render")}
             <Card
                 bordered={false}
-                style={{
-                    margin: "1vh 0.5vh",
-                    overflow: "none",
-                }}
+                // style={{
+                //     margin: "1vh 0.5vh",
+                //     overflow: "none",
+                // }}
             >
                 <Card
                     type="inner"
                     bordered={false}
-                    style={{
-                        padding: "2.5vh",
-                        background: "#f0efed",
-                        borderRadius: "6px",
-                    }}
+                    // style={{
+                    //     padding: "2.5vh",
+                    //     background: "#f0efed",
+                    //     borderRadius: "6px",
+                    // }}
                 >
-                    <Form onFinish={onAddQuestion}>
+                    <Form onFinish={handleSubmit(onSubmit)}>
                         <Row gutter={16}>
-                            <Col xs={6} sm={3} lg={3} span={3}>
+                            <Col xs={6} sm={4} lg={3} span={3}>
                                 <Controller
-                                    style={{ position: "fixed" }}
                                     value={setValue(
                                         "questionNo",
                                         selectedQuestion
@@ -223,7 +235,7 @@ const QuestionDetail = () => {
                                     )}
                                 />
                             </Col>
-                            <Col xs={14} sm={17} span={18}>
+                            <Col xs={13} sm={16} lg={17} span={17}>
                                 <FormItem
                                     control={control}
                                     errors={errors}
@@ -232,21 +244,63 @@ const QuestionDetail = () => {
                                     type="text"
                                 />
                             </Col>
-                            <Col span={3}>
-                                <Tooltip
-                                    title="Delete Question"
-                                    placement="bottom"
-                                    color="#71a832"
+                            <Col xs={5} sm={4} md={4} lg={3} span={3}>
+                                <Row
+                                    gutter={{
+                                        xs: 32,
+                                        sm: 16,
+                                        md: 28,
+                                        lg: 32,
+                                    }}
                                 >
-                                    <CloseCircleFilled
-                                        onClick={onDeleteQuestion}
-                                        style={{
-                                            fontSize: 20,
-                                            color: "#939090",
-                                        }}
-                                        className="hover-icon-delete"
-                                    />
-                                </Tooltip>
+                                    <Col
+                                        xs={8}
+                                        sm={8}
+                                        md={6}
+                                        lg={8}
+                                        xl={5}
+                                        span={8}
+                                    >
+                                        <Tooltip
+                                            title="Save Question"
+                                            placement="bottom"
+                                            color="#71a832"
+                                            // style={{ marginRight: "auto" }}
+                                        >
+                                            <CheckCircleFilled
+                                                onClick={handleSubmit(onSubmit)}
+                                                // style={{
+                                                //     fontSize: 20,
+                                                //     color: "#939090",
+                                                // }}
+                                                className="hover-icon-submit test-submit-delete"
+                                            />
+                                        </Tooltip>
+                                    </Col>
+                                    <Col
+                                        xs={8}
+                                        sm={8}
+                                        md={6}
+                                        lg={8}
+                                        xl={5}
+                                        span={8}
+                                    >
+                                        <Tooltip
+                                            title="Delete Question"
+                                            placement="bottom"
+                                            color="#f20707"
+                                        >
+                                            <CloseCircleFilled
+                                                onClick={onDeleteQuestion}
+                                                // style={{
+                                                //     fontSize: 20,
+                                                //     color: "#939090",
+                                                // }}
+                                                className="hover-icon-delete test-submit-delete"
+                                            />
+                                        </Tooltip>
+                                    </Col>
+                                </Row>
                             </Col>
                         </Row>
                         <Row>
@@ -258,16 +312,22 @@ const QuestionDetail = () => {
                                     render={({ field }) => (
                                         <Radio.Group
                                             {...field}
-                                            style={{ width: "35vw" }}
+                                            style={{ width: "55vw" }}
                                             id="hii"
                                         >
                                             <Row>
                                                 <Col span={24}>
-                                                    <Space direction="vertical">
+                                                    <Space
+                                                        direction="vertical"
+                                                        style={{
+                                                            display: "flex",
+                                                        }}
+                                                    >
                                                         <Row gutter={16}>
                                                             <Col
-                                                                xs={3}
+                                                                xs={2}
                                                                 lg={2}
+                                                                xl={1}
                                                                 span={2}
                                                             >
                                                                 <Radio
@@ -276,9 +336,9 @@ const QuestionDetail = () => {
                                                                 />
                                                             </Col>
                                                             <Col
-                                                                xs={21}
-                                                                lg={22}
-                                                                span={22}
+                                                                xs={16}
+                                                                md={13}
+                                                                lg={10}
                                                             >
                                                                 {/* <ControllerInput
                                                                 control={
@@ -286,7 +346,7 @@ const QuestionDetail = () => {
                                                                 }
                                                                 name="options.a"                                                                                                       
                                                             /> */}
-                                                                <FormItem
+                                                                <FormOption
                                                                     control={
                                                                         control
                                                                     }
@@ -294,21 +354,18 @@ const QuestionDetail = () => {
                                                                         errors
                                                                     }
                                                                     name="options.a"
+                                                                    option="a"
                                                                     placeholder="Enter option"
                                                                     type="text"
-                                                                    width="25vw"
-                                                                    onChange={(
-                                                                        e
-                                                                    ) =>
-                                                                        e.stopPropagation()
-                                                                    }
+                                                                    // width="25vw"
                                                                 />
                                                             </Col>
                                                         </Row>
                                                         <Row gutter={16}>
                                                             <Col
-                                                                xs={3}
+                                                                xs={2}
                                                                 lg={2}
+                                                                xl={1}
                                                                 span={2}
                                                             >
                                                                 <Radio
@@ -317,9 +374,9 @@ const QuestionDetail = () => {
                                                                 />
                                                             </Col>
                                                             <Col
-                                                                xs={21}
-                                                                lg={22}
-                                                                span={22}
+                                                                xs={16}
+                                                                md={13}
+                                                                lg={10}
                                                             >
                                                                 {/* <ControllerInput
                                                                 control={
@@ -329,7 +386,7 @@ const QuestionDetail = () => {
                                                                 option="b"
                                                                 x={setValue}
                                                             /> */}
-                                                                <FormItem
+                                                                <FormOption
                                                                     control={
                                                                         control
                                                                     }
@@ -337,16 +394,18 @@ const QuestionDetail = () => {
                                                                         errors
                                                                     }
                                                                     name="options.b"
+                                                                    option="b"
                                                                     placeholder="Enter option"
                                                                     type="text"
-                                                                    width="25vw"
+                                                                    // width="25vw"
                                                                 />
                                                             </Col>
                                                         </Row>
                                                         <Row gutter={16}>
                                                             <Col
-                                                                xs={3}
+                                                                xs={2}
                                                                 lg={2}
+                                                                xl={1}
                                                                 span={2}
                                                             >
                                                                 <Radio
@@ -355,9 +414,9 @@ const QuestionDetail = () => {
                                                                 />
                                                             </Col>
                                                             <Col
-                                                                xs={21}
-                                                                lg={22}
-                                                                span={22}
+                                                                xs={16}
+                                                                md={13}
+                                                                lg={10}
                                                             >
                                                                 {/* <ControllerInput
                                                                 control={
@@ -367,7 +426,7 @@ const QuestionDetail = () => {
                                                                 option="c"
                                                                 x={setValue}
                                                             /> */}
-                                                                <FormItem
+                                                                <FormOption
                                                                     control={
                                                                         control
                                                                     }
@@ -375,16 +434,18 @@ const QuestionDetail = () => {
                                                                         errors
                                                                     }
                                                                     name="options.c"
+                                                                    option="c"
                                                                     placeholder="Enter option"
                                                                     type="text"
-                                                                    width="25vw"
+                                                                    // width="25vw"
                                                                 />
                                                             </Col>
                                                         </Row>
                                                         <Row gutter={16}>
                                                             <Col
-                                                                xs={3}
+                                                                xs={2}
                                                                 lg={2}
+                                                                xl={1}
                                                                 span={2}
                                                             >
                                                                 <Radio
@@ -393,9 +454,9 @@ const QuestionDetail = () => {
                                                                 />
                                                             </Col>
                                                             <Col
-                                                                xs={21}
-                                                                lg={22}
-                                                                span={22}
+                                                                xs={16}
+                                                                md={13}
+                                                                lg={10}
                                                             >
                                                                 {/* <ControllerInput
                                                                 control={
@@ -405,7 +466,7 @@ const QuestionDetail = () => {
                                                                 option="d"
                                                                 x={setValue}
                                                             /> */}
-                                                                <FormItem
+                                                                <FormOption
                                                                     control={
                                                                         control
                                                                     }
@@ -413,9 +474,10 @@ const QuestionDetail = () => {
                                                                         errors
                                                                     }
                                                                     name="options.d"
+                                                                    option="d"
                                                                     placeholder="Enter option"
                                                                     type="text"
-                                                                    width="25vw"
+                                                                    // width="25vw"
                                                                 />
                                                             </Col>
                                                         </Row>
@@ -433,8 +495,8 @@ const QuestionDetail = () => {
                         <Col span={8}>
                             <Button
                                 danger
-                                onClick={onAddQuestion}
-                                style={{ marginRight: 20 }}
+                                onClick={handleSubmit(onAddQuestion)}
+                                // style={{ marginRight: 20 }}
                             >
                                 Add Question
                             </Button>
@@ -443,6 +505,7 @@ const QuestionDetail = () => {
                             <Row gutter={32} justify="center">
                                 <Col span={5}>
                                     <LeftOutlined
+                                        className="hover-icon-next test-submit-delete"
                                         onClick={() =>
                                             selectedQuestion > 1 &&
                                             dispatch(
@@ -455,6 +518,7 @@ const QuestionDetail = () => {
                                 </Col>
                                 <Col span={5}>
                                     <RightOutlined
+                                        className="hover-icon-next test-submit-delete"
                                         onClick={() =>
                                             selectedQuestion <
                                                 Object.values(questions)
@@ -474,19 +538,20 @@ const QuestionDetail = () => {
             </Card>
             <Card
                 bordered={false}
-                style={{
-                    margin: "1vh 0.5vh",
-                    overflow: "none",
-                }}
+                // style={{
+                //     margin: "1vh 0.5vh",
+                //     overflow: "none",
+                // }}
             >
                 <Card
                     type="inner"
                     bordered={false}
-                    style={{
-                        padding: "0vh",
-                        background: "#f0efed",
-                        borderRadius: "6px",
-                    }}
+                    // style={{
+                    //     padding: "0vh",
+                    //     background: "#f0efed",
+                    //     borderRadius: "6px",
+                    // }}
+                    className="inner-card-padding"
                 >
                     <Row>
                         <Col
@@ -507,7 +572,7 @@ const QuestionDetail = () => {
                             <Button onClick={showPopConfirm} danger>
                                 Delete Section
                             </Button>
-                            <DeleteSectionForm section={section} />
+                            <DeleteSectionForm />
                         </Col>
                     </Row>
                 </Card>

@@ -62,6 +62,20 @@ const selectedQuestion = (questionNo) => {
     };
 };
 
+const selectedSectionNo = (sectionNo) => {
+    return {
+        type: types.SELECTED_SECTION_NO,
+        payload: sectionNo,
+    };
+};
+
+const examId = (id) => {
+    return {
+        type: types.EXAM_ID,
+        payload: id,
+    };
+};
+
 const customActions = {
     visibleTestYes,
     visibleTestNo,
@@ -73,6 +87,8 @@ const customActions = {
     visibleDeleteSectionNo,
     selectedSectionId,
     selectedQuestion,
+    selectedSectionNo,
+    examId,
 };
 
 export default customActions;

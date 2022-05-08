@@ -11,6 +11,7 @@ import connectDB from "./config/db.js";
 import test from "./routes/test.js";
 import section from "./routes/section.js";
 import auth from "./routes/auth.js";
+import exam from "./routes/exam.js";
 
 connectDB();
 
@@ -30,8 +31,9 @@ app.use(morgan("dev"));
 // routes
 
 app.use("/api", auth);
-app.use("/api/prepare", test);
-app.use("/api/prepare", section);
+app.use("/api/prepare/tests", test);
+app.use("/api/prepare/tests", section);
+app.use("/api/prepare/tests/:id/exams", exam);
 
 // csrf
 const csrfProtection = csrf({ cookie: true });

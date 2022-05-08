@@ -6,6 +6,7 @@ import QuestionList from "./QuestionList";
 import QuestionDetail from "./QuestionDetail";
 import allActions from "../../store/actions";
 import ExamDetail from "./ExamDetail";
+import { EMPTY_QUESTIONS } from "../../store/types";
 
 const Questions = () => {
     const router = useRouter();
@@ -20,7 +21,7 @@ const Questions = () => {
         if (id !== undefined) {
             dispatch(allActions.testActions.fetchTest(id));
         }
-    }, [dispatch, id]);
+    }, [router.query, id]);
 
     useEffect(() => {
         const getSection = async () => {
@@ -32,8 +33,15 @@ const Questions = () => {
                             tests[id].sectionData[0].sectionId
                         )
                     );
+                    // dispatch(
+                    //     allActions.customActions.selectedSectionNo(
+                    //         tests[id].sectionData[0].sectionNo
+                    //     )
+                    // );
                     console.log("hi", selectedSectionId);
                 } else if (selectedSectionId) {
+                    dispatch({ type: EMPTY_QUESTIONS });
+                    // dispatch(allActions.customActions.selectedQuestion(1));
                     dispatch(
                         allActions.questionActions.fetchQuestions(
                             id,
@@ -45,7 +53,7 @@ const Questions = () => {
             }
         };
         getSection();
-    }, [id, dispatch, selectedSectionId, tests]);
+    }, [id, selectedSectionId, tests]);
 
     return (
         <Layout
@@ -68,10 +76,10 @@ const Questions = () => {
                     <QuestionList />
                 </Col>
                 <Col className="gutter-row" xs={24} md={15} span={15}>
-                    {path && path.includes("tests") ? (
-                        <QuestionDetail />
-                    ) : (
+                    {path && path.includes("exams") ? (
                         <ExamDetail />
+                    ) : (
+                        <QuestionDetail />
                     )}
                 </Col>
             </Row>

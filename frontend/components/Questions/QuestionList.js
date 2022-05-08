@@ -2,20 +2,23 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
-import { Row, Col, Card, Button } from "antd";
-import { object } from "yup";
+import { Row, Col, Card, Button, Badge } from "antd";
 import allActions from "../../store/actions";
-import { EMPTY_QUESTIONS } from "../../store/types";
+import { EMPTY_ANSWERS, EMPTY_QUESTIONS } from "../../store/types";
 
 const QuestionList = () => {
     const router = useRouter();
     const { id } = router.query;
+    const path = router.pathname;
 
     const { tests } = useSelector((state) => state);
     const { questions } = useSelector((state) => state);
-    const { selectedQuestion, selectedSectionId } = useSelector(
-        (state) => state.custom
-    );
+    const { answers } = useSelector((state) => state);
+    const { examId } = useSelector((state) => state.exam);
+
+    const { selectedQuestion, selectedSectionId, selectedSectionNo } =
+        useSelector((state) => state.custom);
+
     const dispatch = useDispatch();
 
     let questionsList;
@@ -40,21 +43,48 @@ const QuestionList = () => {
         dispatch(allActions.customActions.selectedQuestion(quesionNo));
     };
 
-    const onSectionClick = async (sectionId) => {
+    const onSectionClick = async (sectionId, sectionNo) => {
         if (sectionId !== selectedSectionId) {
             const list = Object.values(questions);
             await axios.patch(
                 `/api/prepare/tests/${id}/sections/${selectedSectionId}`,
                 { questions: list }
             );
-
+            console.log("hiii");
             dispatch(allActions.customActions.selectedSectionId(sectionId));
+            dispatch(allActions.customActions.selectedSectionNo(sectionNo));
             dispatch({ type: EMPTY_QUESTIONS });
             dispatch(allActions.customActions.selectedQuestion(1));
         }
     };
 
-    console.log(selectedQuestion);
+    const onSectionExamClick = async (sectionId, sectionNo) => {
+        if (sectionId !== selectedSectionId) {
+            const answersObj = {
+                selectedSectionId,
+                selectedSectionNo,
+                answers,
+            };
+
+            const exam = await axios.patch(
+                `/api/prepare/tests/${id}/exams/${examId}`,
+
+                answersObj
+            );
+            // dispatch({ type: "FETCH_ANSWERS", payload: exam });
+
+            dispatch(allActions.customActions.selectedSectionId(sectionId));
+            dispatch(allActions.customActions.selectedSectionNo(sectionNo));
+            dispatch({ type: EMPTY_ANSWERS });
+            dispatch({ type: EMPTY_QUESTIONS });
+            dispatch(
+                allActions.answerActions.fetchAnwers(
+                    exam.data.answers[sectionNo]
+                )
+            );
+            dispatch(allActions.customActions.selectedQuestion(1));
+        }
+    };
 
     const onMapQuestions = () => {
         return questionsList.map((question) => {
@@ -66,7 +96,26 @@ const QuestionList = () => {
                     span={4}
                     onClick={() => onQuestionClick(question.questionNo)}
                 >
-                    <Button type="">{question.questionNo}</Button>
+                    <Badge
+                        status="success"
+                        dot={
+                            path && path.includes("tests")
+                                ? question.answer
+                                : answers[question.questionNo]
+                        }
+                    >
+                        <Button
+                            type={
+                                selectedQuestion === question.questionNo
+                                    ? "primary"
+                                    : ""
+                            }
+                        >
+                            {question.questionNo <= 9
+                                ? `0${question.questionNo}`
+                                : question.questionNo}
+                        </Button>
+                    </Badge>
                 </Col>
             );
         });
@@ -82,7 +131,19 @@ const QuestionList = () => {
                                 ? "primary"
                                 : ""
                         }
-                        onClick={() => onSectionClick(section.sectionId)}
+                        onClick={
+                            path && path.includes("tests")
+                                ? () =>
+                                      onSectionClick(
+                                          section.sectionId,
+                                          section.sectionNo
+                                      )
+                                : () =>
+                                      onSectionExamClick(
+                                          section.sectionId,
+                                          section.sectionNo
+                                      )
+                        }
                     >
                         {section.subject}
                     </Button>
@@ -95,20 +156,22 @@ const QuestionList = () => {
         <>
             <Card
                 bordered={false}
-                style={{
-                    margin: "1vh 0.5vh",
-                    overflowY: "auto",
-                    height: "52vh",
-                }}
+                className="question-list-card"
+                // style={{
+                //     margin: "1vh 0.5vh",
+                //     overflowY: "auto",
+                //     // height: "52vh",
+                // }}
             >
                 <Card
                     type="inner"
                     bordered={false}
-                    style={{
-                        padding: "2.5vh",
-                        background: "#f0efed",
-                        borderRadius: "6px",
-                    }}
+                    // style={{
+                    //     padding: "2.5vh",
+                    //     background: "#f0efed",
+                    //     borderRadius: "6px",
+                    // }}
+                    className="inner-card-padding-two"
                 >
                     <Row gutter={[16, 16]}>
                         {questionsList && onMapQuestions()}
@@ -194,10 +257,11 @@ const QuestionList = () => {
             </Card>
             <Card
                 bordered={false}
-                style={{
-                    margin: "1vh 0.5vh",
-                    overflowY: "auto",
-                }}
+                // style={{
+                //     margin: "1vh 0.5vh",
+                //     overflowY: "auto",
+                // }}
+                className="question-list-card"
             >
                 {/* <p>Card content</p>
                 <p>Card content</p>
@@ -206,11 +270,12 @@ const QuestionList = () => {
                 <Card
                     type="inner"
                     bordered={false}
-                    style={{
-                        padding: "2.5vh",
-                        background: "#f0efed",
-                        borderRadius: "6px",
-                    }}
+                    // style={{
+                    //     padding: "2.5vh",
+                    //     background: "#f0efed",
+                    //     borderRadius: "6px",
+                    // }}
+                    className="inner-card-padding-two"
                 >
                     <Row gutter={[8, 16]} style={{ overflow: "hidden" }}>
                         {sections && onMapSections()}

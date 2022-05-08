@@ -3,16 +3,18 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { Button } from "antd";
+import { Button, Tooltip } from "antd";
 import ModalCreate from "../ModalCreate";
 import { EDIT_TEST } from "../../../store/types";
 import { sectionSchema } from "../../../yupUtil";
 import allActions from "../../../store/actions";
 import SectionFormGroup from "./SectionFormGroup";
 
-const CreateSectionForm = () => {
+const CreateSectionForm = ({ length }) => {
     const router = useRouter();
     const { id } = router.query;
+
+    const { tests } = useSelector((state) => state);
 
     const dispatch = useDispatch();
 
@@ -24,29 +26,44 @@ const CreateSectionForm = () => {
         handleSubmit,
         control,
         formState: { errors, isDirty, isSubmitting },
+        setValue,
+        reset,
     } = useForm({
         mode: "onBlur",
         resolver: yupResolver(sectionSchema),
     });
 
     const onSubmit = async (data) => {
+        console.log(data);
         const res = await axios.post(`/api/prepare/tests/${id}/sections`, data);
         console.log(res.data.test);
         dispatch({ type: EDIT_TEST, payload: res.data.test });
         dispatch(allActions.customActions.visibleSectionNo());
+        reset({ subject: "", sectionDescription: "" });
         router.push(`/tests/${id}`);
     };
 
     const onHandleCancel = () => {
         console.log("Clicked cancel button");
         dispatch(allActions.customActions.visibleSectionNo());
+        reset({ subject: "", sectionDescription: "" });
     };
 
     return (
         <>
-            <Button type="primary" onClick={showSectionModal}>
-                Section
-            </Button>
+            <Tooltip
+                title={length >= 4 ? "Limit of 4 sections reached" : ""}
+                placement="bottom"
+                color="#05b523"
+            >
+                <Button
+                    type="primary"
+                    onClick={showSectionModal}
+                    disabled={length >= 4}
+                >
+                    Add Section
+                </Button>
+            </Tooltip>
             <ModalCreate
                 onOk={handleSubmit(onSubmit)}
                 handleCancel={onHandleCancel}
@@ -91,6 +108,8 @@ const CreateSectionForm = () => {
                         control={control}
                         errors={errors}
                         id={id}
+                        secNum={tests[id].sectionData.length + 1}
+                        setValue={setValue}
                     />
                 )}
             </ModalCreate>

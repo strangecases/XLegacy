@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import axios from "axios";
@@ -10,7 +10,6 @@ import allActions from "../../../store/actions";
 import CreateSectionForm from "../../../components/modal/modalSection/CreateSectionForm";
 import AdminRoute from "../../../components/routes/AdminRoute";
 import AdminIsAuthor from "../../../components/routes/AdminIsAuthor";
-import { FETCH_TEST } from "../../../store/types";
 import EditTestForm from "../../../components/modal/modalTest/EditTestForm";
 import DeleteTestForm from "../../../components/modal/modalTest/DeleteTestForm";
 import DeleteSectionForm from "../../../components/modal/modalSection/DeleteSectionForm";
@@ -23,31 +22,27 @@ const TestId = () => {
 
     const { tests } = useSelector((state) => state);
     const dispatch = useDispatch();
-    let test;
-    let testId;
-    if (id !== undefined) {
-        test = tests[id];
-        testId = id;
-    }
 
     useEffect(() => {
         if (id !== undefined) {
-            // const res = await axios.get(`/api/prepare/tests/${id}`);
             dispatch(allActions.testActions.fetchTest(id));
         }
-    }, [id, dispatch]);
+    }, [id, router.query]);
 
     const dispatchSelectedSection = (sectionId) => {
         dispatch(allActions.customActions.selectedSectionId(sectionId));
+        dispatch(allActions.customActions.selectedQuestion(1));
     };
 
-    const showPopConfirm = () => {
+    const showPopConfirm = (secNum, secId) => {
+        dispatch(allActions.customActions.selectedSectionNo(secNum));
+        dispatch(allActions.customActions.selectedSectionId(secId));
         dispatch(allActions.customActions.visibleDeleteSectionYes());
     };
 
     const renderButton = () => {
         return (
-            <Row>
+            <Row gutter={6}>
                 <Col span={16}>
                     <EditTestForm />
                 </Col>
@@ -59,91 +54,93 @@ const TestId = () => {
     };
 
     const renderSection = () => {
-        return test.sectionData.map((section) => {
-            return (
-                <Collapse key={section.sectionId}>
-                    <Panel header={section.subject} key={section.sectionId}>
-                        <Row>
-                            <Col span={20}>
-                                <p>{section.sectionDescription}</p>
-                            </Col>
-                            <Col span={4}>
-                                <Row
-                                    style={{
-                                        textAlign: "right",
-                                    }}
-                                >
-                                    <Col span={18}>
-                                        <Link
-                                            href={`/tests/${testId}/sections`}
-                                            passHref
-                                            style={{
-                                                height: 0,
-                                                lineHeight: 0,
-                                                verticalAlign: 0,
-                                            }}
-                                        >
-                                            <Button
-                                                onClick={() =>
-                                                    dispatchSelectedSection(
-                                                        section.sectionId
-                                                    )
-                                                }
-                                                style={{ border: "none" }}
-                                                shape="circle"
-                                                // onClick={showTestModal}
-                                                icon={
+        return (
+            tests[id] &&
+            tests[id].sectionData.map((section) => {
+                return (
+                    <Collapse key={section.sectionId}>
+                        <Panel header={section.subject} key={section.sectionId}>
+                            <Row>
+                                <Col span={20}>
+                                    <p>{section.sectionDescription}</p>
+                                </Col>
+                                <Col span={4}>
+                                    <Row
+                                        style={{
+                                            textAlign: "right",
+                                        }}
+                                        gutter={10}
+                                    >
+                                        <Col span={18}>
+                                            <Link
+                                                href={`/tests/${id}/sections`}
+                                                passHref
+                                                style={{
+                                                    height: 0,
+                                                    lineHeight: 0,
+                                                    verticalAlign: 0,
+                                                }}
+                                            >
+                                                <Tooltip
+                                                    title="Edit Section"
+                                                    placement="topRight"
+                                                    color="#4287f5"
+                                                >
                                                     <RightCircleFilled
-                                                        style={{
-                                                            fontSize: 20,
-                                                            color: "#0755f0",
-                                                            top: 0,
-                                                        }}
+                                                        onClick={() =>
+                                                            dispatchSelectedSection(
+                                                                section.sectionId
+                                                            )
+                                                        }
+                                                        // style={{
+                                                        //     fontSize: 20,
+                                                        //     color: "#0755f0",
+                                                        //     top: 0,
+                                                        // }}
+                                                        className="hover-icon-edit test-submit-delete"
+                                                        // className="hover-icon-delete-edit test-submit-delete-edit"
                                                     />
-                                                }
-                                                size="small"
-                                            />
-                                        </Link>
-                                    </Col>
-                                    <Col span={6}>
-                                        <Tooltip
-                                            title="Delete Section"
-                                            placement="topLeft"
-                                            color="red"
-                                        >
-                                            <Button
-                                                style={{ borderStyle: "none" }}
-                                                shape="circle"
-                                                onClick={showPopConfirm}
-                                                icon={
-                                                    <CloseCircleFilled
-                                                        style={{
-                                                            fontSize: 20,
-                                                            color: "#939090",
-                                                            paddingTop: 5,
-                                                        }}
-                                                        className="hover-icon-delete"
-                                                    />
-                                                }
-                                                size="small"
-                                            />
-                                        </Tooltip>
-                                        <DeleteSectionForm section={section} />
-                                    </Col>
-                                </Row>
-                            </Col>
-                        </Row>
-                    </Panel>
-                </Collapse>
-            );
-        });
+                                                </Tooltip>
+                                            </Link>
+                                        </Col>
+                                        <Col span={6}>
+                                            <Tooltip
+                                                title="Delete Section"
+                                                placement="topLeft"
+                                                color="red"
+                                            >
+                                                <CloseCircleFilled
+                                                    onClick={() =>
+                                                        showPopConfirm(
+                                                            section.sectionNo,
+                                                            section.sectionId
+                                                        )
+                                                    }
+                                                    // style={{
+                                                    //     fontSize: 20,
+                                                    //     color: "#939090",
+                                                    //     paddingTop: 5,
+                                                    // }}
+                                                    className="hover-icon-delete test-submit-delete"
+                                                />
+                                            </Tooltip>
+                                            <DeleteSectionForm />
+                                        </Col>
+                                    </Row>
+                                </Col>
+                            </Row>
+                        </Panel>
+                    </Collapse>
+                );
+            })
+        );
     };
 
     const renderTest = () => {
         return (
             <Card
-                title={test.testTitle}
-                key={test._id}
+                title={tests[id].testTitle}
+                key={tests[id]._id}
                 extra={renderButton()}
                 style={{ marginBottom: 20 }}
             >
@@ -158,7 +155,7 @@ const TestId = () => {
         );
     };
 
-    return test === undefined ? (
+    return tests[id] === undefined ? (
         <div>{}</div>
     ) : (
         <AdminRoute>
@@ -167,7 +164,9 @@ const TestId = () => {
                     <Row>
                         <Col span={20}>{renderTest()}</Col>
                         <Col span={4} style={{ textAlign: "center" }}>
-                            <CreateSectionForm />
+                            <CreateSectionForm
+                                length={tests[id].sectionData.length}
+                            />
                         </Col>
                     </Row>
                 </div>

@@ -10,6 +10,7 @@ export const requireSignin = expressJwt({
 
 export const arrayLimitForSection = async (req, res, next) => {
     const test = await Test.findById(req.params.id, "sectionData sections");
+    console.log(req.params.id);
     console.log(test);
     if (test.sectionData.length >= 4 && test.sections.length >= 4) {
         throw new ExpressError("only 4 sections can be added to a test", 400);

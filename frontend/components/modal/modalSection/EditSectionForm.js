@@ -49,12 +49,11 @@ const EditSectionForm = ({ section }) => {
     }, [section]);
 
     const onSubmit = async (data) => {
-        const res = await axios.post(
+        const res = await axios.patch(
             `/api/prepare/tests/${id}/sections/${selectedSectionId}`,
             data
         );
         console.log(res.data.test);
-        dispatch({ type: EDIT_TEST, payload: res.data.test });
         dispatch(allActions.customActions.visibleSectionNo());
         router.push(`/tests/${id}/sections`);
     };

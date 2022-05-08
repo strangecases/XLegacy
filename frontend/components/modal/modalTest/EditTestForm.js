@@ -59,16 +59,10 @@ const EditTestForm = () => {
     return (
         <>
             <Tooltip placement="topRight" title="Edit Test" color="#108ee7">
-                <Button
-                    style={{ borderStyle: "none" }}
-                    shape="circle"
+                <PlusCircleFilled
                     onClick={showTestModal}
-                    icon={
-                        <PlusCircleFilled
-                            style={{ fontSize: 20, color: "#20f540" }}
-                        />
-                    }
-                    size="small"
+                    // style={{ fontSize: 20, color: "#20f540" }}
+                    className="hover-icon-edit-test test-submit-delete"
                 />
             </Tooltip>
             <ModalCreate

@@ -52,7 +52,7 @@ const TestId = () => {
                     <Col span={20}>{renderTests()}</Col>
                     <Col span={4} style={{ textAlign: "center" }}>
                         <Button type="primary" onClick={showModal}>
-                            section
+                            Add Test
                         </Button>
                         <CreateTestForm />
                     </Col>

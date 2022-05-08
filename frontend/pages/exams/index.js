@@ -22,7 +22,7 @@ const Exams = () => {
         return tests.map((test) => {
             return (
                 <Col key={test._id} xs={24} md={12} lg={8}>
-                    <Link href={`/exams/${test._id}`} passHref>
+                    <Link href={`/exams/${test._id}/info`} passHref>
                         <Card
                             title={test.testTitle}
                             hoverable
@@ -41,7 +41,7 @@ const Exams = () => {
         <Layout style={{ height: "100vh" }}>
             <Row
                 gutter={[16, 24]}
-                justify="space-between"
+                justify=""
                 style={{ margin: "0 3vh", overflow: "none", paddingTop: 20 }}
             >
                 {onRenderTests()}
