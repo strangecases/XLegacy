@@ -1,12 +1,22 @@
 import { Controller } from "react-hook-form";
-import { Card, Col, Form, Input, Row, Button, Divider, Tooltip } from "antd";
+import {
+    Card,
+    Col,
+    Form,
+    Input,
+    Row,
+    Button,
+    Divider,
+    Tooltip,
+    Popconfirm,
+} from "antd";
 import {
     PlusCircleFilled,
-    PlusSquareFilled,
     MinusCircleOutlined,
     SyncOutlined,
 } from "@ant-design/icons";
-import FormItem from "../FormItem";
+import { useEffect, useState } from "react";
+import FormItem from "../formitems/FormItem";
 import ClassGroup from "./ClassGroup";
 
 const SchoolForm = ({
@@ -17,9 +27,24 @@ const SchoolForm = ({
     fields,
     isDirty = false,
     isSubmitting = false,
+    path = "",
 }) => {
+    const [appe, setAppe] = useState(false);
+    useEffect(() => {
+        window.scrollTo({
+            left: 0,
+            top: document.body.scrollHeight,
+            behavior: "smooth",
+        });
+    }, [appe]);
+
+    const appending = () => {
+        append({});
+        setAppe((prev) => !prev);
+    };
+
     return (
-        <>
+        <div id="scroll">
             <Card>
                 <Row>
                     <Col span={24}>
@@ -30,6 +55,8 @@ const SchoolForm = ({
                             type="text"
                             placeholder="school name"
                             label="School Name"
+                            labelColmn={7}
+                            wrapperColmn={17}
                         />
                     </Col>
                     <Col span={24}>
@@ -40,6 +67,33 @@ const SchoolForm = ({
                             type="text"
                             placeholder="school code"
                             label="School Code"
+                            labelColmn={7}
+                            wrapperColmn={17}
+                        />
+                    </Col>
+                    <Col span={24}>
+                        <FormItem
+                            name="schoolPhNo"
+                            control={control}
+                            errors={errors}
+                            type="text"
+                            placeholder="school phone number"
+                            label="School Phone No"
+                            labelColmn={7}
+                            wrapperColmn={17}
+                        />
+                    </Col>
+                    <Col span={24}>
+                        <FormItem
+                            name="schoolAddress"
+                            control={control}
+                            errors={errors}
+                            type="text"
+                            placeholder="school address"
+                            label="School Address"
+                            labelColmn={7}
+                            wrapperColmn={17}
+                            resize={false}
                         />
                     </Col>
                 </Row>
@@ -74,6 +128,7 @@ const SchoolForm = ({
                                         control={control}
                                         render={({ field }) => (
                                             <Input
+                                                onWheel={(e) => e.target.blur()}
                                                 type="number"
                                                 {...field}
                                                 placeholder="class number (5,6,7...)"
@@ -83,10 +138,24 @@ const SchoolForm = ({
                                 </Form.Item>
                             </Col>
                             <Col span={4}>
-                                <MinusCircleOutlined
-                                    onClick={() => remove(index)}
-                                    className="hover-icon-delete test-submit-delete"
-                                />
+                                <Popconfirm
+                                    placement={
+                                        path === "edit" ? "top" : "right"
+                                    }
+                                    title={
+                                        path === "edit"
+                                            ? `Are you sure? This will delete all the tests you created under this class`
+                                            : `Are you sure?`
+                                    }
+                                    okText="Yes"
+                                    cancelText="No"
+                                    onConfirm={() => remove(index)}
+                                >
+                                    <MinusCircleOutlined
+                                        // onClick={() => remove(index)}
+                                        className="hover-icon-delete test-submit-delete"
+                                    />
+                                </Popconfirm>
                             </Col>
                             <Col offset={3} span={17}>
                                 <ClassGroup
@@ -112,7 +181,7 @@ const SchoolForm = ({
                         >
                             <PlusCircleFilled
                                 className="hover-icon-submit test-submit-delete"
-                                onClick={() => append({})}
+                                onClick={appending}
                             />
                         </Tooltip>
                     </Col>
@@ -128,7 +197,7 @@ const SchoolForm = ({
                     {console.log(isSubmitting, isDirty)}
                 </Row>
             </Card>
-        </>
+        </div>
     );
 };
 

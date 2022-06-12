@@ -12,12 +12,12 @@ import catchAsync from "../utils/catchAsync.js";
 const router = express.Router();
 
 router
-    .route("/:id/sections")
+    .route("/:testId/sections")
     .get(catchAsync(index))
     .post(catchAsync(arrayLimitForSection), catchAsync(createSection));
 
 router
-    .route("/:id/sections/:sectionId")
+    .route("/:testId/sections/:sectionId")
     .get(catchAsync(showSection))
     .patch(catchAsync(editSection))
     .delete(catchAsync(deleteSection));

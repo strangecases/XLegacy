@@ -7,23 +7,35 @@ import {
     currentAdmin,
     // sendTestEmail,
     forgotPassword,
+    editAdmin,
     resetPassword,
     adminIsAuthor,
 } from "../controllers/auth.js";
 
 // middleware
-import { requireSignin, isAuthor } from "../middlewares/index.js";
+import {
+    requireSignin,
+    isTestAuthor,
+    isSchoolAdmin,
+} from "../middlewares/index.js";
 
 const router = express.Router();
 
 router.post("/register", catchAsync(register));
+router.patch("/register/:registerId", catchAsync(editAdmin));
 router.post("/login", catchAsync(login));
 router.get("/logout", catchAsync(logout));
 router.get("/current-admin", requireSignin, catchAsync(currentAdmin));
 router.get(
-    "/admin-is-author/:id",
+    "/admin-is-author/:testId",
     requireSignin,
-    catchAsync(isAuthor),
+    catchAsync(isTestAuthor),
+    catchAsync(adminIsAuthor)
+);
+router.get(
+    "/admin-is-school-admin/:id",
+    requireSignin,
+    catchAsync(isSchoolAdmin),
     catchAsync(adminIsAuthor)
 );
 router.post("/forgot-password", catchAsync(forgotPassword));

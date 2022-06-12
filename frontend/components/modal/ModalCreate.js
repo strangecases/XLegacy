@@ -16,7 +16,7 @@ const ModalCreateTest = ({
         modalSectionVisible,
         popTestVisible,
         popSectionVisible,
-    } = useSelector((state) => state.custom);
+    } = useSelector((state) => state.modals);
 
     let visible = false;
 
@@ -34,7 +34,7 @@ const ModalCreateTest = ({
 
     // const handleCancel = () => {
     //     console.log("Clicked cancel button");
-    //     dispatch(allActions.customActions.visibleNo());
+    //     dispatch(allActions.modalActions.visibleNo());
     // };
     return (
         <Modal

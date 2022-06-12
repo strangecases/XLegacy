@@ -1,53 +1,5 @@
 import * as types from "../types";
 
-const visibleTestYes = () => {
-    return {
-        type: types.VISIBLE_TEST_YES,
-    };
-};
-
-const visibleTestNo = () => {
-    return {
-        type: types.VISIBLE_TEST_NO,
-    };
-};
-
-const visibleSectionYes = () => {
-    return {
-        type: types.VISIBLE_SECTION_YES,
-    };
-};
-
-const visibleSectionNo = () => {
-    return {
-        type: types.VISIBLE_SECTION_NO,
-    };
-};
-
-const visibleDeleteTestYes = () => {
-    return {
-        type: types.VISIBLE_DELETE_TEST_YES,
-    };
-};
-
-const visibleDeleteTestNo = () => {
-    return {
-        type: types.VISIBLE_DELETE_TEST_NO,
-    };
-};
-
-const visibleDeleteSectionYes = () => {
-    return {
-        type: types.VISIBLE_DELETE_SECTION_YES,
-    };
-};
-
-const visibleDeleteSectionNo = () => {
-    return {
-        type: types.VISIBLE_DELETE_SECTION_NO,
-    };
-};
-
 const selectedSectionId = (id) => {
     return {
         type: types.SELECTED_SECTION_ID,
@@ -69,26 +21,42 @@ const selectedSectionNo = (sectionNo) => {
     };
 };
 
-const examId = (id) => {
+const totalTests = (total) => {
     return {
-        type: types.EXAM_ID,
-        payload: id,
+        type: types.TOTAL_TESTS,
+        payload: total,
+    };
+};
+
+const selectedClass = (classNo) => {
+    return {
+        type: types.SELECTED_CLASS,
+        payload: classNo,
+    };
+};
+
+const examSaved = (val) => {
+    return {
+        type: types.EXAM_SAVED,
+        payload: val,
+    };
+};
+
+const examSuccess = (msg) => {
+    return {
+        type: types.EXAM_SUCCESS,
+        payload: msg,
     };
 };
 
 const customActions = {
-    visibleTestYes,
-    visibleTestNo,
-    visibleSectionYes,
-    visibleSectionNo,
-    visibleDeleteTestYes,
-    visibleDeleteTestNo,
-    visibleDeleteSectionYes,
-    visibleDeleteSectionNo,
     selectedSectionId,
     selectedQuestion,
     selectedSectionNo,
-    examId,
+    totalTests,
+    selectedClass,
+    examSaved,
+    examSuccess,
 };
 
 export default customActions;

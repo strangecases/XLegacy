@@ -5,6 +5,8 @@ import customizeReducer from "./customizeReducer";
 import questionReducer from "./questionReducer";
 import answerReducer from "./answerReducer";
 import examReducer from "./examReducer";
+import schoolReducer from "./schoolReducer";
+import modalReducer from "./modalReducer";
 
 const rootReducer = combineReducers({
     auth: authReducer,
@@ -13,6 +15,8 @@ const rootReducer = combineReducers({
     questions: questionReducer,
     answers: answerReducer,
     exam: examReducer,
+    schools: schoolReducer,
+    modals: modalReducer,
 });
 
 export default rootReducer;

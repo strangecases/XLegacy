@@ -16,18 +16,18 @@ const EditTestForm = () => {
     const { tests } = useSelector((state) => state);
 
     const router = useRouter();
-    const { id } = router.query;
+    const { id, testId } = router.query;
     // console.log(router.pathname);
 
     const dispatch = useDispatch();
 
     const showTestModal = () => {
-        dispatch(allActions.customActions.visibleTestYes());
+        dispatch(allActions.modalActions.visibleTestYes());
     };
 
     let defaultValues;
-    if (id !== undefined) {
-        const { testTitle, testCode, classNo, testTime } = tests[id];
+    if (testId !== undefined) {
+        const { testTitle, testCode, classNo, testTime } = tests[testId];
         defaultValues = { testTitle, testCode, classNo, testTime };
     }
 
@@ -44,21 +44,21 @@ const EditTestForm = () => {
     const onEditSubmit = async (data) => {
         const x = { ...data };
         console.log(x);
-        const res = await axios.patch(`/api/prepare/tests/${id}`, x);
+        const res = await axios.patch(`/api/schools/${id}/tests/${testId}`, x);
         console.log(res.data);
-        await dispatch({ type: EDIT_TEST, payload: res.data.test });
-        await dispatch(allActions.customActions.visibleTestNo());
-        router.push(`/tests/${id}`);
+        dispatch({ type: EDIT_TEST, payload: res.data.test });
+        dispatch(allActions.modalActions.visibleTestNo());
+        router.push(`/schools/${id}/tests/${testId}`);
     };
 
     const onHandleCancel = () => {
         console.log("Clicked cancel button");
-        dispatch(allActions.customActions.visibleTestNo());
+        dispatch(allActions.modalActions.visibleTestNo());
     };
 
     return (
         <>
-            <Tooltip placement="topRight" title="Edit Test" color="#108ee7">
+            <Tooltip placement="left" title="Edit Test" color="#108ee7">
                 <PlusCircleFilled
                     onClick={showTestModal}
                     // style={{ fontSize: 20, color: "#20f540" }}
@@ -69,7 +69,7 @@ const EditTestForm = () => {
                 onOk={handleSubmit(onEditSubmit)}
                 isDirty={isDirty}
                 isSubmitting={isSubmitting}
-                title="Create Test"
+                title="Edit Test"
                 handleCancel={onHandleCancel}
             >
                 {/* <div className="container col-md-10 offset-md-1">
@@ -110,7 +110,7 @@ const EditTestForm = () => {
                     </Link>
                 </p>
             </div> */}
-                <TestFormGroup control={control} errors={errors} />
+                <TestFormGroup control={control} errors={errors} path="edit" />
             </ModalCreate>
         </>
     );

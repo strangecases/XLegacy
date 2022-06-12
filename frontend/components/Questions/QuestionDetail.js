@@ -9,7 +9,6 @@ import {
     Input,
     Col,
     Tooltip,
-    message,
 } from "antd";
 import {
     CloseCircleFilled,
@@ -17,20 +16,21 @@ import {
     LeftOutlined,
     CheckCircleFilled,
 } from "@ant-design/icons";
-import { Controller, set, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import FormItem from "../FormItem";
+import FormItem from "../formitems/FormItem";
 import { questionSchema } from "../../yupUtil";
 import allActions from "../../store/actions";
 import DeleteSectionForm from "../modal/modalSection/DeleteSectionForm";
 import EditSectionForm from "../modal/modalSection/EditSectionForm";
 import styles from "../../styles/modules/TopNav.module.css";
-import FormOption from "../FormOption";
+import FormOption from "../formitems/FormOption";
+import SegmentedSections from "./SegmentedSections";
 
 const QuestionDetail = () => {
     const { selectedQuestion, selectedSectionId } = useSelector(
@@ -40,13 +40,13 @@ const QuestionDetail = () => {
     const { questions } = useSelector((state) => state);
 
     const router = useRouter();
-    const { id } = router.query;
+    const { id, testId } = router.query;
 
     const dispatch = useDispatch();
 
     let section;
-    if (id && tests[id]) {
-        section = tests[id].sectionData.find((x) => {
+    if (testId && tests[testId]) {
+        section = tests[testId].sectionData.find((x) => {
             return x.sectionId === selectedSectionId;
         });
     }
@@ -179,25 +179,39 @@ const QuestionDetail = () => {
         }
     };
 
-    const onSave = async () => {
+    const onSave = async (publish) => {
         const questionsList = Object.values(questions);
-        await axios.patch(
-            `/api/prepare/tests/${id}/sections/${selectedSectionId}`,
-            { questions: questionsList }
-        );
-        toast.success("hii", {
-            hideProgressBar: true,
-            autoClose: 1200,
-        });
+
+        if (!publish) {
+            await axios.patch(
+                `/api/tests/${testId}/sections/${selectedSectionId}`,
+                { questions: questionsList }
+            );
+            toast.success("Saved", {
+                hideProgressBar: true,
+                autoClose: 1200,
+            });
+        } else {
+            await axios.patch(
+                `/api/tests/${testId}/sections/${selectedSectionId}`,
+                { questions: questionsList, isPublished: publish }
+            );
+            toast.success("Published", {
+                hideProgressBar: true,
+                autoClose: 1200,
+            });
+            router.push(`/schools/${id}/tests/${testId}`);
+        }
     };
 
     const showPopConfirm = () => {
-        dispatch(allActions.customActions.visibleDeleteSectionYes());
+        dispatch(allActions.modalActions.visibleDeleteSectionYes());
     };
 
     return (
         <>
-            {console.log("ree render")}
+            <SegmentedSections />
+
             <Card
                 bordered={false}
                 // style={{
@@ -206,6 +220,7 @@ const QuestionDetail = () => {
                 // }}
             >
                 <Card
+                    style={{ overflow: "hidden" }}
                     type="inner"
                     bordered={false}
                     // style={{
@@ -269,10 +284,9 @@ const QuestionDetail = () => {
                                         >
                                             <CheckCircleFilled
                                                 onClick={handleSubmit(onSubmit)}
-                                                // style={{
-                                                //     fontSize: 20,
-                                                //     color: "#939090",
-                                                // }}
+                                                style={{
+                                                    verticalAlign: "-0.2em",
+                                                }}
                                                 className="hover-icon-submit test-submit-delete"
                                             />
                                         </Tooltip>
@@ -292,10 +306,9 @@ const QuestionDetail = () => {
                                         >
                                             <CloseCircleFilled
                                                 onClick={onDeleteQuestion}
-                                                // style={{
-                                                //     fontSize: 20,
-                                                //     color: "#939090",
-                                                // }}
+                                                style={{
+                                                    verticalAlign: "-0.2em",
+                                                }}
                                                 className="hover-icon-delete test-submit-delete"
                                             />
                                         </Tooltip>
@@ -553,26 +566,45 @@ const QuestionDetail = () => {
                     // }}
                     className="inner-card-padding"
                 >
-                    <Row>
+                    <Row gutter={[8, 16]} style={{ overflow: "hidden" }}>
                         <Col
-                            xs={{ span: 7, offset: 1 }}
-                            lg={{ span: 5, offset: 1 }}
+                            xs={{ span: 24, offset: 1 }}
+                            sm={{ span: 9, offset: 0 }}
+                            md={{ span: 10, offset: 0 }}
+                            lg={{ span: 8, offset: 1 }}
+                            xl={{ span: 8, offset: 1 }}
                         >
-                            <Button type="primary" onClick={onSave}>
-                                save
-                            </Button>
+                            <Space size={[16, 12]} wrap>
+                                <Button
+                                    type="primary"
+                                    onClick={() => onSave(false)}
+                                >
+                                    save
+                                </Button>
+                                {tests && !tests[testId]?.isPublished && (
+                                    <Button onClick={() => onSave(true)}>
+                                        publish
+                                    </Button>
+                                )}
+                            </Space>
                         </Col>
+
                         <Col
-                            xs={{ span: 7, offset: 1 }}
-                            lg={{ span: 3, offset: 8 }}
+                            xs={{ span: 24, offset: 1 }}
+                            sm={{ span: 14, offset: 1 }}
+                            md={{ span: 14, offset: 0 }}
+                            lg={{ span: 12, offset: 3 }}
+                            xl={{ span: 10, offset: 5 }}
                         >
-                            {section && <EditSectionForm section={section} />}
-                        </Col>
-                        <Col xs={{ span: 7, offset: 1 }} lg={{ span: 3 }}>
-                            <Button onClick={showPopConfirm} danger>
-                                Delete Section
-                            </Button>
-                            <DeleteSectionForm />
+                            <Space size={[16, 12]} wrap>
+                                {section && (
+                                    <EditSectionForm section={section} />
+                                )}
+                                <Button onClick={showPopConfirm} danger>
+                                    Delete Section
+                                </Button>
+                                <DeleteSectionForm />
+                            </Space>
                         </Col>
                     </Row>
                 </Card>

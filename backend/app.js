@@ -12,6 +12,7 @@ import test from "./routes/test.js";
 import section from "./routes/section.js";
 import auth from "./routes/auth.js";
 import exam from "./routes/exam.js";
+import school from "./routes/school.js";
 
 connectDB();
 
@@ -31,9 +32,10 @@ app.use(morgan("dev"));
 // routes
 
 app.use("/api", auth);
-app.use("/api/prepare/tests", test);
-app.use("/api/prepare/tests", section);
-app.use("/api/prepare/tests/:id/exams", exam);
+app.use("/api/schools", school);
+app.use("/api/schools", test);
+app.use("/api/tests", section);
+app.use("/api/schools", exam);
 
 // csrf
 const csrfProtection = csrf({ cookie: true });

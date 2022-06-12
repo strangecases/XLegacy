@@ -1,30 +1,108 @@
+html,
+body {
+    font-family: "Montserrat", "Roboto", sans-serif;
+    font-weight: 400;
+    /* overflow-x: hidden !important; */
+}
 html {
     font-size: 20px !important;
 }
 
-html::-webkit-scrollbar {
+::-webkit-scrollbar {
     width: 0.6vw;
+    height: 0.4vh;
     background-color: #f5f5f5;
 }
 
-html::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
     background-color: #585757;
     border-radius: 4px;
 }
 
-html::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
     background-color: #282626;
     border-radius: 4px;
 }
 
-html::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
     background-color: #f5f5f5;
     border-radius: 4px;
 }
 
-body {
-    font-family: "Roboto" !important;
-    font-weight: 400 !important;
+@supports (scrollbar-color: red blue) {
+    * {
+        scrollbar-color: #585757 #f5f5f5;
+        scrollbar-width: thin;
+    }
+}
+
+/* body::-webkit-scrollbar {
+    width: 0.6vw;
+    height: 0.4vh;
+    background-color: #f5f5f5;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: #585757;
+    border-radius: 4px;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+    background-color: #282626;
+    border-radius: 4px;
+}
+
+body::-webkit-scrollbar-track {
+    background-color: #f5f5f5;
+    border-radius: 4px;
+} */
+
+.ant-table-body::-webkit-scrollbar {
+    height: 1vh;
+    width: 0.5vw;
+    background-color: #f5f5f5;
+}
+
+.ant-table-body::-webkit-scrollbar-thumb {
+    background-color: #585757;
+    border-radius: 4px;
+}
+.ant-table-body::-webkit-scrollbar-thumb:hover {
+    background-color: #282626;
+    border-radius: 4px;
+}
+.ant-table-body::-webkit-scrollbar-track {
+    background-color: #f5f5f5;
+    border-radius: 4px;
+}
+
+.ant-card::-webkit-scrollbar {
+    height: 1vh;
+    width: 0.4vw;
+    background-color: #f5f5f5;
+}
+
+.ant-card::-webkit-scrollbar-thumb {
+    background-color: #848181;
+    border-radius: 4px;
+}
+.ant-card::-webkit-scrollbar-thumb:hover {
+    background-color: #585757;
+    border-radius: 4px;
+}
+.ant-card::-webkit-scrollbar-track {
+    background-color: #f5f5f5;
+    border-radius: 4px;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+li {
+    margin-bottom: 5px;
 }
 
 #components-layout-demo-fixed-sider .logo {
@@ -67,8 +145,23 @@ body {
     margin: 5px;
 }
 
+.inner-card-padding-small .ant-card-body {
+    padding: 6px;
+    margin: 5px;
+}
+
+.inner-card-padding-small-marginbottom .ant-card-body {
+    padding: 14px 6px 0px 6px;
+    margin: 6px 0px 0px 0px;
+}
+
 .ant-card-body .ant-card .ant-card-body {
     padding: 14px;
+    margin: 5px;
+}
+
+.ant-card-body .inner-card-padding-small .ant-card-body {
+    padding: 3px;
     margin: 5px;
 }
 
@@ -99,6 +192,13 @@ body {
     overflow: hidden;
     border-radius: 0;
 }
+.ant-card .ant-card-body .exam-result-inner-card {
+    padding: 0;
+    margin: 0;
+    background: #f4f5ec;
+    overflow: hidden;
+    border-radius: 8px;
+}
 
 .ant-col .ant-card .option-card {
     padding: 0;
@@ -107,7 +207,7 @@ body {
 }
 
 .ant-radio-wrapper {
-    width: 30vw;
+    width: 34vw;
 }
 
 .ant-col .test-submit-delete {
@@ -123,6 +223,15 @@ body {
 .ant-col .test-submit-delete-edit {
     font-size: 22px;
     color: rgb(147, 144, 144);
+}
+
+.ant-col .school-submit-delete {
+    font-size: 26px;
+    color: rgb(147, 144, 144);
+}
+
+.ant-col .school-submit-delete:hover {
+    color: rgb(123, 143, 240);
 }
 
 .ant-col .hover-icon-submit:hover {
@@ -160,6 +269,19 @@ body {
     color: #20f540;
 }
 
+.ant-col .ant-form-inline .inline-form {
+    margin-bottom: 0;
+}
+
+.ant-card .ant-card-body .inner-divider {
+    margin: 4px 0;
+    color: black;
+}
+
+.ant-message .ant-message-notice-content .anticon {
+    top: -2px;
+}
+
 @media only screen and (max-width: 520px) {
     .display-register {
         display: none !important;
@@ -169,5 +291,9 @@ body {
 @media only screen and (max-width: 767px) {
     .display-question-bar {
         display: none !important;
+    }
+    .segmentedAnt {
+        display: flex !important;
+        justify-content: center !important;
     }
 }

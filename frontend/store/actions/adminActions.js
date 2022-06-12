@@ -13,9 +13,17 @@ const logOut = () => {
     };
 };
 
+const editAdmin = (admin) => {
+    return {
+        type: types.LOGIN,
+        payload: admin,
+    };
+};
+
 const adminActions = {
     logIn,
     logOut,
+    editAdmin,
 };
 
 export default adminActions;

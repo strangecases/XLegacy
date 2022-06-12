@@ -13,7 +13,7 @@ export const testSchema = yup.object().shape({
     classNo: yup
         .number()
         .typeError("class number must be a number")
-        .min(6, "tests start with class 6")
+        .min(1, "tests start with class 1")
         .max(12, "tests end with class 12")
         .required("class number is required"),
     testCode: yup.string().required("test code is required"),
@@ -100,11 +100,10 @@ export const examSchema = yup
     .shape({
         studentName: yup.string().required("name is required"),
         schoolCode: yup.string().required("school code is required"),
-        classNo: yup
-            .number()
-            .min(1, "class number can start with 1")
-            .max(12, "class number can not be more than 12")
-            .required("password is required"),
+        parentsPhNo: yup
+            .string()
+            .matches(/^$|^\d{10}$/, "not a valid phone no"),
+        classNo: yup.number(),
         classGroup: yup.string(),
     })
     .required();
@@ -118,6 +117,8 @@ export const schoolSchema = yup.object().shape({
         .string()
         .max(10, "school code should be maximum 10 characters long")
         .required("school code is required"),
+    schoolPhNo: yup.string().matches(/^$|^\d{10}$/, "not a valid phone no"),
+    schoolAddress: yup.string(),
     classes: yup.array().of(
         yup
             .object()
@@ -135,3 +136,67 @@ export const schoolSchema = yup.object().shape({
             .required("class number is required")
     ),
 });
+
+export const addOtherTestSchema = yup.object().shape({
+    link: yup
+        .string()
+        .matches(
+            /^http:\/\/\w+(\.\w+)*(:[0-9]+)?\/?(\/schools\/[.\w]*\/exams\/[.\w]*\/info)*$/,
+            "Enter a valid url"
+        )
+        .required("Link is required"),
+});
+
+export const adminDetailsEditSchema = yup.object().shape({
+    email: yup
+        .string()
+        .email("email format is wrong")
+        .required("email is required"),
+    name: yup.string().required("name is required"),
+    password: yup.string(),
+    newPassword: yup.string().when("password", {
+        is: (password = "") => password.length >= 6,
+        then: yup
+            .string()
+            .min(6, "password should be minimum 6 characters long")
+            .required("password required"),
+        otherwise: yup.string(),
+    }),
+    confirmPassword: yup
+        .string()
+        .when("password", {
+            is: (password = "") => password.length >= 6,
+            then: yup
+                .string()
+                .min(6, "password should be minimum 6 characters long")
+                .required("password required"),
+            otherwise: yup.string(),
+        })
+        .oneOf([yup.ref("newPassword"), null], "Passwords must match"),
+});
+
+export const resetPasswordSchema = yup
+    .object()
+    .shape({
+        email: yup
+            .string()
+            .email("email format is wrong")
+            .required("email is required"),
+        code: yup.string().required("Six digit code sent to your mail"),
+        newPassword: yup
+            .string()
+            .min(6, "password should be minimum 6 characters long")
+            .max(16)
+            .required("password is required"),
+    })
+    .required();
+
+export const forgotPasswordSchema = yup
+    .object()
+    .shape({
+        email: yup
+            .string()
+            .email("email format is wrong")
+            .required("email is required"),
+    })
+    .required();

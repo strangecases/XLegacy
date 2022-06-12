@@ -1,14 +1,14 @@
-import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
-import { Row, Col, Card, Button, Badge } from "antd";
+import { Row, Col, Card, Button, Badge, Space } from "antd";
+import { useEffect } from "react";
 import allActions from "../../store/actions";
 import { EMPTY_ANSWERS, EMPTY_QUESTIONS } from "../../store/types";
 
 const QuestionList = () => {
     const router = useRouter();
-    const { id } = router.query;
+    const { id, testId } = router.query;
     const path = router.pathname;
 
     const { tests } = useSelector((state) => state);
@@ -31,8 +31,8 @@ const QuestionList = () => {
     //     console.log(questionsList);
     // }, [questions]);
 
-    if (id !== null && tests[id]) {
-        sections = tests[id].sectionData;
+    if (testId !== null && tests[testId]) {
+        sections = tests[testId].sectionData;
     }
 
     if (questions) {
@@ -47,42 +47,49 @@ const QuestionList = () => {
         if (sectionId !== selectedSectionId) {
             const list = Object.values(questions);
             await axios.patch(
-                `/api/prepare/tests/${id}/sections/${selectedSectionId}`,
+                `/api/tests/${testId}/sections/${selectedSectionId}`,
                 { questions: list }
             );
             console.log("hiii");
             dispatch(allActions.customActions.selectedSectionId(sectionId));
             dispatch(allActions.customActions.selectedSectionNo(sectionNo));
-            dispatch({ type: EMPTY_QUESTIONS });
+            dispatch(allActions.questionActions.emptyQuestions());
             dispatch(allActions.customActions.selectedQuestion(1));
         }
     };
 
     const onSectionExamClick = async (sectionId, sectionNo) => {
         if (sectionId !== selectedSectionId) {
-            const answersObj = {
-                selectedSectionId,
-                selectedSectionNo,
-                answers,
-            };
-
-            const exam = await axios.patch(
-                `/api/prepare/tests/${id}/exams/${examId}`,
-
-                answersObj
-            );
-            // dispatch({ type: "FETCH_ANSWERS", payload: exam });
-
-            dispatch(allActions.customActions.selectedSectionId(sectionId));
-            dispatch(allActions.customActions.selectedSectionNo(sectionNo));
-            dispatch({ type: EMPTY_ANSWERS });
-            dispatch({ type: EMPTY_QUESTIONS });
             dispatch(
-                allActions.answerActions.fetchAnwers(
-                    exam.data.answers[sectionNo]
+                allActions.examActions.onSectionChange(
+                    id,
+                    testId,
+                    sectionId,
+                    sectionNo
                 )
             );
-            dispatch(allActions.customActions.selectedQuestion(1));
+            // const answersObj = {
+            //     selectedSectionId,
+            //     selectedSectionNo,
+            //     answers,
+            // };
+
+            // const exam = await axios.patch(
+            //     `/api/schools/${id}/tests/${testId}/exams/${examId}`,
+            //     answersObj
+            // );
+            // // dispatch({ type: "FETCH_ANSWERS", payload: exam });
+
+            // dispatch(allActions.customActions.selectedSectionId(sectionId));
+            // dispatch(allActions.customActions.selectedSectionNo(sectionNo));
+            // dispatch(allActions.answerActions.emptyAnswers());
+            // dispatch(allActions.questionActions.emptyQuestions());
+            // dispatch(
+            //     allActions.answerActions.fetchAnwers(
+            //         exam.data.answers[sectionNo]
+            //     )
+            // );
+            // dispatch(allActions.customActions.selectedQuestion(1));
         }
     };
 
@@ -91,10 +98,13 @@ const QuestionList = () => {
             return (
                 <Col
                     key={question.questionNo}
-                    lg={4}
+                    // offset={1}
+                    xl={4}
+                    lg={6}
                     sm={8}
                     span={4}
                     onClick={() => onQuestionClick(question.questionNo)}
+                    // style={{ marginLeft: 10 }}
                 >
                     <Badge
                         status="success"
@@ -124,13 +134,14 @@ const QuestionList = () => {
     const onMapSections = () => {
         return sections.map((section) => {
             return (
-                <Col key={section.sectionId} xl={12} justify="start">
+                <Col key={section.sectionId} offset={0} xl={12}>
                     <Button
                         type={
                             selectedSectionId === section.sectionId
                                 ? "primary"
                                 : ""
                         }
+                        style={{ width: "100%", overflow: "hidden" }}
                         onClick={
                             path && path.includes("tests")
                                 ? () =>
@@ -156,6 +167,8 @@ const QuestionList = () => {
         <>
             <Card
                 bordered={false}
+                size="small"
+                title="Question Numbers"
                 className="question-list-card"
                 // style={{
                 //     margin: "1vh 0.5vh",
@@ -175,98 +188,19 @@ const QuestionList = () => {
                 >
                     <Row gutter={[16, 16]}>
                         {questionsList && onMapQuestions()}
-                        {/* <Col span={4} onClick={() => onSubmit(1)}>
-                        <Button type="">01</Button>
-                    </Col>
-                    <Col span={4}>
-                        <Badge dot status="success">
-                            <Button type="primary">02</Button>
-                        </Badge>
-                    </Col>
-                    <Col span={4}>
-                        <Button type="">03</Button>
-                    </Col>
-                    <Col span={4}>
-                        <Button type="">04</Button>
-                    </Col>
-                    <Col span={4}>
-                        <Button type="">05</Button>
-                    </Col>
-                    <Col span={4}>
-                        <Button type="">06</Button>
-                    </Col>
-                    <Col span={4}>
-                        <Button type="">07</Button>
-                    </Col>
-                    <Col span={4}>
-                        <Button type="">08</Button>
-                    </Col>
-                    <Col span={4}>
-                        <Button type="">09</Button>
-                    </Col>
-                    <Col span={4}>
-                        <Button type="">10</Button>
-                    </Col>
-                    <Col span={4}>
-                        <Button type="">11</Button>
-                    </Col>
-                    <Col span={4}>
-                        <Button type="">12</Button>
-                    </Col>
-                    <Col span={4}>
-                        <Button type="">13</Button>
-                    </Col>
-                    <Col span={4}>
-                        <Button type="">14</Button>
-                    </Col>
-                    <Col span={4}>
-                        <Button type="">15</Button>
-                    </Col>
-                    <Col span={4}>
-                        <Button type="">16</Button>
-                    </Col>
-                    <Col span={4}>
-                        <Button type="">17</Button>
-                    </Col>
-                    <Col span={4}>
-                        <Button type="">18</Button>
-                    </Col>
-                    <Col span={4}>
-                        <Button type="">19</Button>
-                    </Col>
-                    <Col span={4}>
-                        <Button type="">20</Button>
-                    </Col>
-                    <Col span={4}>
-                        <Button type="">21</Button>
-                    </Col>
-                    <Col span={4}>
-                        <Button type="">22</Button>
-                    </Col>
-                    <Col span={4}>
-                        <Button type="">23</Button>
-                    </Col>
-                    <Col span={4}>
-                        <Button type="">24</Button>
-                    </Col>
-                    <Col span={4}>
-                        <Button type="">25</Button>
-                    </Col> */}
                     </Row>
                 </Card>
             </Card>
             <Card
                 bordered={false}
+                size="small"
+                title="Sections"
                 // style={{
                 //     margin: "1vh 0.5vh",
                 //     overflowY: "auto",
                 // }}
                 className="question-list-card"
             >
-                {/* <p>Card content</p>
-                <p>Card content</p>
-                <p>Card content</p>
-                <p>Card content</p> */}
                 <Card
                     type="inner"
                     bordered={false}
@@ -277,8 +211,14 @@ const QuestionList = () => {
                     // }}
                     className="inner-card-padding-two"
                 >
-                    <Row gutter={[8, 16]} style={{ overflow: "hidden" }}>
+                    <Row
+                        justify="center"
+                        gutter={[8, 16]}
+                        style={{ overflow: "hidden" }}
+                    >
+                        {/* <Space size={[60, 16]} align="center" wrap> */}
                         {sections && onMapSections()}
+                        {/* </Space> */}
                     </Row>
                 </Card>
             </Card>

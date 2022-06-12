@@ -1,42 +1,31 @@
 import * as types from "../types";
 
 const initialState = {
-    modalTestVisible: false,
-    modalSectionVisible: false,
-    popTestVisible: false,
-    popSectionVisible: false,
     selectedSectionId: null,
     selectedQuestion: 1,
     selectedSectionNo: 1,
-    examId: "",
+    totalTests: 50,
+    selectedClass: "",
+    examSaved: false,
+    examSuccess: "",
 };
 
 const customizeReducer = (state = initialState, action) => {
     switch (action.type) {
-        case types.VISIBLE_TEST_YES:
-            return { ...state, modalTestVisible: true };
-        case types.VISIBLE_TEST_NO:
-            return { ...state, modalTestVisible: false };
-        case types.VISIBLE_SECTION_YES:
-            return { ...state, modalSectionVisible: true };
-        case types.VISIBLE_SECTION_NO:
-            return { ...state, modalSectionVisible: false };
-        case types.VISIBLE_DELETE_TEST_YES:
-            return { ...state, popTestVisible: true };
-        case types.VISIBLE_DELETE_TEST_NO:
-            return { ...state, popTestVisible: false };
-        case types.VISIBLE_DELETE_SECTION_YES:
-            return { ...state, popSectionVisible: true };
-        case types.VISIBLE_DELETE_SECTION_NO:
-            return { ...state, popSectionVisible: false };
         case types.SELECTED_SECTION_ID:
             return { ...state, selectedSectionId: action.payload };
         case types.SELECTED_QUESTION:
             return { ...state, selectedQuestion: action.payload };
         case types.SELECTED_SECTION_NO:
             return { ...state, selectedSectionNo: action.payload };
-        case types.EXAM_ID:
-            return { ...state, examId: action.payload };
+        case types.TOTAL_TESTS:
+            return { ...state, totalTests: action.payload };
+        case types.SELECTED_CLASS:
+            return { ...state, selectedClass: action.payload };
+        case types.EXAM_SAVED:
+            return { ...state, examSaved: action.payload };
+        case types.EXAM_SUCCESS:
+            return { ...state, examSuccess: action.payload };
         default:
             return state;
     }

@@ -8,12 +8,13 @@ const adminSchema = new Schema(
             type: String,
             trim: true,
             required: true,
+            unique: [true, "Name is already taken try new name"],
         },
         email: {
             type: String,
             trim: true,
             required: true,
-            unique: true,
+            unique: [true, "Email is already taken try another email"],
         },
         password: {
             type: String,
@@ -33,5 +34,12 @@ const adminSchema = new Schema(
     },
     { timestamps: true }
 );
+
+// adminSchema.path("email").validate(async (email) => {
+//     await mongoose.models.Admin.findOne({ email }, (err, admin) => {
+//         if (!admin) return true;
+//         return false;
+//     });
+// }, "Email already taken, try another");
 
 export default mongoose.model("Admin", adminSchema);

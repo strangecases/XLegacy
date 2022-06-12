@@ -3,49 +3,36 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { SyncOutlined } from "@ant-design/icons";
+import { Form, Button, Card, Row, Col } from "antd";
 import { useRouter } from "next/router";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import * as yup from "yup";
-
-const schema = yup
-    .object()
-    .shape({
-        email: yup
-            .string()
-            .email("email format is wrong")
-            .required("email is required"),
-        code: yup.string().required("Six digit code sent to your mail"),
-        newPassword: yup
-            .string()
-            .min(6, "password should be minimum 6 characters long")
-            .max(16)
-            .required("password is required"),
-    })
-    .required();
+import FormInput from "../components/formitems/FormInput";
+import authStyles from "../styles/modules/Auth.module.css";
+import { resetPasswordSchema } from "../yupUtil";
 
 const ResetPassword = () => {
     // state
-    const { user } = useSelector((state) => state.auth);
+    const { admin } = useSelector((state) => state.auth);
 
     // router
     const router = useRouter();
 
     const {
         handleSubmit,
-        register,
         formState: { errors, isDirty, isSubmitting },
+        control,
     } = useForm({
         mode: "onBlur",
-        resolver: yupResolver(schema),
+        resolver: yupResolver(resetPasswordSchema),
     });
 
     // redirect if user is logged in
     useEffect(() => {
-        if (user !== null) {
+        if (admin !== null) {
             router.push("/");
         }
-    }, [user, router]);
+    }, [admin, router]);
 
     const onResetPassword = async ({ email, code, newPassword }) => {
         try {
@@ -58,66 +45,58 @@ const ResetPassword = () => {
             toast("Great! Now you can login with your new password");
             router.push("/login");
         } catch (err) {
-            toast(err.response.data);
+            toast(err);
         }
     };
 
     return (
         <>
-            <h1 className="jumbotron text-center bg-primary">Reset Password</h1>
-            <div className="container col-md-4 offset-md-4 pb-5">
-                <form
-                    onSubmit={handleSubmit(onResetPassword)}
-                    autoComplete="off"
-                    noValidate
-                >
-                    <input
-                        type="email"
-                        className="form-control mt-4 p-2"
-                        {...register("email")}
-                        placeholder="Enter email"
-                        required
-                    />
-                    {!!errors.email && (
-                        <div className="text-danger ps-2">
-                            {errors?.email?.message}
-                        </div>
-                    )}
-
-                    <input
-                        type="text"
-                        className="form-control mt-4 p-2"
-                        {...register("code")}
-                        placeholder="Enter email"
-                        required
-                    />
-                    {!!errors.code && (
-                        <div className="text-danger ps-2">
-                            {errors?.code?.message}
-                        </div>
-                    )}
-                    <input
-                        type="password"
-                        className="form-control mt-4 p-2"
-                        {...register("newPassword")}
-                        placeholder="Enter password"
-                        required
-                    />
-                    {!!errors.newPassword && (
-                        <div className="text-danger ps-2">
-                            {errors?.newPassword?.message}
-                        </div>
-                    )}
-
-                    <button
-                        type="submit"
-                        className="btn btn-primary col-12 mt-4"
-                        disabled={isSubmitting || !isDirty}
-                    >
-                        {isSubmitting ? <SyncOutlined spin /> : "Submit"}
-                    </button>
-                </form>
-            </div>
+            <h2 className={authStyles.headingAuth}>Reset Password</h2>
+            <Row justify="center">
+                <Col xs={22} sm={12} md={10} lg={8} span={8}>
+                    <Card className={authStyles["blue-tint"]}>
+                        <Form
+                            onFinish={handleSubmit(onResetPassword)}
+                            autoComplete="off"
+                            noValidate
+                        >
+                            <FormInput
+                                type="email"
+                                placeholder="Enter email"
+                                name="email"
+                                control={control}
+                                errors={errors}
+                            />
+                            <FormInput
+                                type="text"
+                                placeholder="Enter code"
+                                name="code"
+                                control={control}
+                                errors={errors}
+                            />
+                            <FormInput
+                                type="password"
+                                placeholder="Enter password"
+                                name="newPassword"
+                                control={control}
+                                errors={errors}
+                            />
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                                className={authStyles["width-100"]}
+                                disabled={isSubmitting || !isDirty}
+                            >
+                                {isSubmitting ? (
+                                    <SyncOutlined spin />
+                                ) : (
+                                    "Submit"
+                                )}
+                            </Button>
+                        </Form>
+                    </Card>
+                </Col>
+            </Row>
         </>
     );
 };

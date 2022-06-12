@@ -1,4 +1,4 @@
-import { Button, Tooltip } from "antd";
+import { Tooltip } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import axios from "axios";
@@ -7,39 +7,52 @@ import allActions from "../../../store/actions";
 import ModalCreateTest from "../ModalCreate";
 import { DELETE_TEST } from "../../../store/types";
 
-const DeleteTestForm = () => {
+const DeleteTestForm = ({ type = "" }) => {
     const { tests } = useSelector((state) => state);
 
     const dispatch = useDispatch();
 
     const router = useRouter();
-    const { id } = router.query;
+    const { id, testId } = router.query;
 
     let test;
-    if (id !== undefined) {
-        test = tests[id];
+    if (testId !== undefined) {
+        test = tests[testId];
     }
 
     const showPopConfirm = () => {
-        dispatch(allActions.customActions.visibleDeleteTestYes());
+        dispatch(allActions.modalActions.visibleDeleteTestYes());
     };
 
     const onSubmit = async () => {
-        const res = await axios.delete(`/api/prepare/tests/${id}`);
-        dispatch({ type: DELETE_TEST, payload: id });
-        dispatch(allActions.customActions.visibleDeleteTestNo());
+        const res = await axios.delete(`/api/schools/${id}/tests/${testId}`);
+        dispatch({ type: DELETE_TEST, payload: testId });
+        dispatch(allActions.modalActions.visibleDeleteTestNo());
         console.log(res.data);
-        router.push("/tests");
+        router.push(`/schools/${id}/tests`);
+    };
+
+    const onOtherTestSubmit = () => {
+        dispatch(
+            allActions.schoolActions.editSchool(id, {
+                classNo: "otherTests",
+                testId,
+                type: "delete",
+            })
+        );
+        dispatch(allActions.modalActions.visibleDeleteTestNo());
+        dispatch(allActions.customActions.selectedClass(""));
+        router.push(`/schools/${id}/tests`);
     };
 
     const onHandleCancel = () => {
         console.log("Clicked cancel button");
-        dispatch(allActions.customActions.visibleDeleteTestNo());
+        dispatch(allActions.modalActions.visibleDeleteTestNo());
     };
 
     return (
         <>
-            <Tooltip title="Delete Test" placement="topLeft" color="red">
+            <Tooltip title="Delete Test" placement="right" color="red">
                 <CloseCircleFilled
                     onClick={showPopConfirm}
                     // style={{ fontSize: 20, color: "#939090" }}
@@ -48,12 +61,22 @@ const DeleteTestForm = () => {
             </Tooltip>
             <ModalCreateTest
                 style={{ top: 20 }}
-                onOk={onSubmit}
+                onOk={type !== "otherTests" ? onSubmit : onOtherTestSubmit}
                 title="Delete Test"
                 handleCancel={onHandleCancel}
                 path="deleteTest"
             >
-                <p>Warning! You sure u want to delete this test</p>
+                {type !== "otherTests" ? (
+                    <p>
+                        Warning! You sure u want to delete this test and results
+                        associated to it.
+                    </p>
+                ) : (
+                    <p>
+                        This test is from other school and your students results
+                        will be deleted
+                    </p>
+                )}
                 <p>{test.testTitle}</p>
             </ModalCreateTest>
         </>

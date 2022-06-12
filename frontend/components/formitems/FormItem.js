@@ -11,6 +11,9 @@ const FormItem = ({
     type,
     width = "",
     label = "",
+    labelColmn = "",
+    wrapperColmn = "",
+    resize = true,
 }) => {
     return (
         <Form.Item
@@ -20,6 +23,22 @@ const FormItem = ({
                 errors[name] && errors[name].message ? "error" : "success"
             }
             label={label}
+            labelCol={
+                labelColmn && {
+                    sm: { span: 24 },
+                    md: { span: 12 },
+                    lg: { span: labelColmn + 2 },
+                    xl: { span: labelColmn },
+                }
+            }
+            wrapperCol={
+                wrapperColmn && {
+                    sm: { span: 24 },
+                    md: { span: 12 },
+                    lg: { span: wrapperColmn - 2 },
+                    xl: { span: wrapperColmn },
+                }
+            }
         >
             <Controller
                 render={({ field }) =>
@@ -29,7 +48,7 @@ const FormItem = ({
                             allowClear
                             {...field}
                             placeholder={placeholder}
-                            autoSize
+                            autoSize={resize}
                             style={{ width }}
                         />
                     ) : (

@@ -11,6 +11,16 @@ const examSchema = new Schema({
         type: String,
         required: true,
     },
+    parentsPhNo: {
+        type: String,
+        trim: true,
+        validate: {
+            validator(v) {
+                return /^$|^\d{10}$/.test(v);
+            },
+            message: "Phone no is not valid.",
+        },
+    },
     classNo: {
         type: Number,
         required: true,
@@ -23,6 +33,14 @@ const examSchema = new Schema({
         type: Number,
         default: 0,
         // required: true,
+    },
+    schoolId: {
+        type: Schema.Types.ObjectId,
+        ref: "School",
+    },
+    testId: {
+        type: Schema.Types.ObjectId,
+        ref: "Test",
     },
 });
 

@@ -8,22 +8,29 @@ import {
     Input,
     Button,
     Divider,
+    Popconfirm,
+    message,
 } from "antd";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { useForm, Controller } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useRouter } from "next/router";
 import { EDIT_ANSWER } from "../../store/types";
 import allActions from "../../store/actions";
+import SegmentedSections from "./SegmentedSections";
 
 const ExamDetail = () => {
     const [question, setQuestion] = useState({});
 
     const { questions } = useSelector((state) => state);
     const { answers } = useSelector((state) => state);
-    const { selectedQuestion, selectedSectionNo } = useSelector(
-        (state) => state.custom
-    );
+    const { selectedQuestion, selectedSectionNo, selectedSectionId } =
+        useSelector((state) => state.custom);
+    const { examId } = useSelector((state) => state.exam);
+
+    const router = useRouter();
+    const { id, testId } = router.query;
 
     const dispatch = useDispatch();
 
@@ -40,6 +47,22 @@ const ExamDetail = () => {
     const onSubmit = (data) => {
         console.log(data);
         dispatch({ type: EDIT_ANSWER, payload: data });
+    };
+
+    const onSectionSubmit = async () => {
+        dispatch(allActions.customActions.examSaved(true));
+        setTimeout(() => {
+            dispatch(allActions.examActions.onSectionSubmit(id, testId));
+            if (localStorage.getItem("end_date") != null)
+                localStorage.removeItem("end_date");
+            message.success("Successfully saved your work", 4);
+            // dispatch(allActions.customActions.examSaved(false));
+        }, 1000);
+    };
+
+    const onSectionCancel = () => {
+        message.error("Continue Test");
+        dispatch(allActions.customActions.examSaved(false));
     };
 
     useEffect(() => {
@@ -112,6 +135,7 @@ const ExamDetail = () => {
                     "hii"
                 )} */}
             {/* {question && question.options ? ( */}
+            <SegmentedSections />
             <Form onFinish={handleSubmit(onSubmit)}>
                 <Card
                 // style={{
@@ -211,7 +235,7 @@ const ExamDetail = () => {
                                                     >
                                                         <Card
                                                             hoverable
-                                                            className="option-card"
+                                                            className="option-card inner-card-padding-zero"
                                                         >
                                                             <Radio
                                                                 className="hiii2"
@@ -303,12 +327,41 @@ const ExamDetail = () => {
                         <Divider />
                         <Row justify="space-between">
                             <Col span={8}>
-                                <Button type="primary">Submit</Button>
+                                <Popconfirm
+                                    title="Submitting will end the test and save your work. Are you sure about this?"
+                                    onConfirm={onSectionSubmit}
+                                    onCancel={onSectionCancel}
+                                    okText="Yes"
+                                >
+                                    <Button
+                                        onClick={() => {
+                                            dispatch(
+                                                allActions.customActions.examSaved(
+                                                    true
+                                                )
+                                            );
+
+                                            setTimeout(
+                                                () =>
+                                                    dispatch(
+                                                        allActions.customActions.examSaved(
+                                                            false
+                                                        )
+                                                    ),
+                                                700
+                                            );
+                                        }}
+                                        type="primary"
+                                    >
+                                        Submit
+                                    </Button>
+                                </Popconfirm>
                             </Col>
                             <Col span={8} offset={8}>
                                 <Row gutter={32} justify="center">
                                     <Col span={5}>
                                         <LeftOutlined
+                                            className="hover-icon-next test-submit-delete"
                                             onClick={() =>
                                                 selectedQuestion > 1 &&
                                                 dispatch(
@@ -321,6 +374,7 @@ const ExamDetail = () => {
                                     </Col>
                                     <Col span={5}>
                                         <RightOutlined
+                                            className="hover-icon-next test-submit-delete"
                                             onClick={() =>
                                                 selectedQuestion <
                                                     Object.values(questions)

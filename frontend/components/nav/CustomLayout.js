@@ -4,10 +4,10 @@ import SideBar from "./SideBar";
 
 const { Content, Footer } = Layout;
 
-const CustomLayout = ({ children }) => {
+const CustomLayout = ({ children, type = "outside" }) => {
     return (
         <Layout hasSider>
-            <SideBar />
+            <SideBar type={type} />
             <Layout className="site-layout">
                 <HeaderTop />
                 <Content
@@ -18,9 +18,7 @@ const CustomLayout = ({ children }) => {
                 >
                     {children}
                 </Content>
-                <Footer style={{ textAlign: "center" }}>
-                    Ant Design ©2018 Created by Ant UED
-                </Footer>
+                <Footer style={{ textAlign: "center" }}>ScholarX ©2022</Footer>
             </Layout>
         </Layout>
     );

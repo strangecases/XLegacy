@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
+import { Spin } from "antd";
 import { useRouter } from "next/router";
 import { SyncOutlined } from "@ant-design/icons";
 import allActions from "../../store/actions";
@@ -35,9 +36,10 @@ const AdminRoute = ({ children }) => {
             {ok ? (
                 <> {children} </>
             ) : (
-                <SyncOutlined
-                    spin
-                    className="d-flex justify-content-center display-1 text-primary p-5"
+                <Spin
+                    size="large"
+                    style={{ position: "relative", top: "21vh", left: "45%" }}
+                    indicator={<SyncOutlined spin style={{ fontSize: 72 }} />}
                 />
             )}
         </div>

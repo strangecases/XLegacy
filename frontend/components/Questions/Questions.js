@@ -10,7 +10,7 @@ import { EMPTY_QUESTIONS } from "../../store/types";
 
 const Questions = () => {
     const router = useRouter();
-    const { id } = router.query;
+    const { id, testId } = router.query;
     const path = router.pathname;
 
     const { tests } = useSelector((state) => state);
@@ -19,18 +19,18 @@ const Questions = () => {
 
     useEffect(() => {
         if (id !== undefined) {
-            dispatch(allActions.testActions.fetchTest(id));
+            dispatch(allActions.testActions.fetchTest(id, testId));
         }
-    }, [router.query, id]);
+    }, [router.query, id, testId]);
 
     useEffect(() => {
         const getSection = async () => {
-            if (id !== undefined && tests[id]) {
+            if (testId !== undefined && tests[testId]) {
                 if (!selectedSectionId) {
-                    console.log(tests[id].sectionData[0].sectionId);
+                    console.log(tests[testId].sectionData[0].sectionId);
                     dispatch(
                         allActions.customActions.selectedSectionId(
-                            tests[id].sectionData[0].sectionId
+                            tests[testId].sectionData[0].sectionId
                         )
                     );
                     // dispatch(
@@ -44,7 +44,7 @@ const Questions = () => {
                     // dispatch(allActions.customActions.selectedQuestion(1));
                     dispatch(
                         allActions.questionActions.fetchQuestions(
-                            id,
+                            testId,
                             selectedSectionId
                         )
                     );
@@ -53,7 +53,7 @@ const Questions = () => {
             }
         };
         getSection();
-    }, [id, selectedSectionId, tests]);
+    }, [testId, selectedSectionId, tests]);
 
     return (
         <Layout

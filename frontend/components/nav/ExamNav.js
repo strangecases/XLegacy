@@ -1,31 +1,27 @@
-import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Menu } from "antd";
-import Link from "next/link";
 import { AppstoreOutlined } from "@ant-design/icons";
-import axios from "axios";
-import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-import allActions from "../../store/actions";
+import ExamCountDown from "./ExamCountDown";
 
-const { Item, SubMenu } = Menu;
+const { Item } = Menu;
 
-const ExamNav = ({ children }) => {
-    // const [current, setCurrent] = useState("/");
-    // const [mount, setMount] = useState(false);
-
-    const { admin } = useSelector((state) => state.auth);
+const ExamNav = ({ children, type = "exam" }) => {
+    const { tests } = useSelector((state) => state);
     const { examData } = useSelector((state) => state.exam);
 
     const dispatch = useDispatch();
 
     const router = useRouter();
+    const { id, testId } = router.query;
+    const path = router.pathname;
 
     // useEffect(() => {
-    //     if (process.browser) setCurrent(router.pathname);
-    //     setMount(true);
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [router.pathname]);
+    //     if (path.includes("exams") && !examId) {
+    //         router.push(`/schools/${id}/exams/${testId}/info`);
+    //     }
+    // }, [examId, id, testId]);
+    console.log("examnav");
 
     return (
         // mount && (
@@ -37,14 +33,46 @@ const ExamNav = ({ children }) => {
                 style={{
                     height: 46,
                     border: 0,
+                    position: "relative",
+                    display: "flex",
                 }}
             >
                 <Item key="/" icon={<AppstoreOutlined />}>
                     App
                 </Item>
-                <Item key="#" className="margin-left-auto">
-                    {examData && examData.studentName}
-                </Item>
+
+                {type === "exam" && (
+                    <>
+                        <Item
+                            key="#"
+                            style={{
+                                position: "absolute",
+                                top: 6,
+                                left: "44vw",
+                            }}
+                        >
+                            {/* <Countdown
+                        value={
+                            tests &&
+                            tests[testId] &&
+                            // Date.now() + tests[testId].testTime * 1000 * 60
+                            Date.now() +
+                                1000 *
+                                    parseInt(ress.current && ress.current, 10)
+                            // parseInt(window.localStorage.getItem("timer"), 10)
+                        }
+                        onChange={onChange}
+                    /> */}
+
+                            {tests[testId] && (
+                                <ExamCountDown time={tests[testId].testTime} />
+                            )}
+                        </Item>
+                        <Item key="2" className="margin-left-auto">
+                            {examData && examData.studentName}
+                        </Item>
+                    </>
+                )}
             </Menu>
 
             {children}

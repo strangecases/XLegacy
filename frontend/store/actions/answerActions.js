@@ -14,9 +14,16 @@ const editAnswer = (data) => {
     };
 };
 
+const emptyAnswers = () => {
+    return {
+        type: types.EMPTY_ANSWERS,
+    };
+};
+
 const answerActions = {
     fetchAnwers,
     editAnswer,
+    emptyAnswers,
 };
 
 export default answerActions;

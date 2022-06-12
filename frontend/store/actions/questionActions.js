@@ -2,10 +2,10 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import * as types from "../types";
 
-const fetchQuestions = (id, sectionId) => async (dispatch) => {
+const fetchQuestions = (testId, sectionId) => async (dispatch) => {
     try {
         const response = await axios.get(
-            `/api/prepare/tests/${id}/sections/${sectionId}`
+            `/api/tests/${testId}/sections/${sectionId}`
         );
 
         dispatch({
@@ -20,12 +20,12 @@ const fetchQuestions = (id, sectionId) => async (dispatch) => {
 const editQuestion = (formValues) => async (dispatch) => {
     try {
         // const response = await axios.patch(
-        //     `/api/prepare/tests/${id}/sections/${sectionId}`,
+        //     `/api/tests/${testId}/sections/${sectionId}`,
         //     formValues
         // );
         dispatch({ type: types.EDIT_QUESTION, payload: formValues });
         toast.success("Question added, save before refresh", {
-            autoClose: 1100,
+            autoClose: 2200,
             hideProgressBar: true,
         });
     } catch (err) {
@@ -35,7 +35,7 @@ const editQuestion = (formValues) => async (dispatch) => {
 
 const deleteQuestion = (questionNo) => async (dispatch) => {
     try {
-        // await axios.delete(`/api/prepare/tests/${id}/sections/${sectionId}`);
+        // await axios.delete(`/api/tests/${testId}/sections/${sectionId}`);
         dispatch({ type: types.DELETE_QUESTION, payload: questionNo });
     } catch (err) {
         console.log(err);
@@ -49,11 +49,18 @@ const upOnDeletion = (data) => {
     };
 };
 
+const emptyQuestions = () => {
+    return {
+        type: types.EMPTY_QUESTIONS,
+    };
+};
+
 const questionActions = {
     fetchQuestions,
     editQuestion,
     deleteQuestion,
     upOnDeletion,
+    emptyQuestions,
 };
 
 export default questionActions;

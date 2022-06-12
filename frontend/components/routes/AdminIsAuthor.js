@@ -2,19 +2,20 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { SyncOutlined } from "@ant-design/icons";
 import axios from "axios";
+import { message } from "antd";
 
 const AdminIsAuthor = ({ children }) => {
-    const [ok, setOk] = useState(true);
+    const [ok, setOk] = useState(false);
 
     const router = useRouter();
-    const { id } = router.query;
+    const { testId } = router.query;
 
     useEffect(() => {
         const fetchAdmin = async () => {
             try {
-                if (id !== undefined) {
+                if (testId !== undefined) {
                     const { data } = await axios.get(
-                        `/api/admin-is-author/${id}`
+                        `/api/admin-is-author/${testId}`
                     );
                     if (data.ok) {
                         setOk(true);
@@ -23,11 +24,12 @@ const AdminIsAuthor = ({ children }) => {
             } catch (err) {
                 console.log(err);
                 setOk(false);
+                message.error("you can not visit that page.", 2);
                 router.push("/admin");
             }
         };
         fetchAdmin();
-    }, [router, ok, id]);
+    }, [router, ok, testId]);
 
     return (
         <div>

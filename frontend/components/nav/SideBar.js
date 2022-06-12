@@ -1,19 +1,25 @@
 import { useState, useEffect } from "react";
 import { Layout, Menu } from "antd";
 import {
-    AreaChartOutlined,
     UserOutlined,
     FormOutlined,
     SolutionOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/router";
 
 const { Sider } = Layout;
 
-const SideBar = () => {
+const SideBar = ({ type }) => {
     const [collapsed, setCollapsed] = useState(false);
-    // const [mobileNavOpen, setMobileNavOpen] = useState(false);
     const [showMobileSideBar, setShowMobileSideBar] = useState(false);
+    const [current, setCurrent] = useState("");
+
+    const { schools } = useSelector((state) => state);
+
+    const router = useRouter();
+    const { id } = router.query;
 
     useEffect(() => {
         if (window.innerWidth > 767) setShowMobileSideBar(true);
@@ -56,6 +62,7 @@ const SideBar = () => {
                 top: 0,
                 bottom: 0,
             }}
+            width={200}
         >
             <img
                 alt="hi"
@@ -64,33 +71,68 @@ const SideBar = () => {
                 width={50}
                 height={50}
             />
-            <Menu
-                theme="dark"
-                mode="inline"
-                defaultSelectedKeys={["4"]}
-                style={{ padding: "20px 0" }}
-            >
-                <Menu.Item key="1" icon={<UserOutlined />}>
-                    <Link href="/admin">
-                        <a>Dashboard</a>
-                    </Link>
-                </Menu.Item>
-                <Menu.Item key="2" icon={<SolutionOutlined />}>
-                    <Link href="/schools">
-                        <a>Schools</a>
-                    </Link>
-                </Menu.Item>
-                <Menu.Item key="3" icon={<FormOutlined />}>
-                    <Link href="/tests">
-                        <a>Tests</a>
-                    </Link>
-                </Menu.Item>
-                <Menu.Item key="4" icon={<AreaChartOutlined />}>
-                    <Link href="/results">
-                        <a>Results</a>
-                    </Link>
-                </Menu.Item>
-            </Menu>
+            {type === "inside" && schools[id] ? (
+                <Menu
+                    theme="dark"
+                    mode="inline"
+                    // onClick={(e) => setCurrent(e.key)}
+                    selectedKeys={
+                        router.asPath.includes("tests")
+                            ? `/schools/${id}/tests`
+                            : router.asPath
+                    }
+                    defaultSelectedKeys={[`/schools/${id}/edit`]}
+                    style={{ padding: "20px 0" }}
+                >
+                    <Menu.Item
+                        key={`/schools/${id}/tests`}
+                        icon={<UserOutlined />}
+                    >
+                        <Link href={`/schools/${id}/tests`}>
+                            <a>{schools[id].schoolName}</a>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item
+                        key={`/schools/${id}/edit`}
+                        icon={<SolutionOutlined />}
+                    >
+                        <Link href={`/schools/${id}/edit`}>
+                            <a>Edit Details</a>
+                        </Link>
+                    </Menu.Item>
+
+                    <Menu.Item key="/schools" icon={<SolutionOutlined />}>
+                        <Link href="/schools">
+                            <a>All Schools</a>
+                        </Link>
+                    </Menu.Item>
+                </Menu>
+            ) : (
+                <Menu
+                    theme="dark"
+                    mode="inline"
+                    // onClick={(e) => setCurrent(e.key)}
+                    selectedKeys={router.asPath}
+                    // defaultSelectedKeys={["1"]}
+                    style={{ padding: "20px 0" }}
+                >
+                    <Menu.Item key="/admin" icon={<UserOutlined />}>
+                        <Link href="/admin">
+                            <a>Dashboard</a>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="/schools/new" icon={<FormOutlined />}>
+                        <Link href="/schools/new">
+                            <a>Add School</a>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="/schools" icon={<SolutionOutlined />}>
+                        <Link href="/schools">
+                            <a>Schools</a>
+                        </Link>
+                    </Menu.Item>
+                </Menu>
+            )}
         </Sider>
     );
 };

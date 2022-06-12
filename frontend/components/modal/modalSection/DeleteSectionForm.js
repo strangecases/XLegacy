@@ -15,21 +15,21 @@ const DeleteSectionForm = () => {
     const dispatch = useDispatch();
 
     const router = useRouter();
-    const { id } = router.query;
+    const { id, testId } = router.query;
 
     // const showPopConfirm = () => {
-    //     dispatch(allActions.customActions.visibleDeleteSectionYes());
+    //     dispatch(allActions.modalActions.visibleDeleteSectionYes());
     // };
 
     const onSubmit = async () => {
         const res = await axios.delete(
-            `/api/prepare/tests/${id}/sections/${selectedSectionId}`
+            `/api/tests/${testId}/sections/${selectedSectionId}`
         );
         console.log(res.data.sectionNo);
-        if (res.data.sectionNo < tests[id].sectionData.length) {
+        if (res.data.sectionNo < tests[testId].sectionData.length) {
             console.log("sections update");
-            console.log(tests[id].sectionData.slice(res.data.sectionNo));
-            tests[id].sectionData
+            console.log(tests[testId].sectionData.slice(res.data.sectionNo));
+            tests[testId].sectionData
                 .slice(res.data.sectionNo)
                 .forEach(async (sect) => {
                     console.log(sect);
@@ -37,19 +37,19 @@ const DeleteSectionForm = () => {
                     const sectionData = { ...sect, sectionNo: sectionNum };
                     console.log(sectionData);
                     await axios.patch(
-                        `/api/prepare/tests/${id}/sections/${sect.sectionId}`,
+                        `/api/tests/${testId}/sections/${sect.sectionId}`,
                         sectionData
                     );
                 });
         }
-        dispatch(allActions.customActions.visibleDeleteSectionNo());
-        router.push(`/tests/${id}`);
+        dispatch(allActions.modalActions.visibleDeleteSectionNo());
+        router.push(`/schools/${id}/tests/${testId}`);
         console.log("finish");
     };
 
     const onHandleCancel = () => {
         console.log("Clicked cancel button");
-        dispatch(allActions.customActions.visibleDeleteSectionNo());
+        dispatch(allActions.modalActions.visibleDeleteSectionNo());
     };
 
     return (

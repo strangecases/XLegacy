@@ -9,7 +9,7 @@ export const index = (req, res) => {
 export const createSection = async (req, res) => {
     const section = await new Section(req.body);
     const test = await Test.findByIdAndUpdate(
-        req.params.id,
+        req.params.testId,
         {
             $push: {
                 sectionData: { ...req.body, sectionId: section._id },
@@ -39,17 +39,27 @@ export const editSection = async (req, res) => {
     console.log(req.body);
     const section = await Section.findByIdAndUpdate(
         req.params.sectionId,
-        req.body,
+        { questions: req.body.questions },
         {
             upsert: true,
             new: true,
         }
     );
     let test;
+    if (req.body.isPublished) {
+        await Test.findByIdAndUpdate(
+            req.params.testId,
+            { isPublished: req.body.isPublished },
+            {
+                upsert: true,
+                new: true,
+            }
+        );
+    }
     if (req.body.subject || req.body.sectionNo || req.body.sectionDescription) {
         test = await Test.findOneAndUpdate(
             {
-                _id: req.params.id,
+                _id: req.params.testId,
             },
             {
                 $set: {
@@ -72,7 +82,7 @@ export const editSection = async (req, res) => {
 
 export const deleteSection = async (req, res) => {
     const test = await Test.findByIdAndUpdate(
-        req.params.id,
+        req.params.testId,
         {
             $pull: {
                 sections: req.params.sectionId,

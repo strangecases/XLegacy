@@ -66,6 +66,37 @@ export const register = async (req, res) => {
     return res.json({ ok: true });
 };
 
+export const editAdmin = async (req, res) => {
+    const admin = await Admin.findById(req.params.registerId);
+    admin.name = req.body.name;
+    admin.email = req.body.email;
+    if (
+        req.body.password?.length >= 6 &&
+        req.body.newPassword === req.body.confirmPassword
+    ) {
+        console.log("enered");
+        const match = await comparePassword(req.body.password, admin.password);
+
+        if (!match)
+            throw new ExpressError(
+                "Current Password does not match the password stored.",
+                400
+            );
+
+        const newHasedPassword = await hashPassword(req.body.newPassword);
+        admin.password = newHasedPassword;
+    }
+    // } else {
+    //     throw new ExpressError(
+    //         "Please check change password section some thing went wrong",
+    //         400
+    //     );
+    // }
+    await admin.save();
+    admin.password = undefined;
+    res.json(admin);
+};
+
 export const login = async (req, res) => {
     const { email, password } = req.body;
 

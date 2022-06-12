@@ -13,6 +13,8 @@ const testReducer = (state = {}, action) => {
             return { ...state, [action.payload._id]: action.payload };
         case types.DELETE_TEST:
             return _.omit(state, action.payload);
+        case types.EMPTY_TESTS:
+            return {};
         default:
             return state;
     }

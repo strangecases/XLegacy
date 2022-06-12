@@ -1,0 +1,49 @@
+.headingAuth {
+    text-align: center;
+    background-color: #0c8be1d4;
+    color: white;
+    padding: 5px 0;
+}
+
+.blue-tint {
+    background-color: #f1f2f878;
+}
+
+:global(.ant-card .ant-card-body) .dark-blue-tint {
+    background-color: #16758fe6;
+    color: white;
+}
+
+:global(.ant-card .ant-card-body) .padding-to-left {
+    padding-left: 0rem;
+    margin: 7px 10px 6px 20px;
+}
+
+.bolding-text {
+    font-weight: bold;
+    color: #ff5644fa;
+    font-size: 16px;
+}
+
+.form-heading-color {
+    color: #ff5644fa;
+}
+
+.anchor-link {
+    color: rgb(255, 174, 0);
+}
+.anchor-link:hover {
+    color: rgb(210, 152, 44);
+}
+
+.text-center {
+    text-align: center;
+}
+
+.margin-top {
+    margin-top: 25px;
+}
+
+.width-100 {
+    width: 100%;
+}

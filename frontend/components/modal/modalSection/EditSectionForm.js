@@ -13,7 +13,8 @@ import SectionFormGroup from "./SectionFormGroup";
 
 const EditSectionForm = ({ section }) => {
     const router = useRouter();
-    const { id } = router.query;
+    const { id, testId } = router.query;
+    console.log(id, testId);
 
     // let sectionData;
     // if (section) {
@@ -26,7 +27,7 @@ const EditSectionForm = ({ section }) => {
     const dispatch = useDispatch();
 
     const showSectionModal = () => {
-        dispatch(allActions.customActions.visibleSectionYes());
+        dispatch(allActions.modalActions.visibleSectionYes());
     };
 
     const {
@@ -50,22 +51,22 @@ const EditSectionForm = ({ section }) => {
 
     const onSubmit = async (data) => {
         const res = await axios.patch(
-            `/api/prepare/tests/${id}/sections/${selectedSectionId}`,
+            `/api/tests/${testId}/sections/${selectedSectionId}`,
             data
         );
         console.log(res.data.test);
-        dispatch(allActions.customActions.visibleSectionNo());
-        router.push(`/tests/${id}/sections`);
+        dispatch(allActions.modalActions.visibleSectionNo());
+        router.push(`/schools/${id}/tests/${testId}/sections`);
     };
 
     const onHandleCancel = () => {
         console.log("Clicked cancel button");
-        dispatch(allActions.customActions.visibleSectionNo());
+        dispatch(allActions.modalActions.visibleSectionNo());
     };
 
     return (
         <>
-            <Button onClick={showSectionModal}>Section</Button>
+            <Button onClick={showSectionModal}>Edit Section</Button>
             <ModalCreate
                 onOk={handleSubmit(onSubmit)}
                 handleCancel={onHandleCancel}
@@ -105,13 +106,8 @@ const EditSectionForm = ({ section }) => {
                         </Link>
                     </p>
                 </div> */}
-                {id && (
-                    <SectionFormGroup
-                        control={control}
-                        errors={errors}
-                        id={id}
-                    />
-                )}
+
+                <SectionFormGroup control={control} errors={errors} />
             </ModalCreate>
         </>
     );

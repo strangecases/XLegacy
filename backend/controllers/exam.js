@@ -3,20 +3,46 @@ import Section from "../models/section.js";
 import ExpressError from "../utils/ExpressError.js";
 
 export const index = async (req, res) => {
-    res.send("hii");
+    const { id, testId } = req.params;
+    let exams;
+    if (req.query.classNo && req.query.group) {
+        exams = await Exam.find(
+            {
+                schoolId: id,
+                testId,
+                classNo: req.query.classNo,
+                classGroup: req.query.group,
+            },
+            "-schoolId -testId"
+        ).sort({ marks: -1 });
+    } else {
+        exams = await Exam.find(
+            { $and: [{ schoolId: id }, { testId }] },
+            "-schoolId -testId"
+        ).sort({ marks: -1 });
+    }
+
+    // console.log(exams);
+    res.json(exams);
 };
 
 export const createExam = async (req, res) => {
     // console.log(req.body);
+    // console.log(req.params);
     // res.json({ _id: "hi" });
     const exam = new Exam(req.body);
+    exam.schoolId = req.params.id;
+    exam.testId = req.params.testId;
     await exam.save();
+    console.log(exam);
     if (!exam) throw new ExpressError("Exam not saved, try again", 400);
     res.json(exam);
 };
 
 export const showExam = async (req, res) => {
     console.log(req.body);
+    const exam = await Exam.findById(req.params.examId);
+    res.json(exam);
 };
 
 export const editExam = async (req, res) => {
@@ -47,27 +73,37 @@ export const editExam = async (req, res) => {
         console.log("hi", y);
     }
 
-    let marks = 0;
+    let score = 0;
+    const outOf = Object.values(object).length;
     for (let i = 1; i <= Object.values(object).length; i += 1) {
         if (
             object[i] !== undefined &&
             answers[i] !== undefined &&
             object[i] === answers[i]
         ) {
-            marks += 1;
+            score += 1;
         }
     }
 
     if (!exam.answers) {
         exam.answers = {
-            [selectedSectionNo]: { ...answers, sectionMarks: marks },
+            [selectedSectionNo]: {
+                ...answers,
+                sectionMarks: score,
+                sectionOutOf: outOf,
+            },
         };
+        exam.marks = score;
         console.log("first");
     } else {
         console.log(y);
-        exam.answers[selectedSectionNo] = { ...answers, sectionMarks: marks };
+        exam.answers[selectedSectionNo] = {
+            ...answers,
+            sectionMarks: score,
+            sectionOutOf: outOf,
+        };
         exam.marks -= y;
-        exam.marks += marks;
+        exam.marks += score;
     }
 
     exam.markModified(`answers.${selectedSectionNo}`);

@@ -12,14 +12,14 @@ import SectionFormGroup from "./SectionFormGroup";
 
 const CreateSectionForm = ({ length }) => {
     const router = useRouter();
-    const { id } = router.query;
+    const { id, testId } = router.query;
 
     const { tests } = useSelector((state) => state);
 
     const dispatch = useDispatch();
 
     const showSectionModal = () => {
-        dispatch(allActions.customActions.visibleSectionYes());
+        dispatch(allActions.modalActions.visibleSectionYes());
     };
 
     const {
@@ -35,17 +35,17 @@ const CreateSectionForm = ({ length }) => {
 
     const onSubmit = async (data) => {
         console.log(data);
-        const res = await axios.post(`/api/prepare/tests/${id}/sections`, data);
+        const res = await axios.post(`/api/tests/${testId}/sections`, data);
         console.log(res.data.test);
         dispatch({ type: EDIT_TEST, payload: res.data.test });
-        dispatch(allActions.customActions.visibleSectionNo());
+        dispatch(allActions.modalActions.visibleSectionNo());
         reset({ subject: "", sectionDescription: "" });
-        router.push(`/tests/${id}`);
+        router.push(`/schools/${id}/tests/${testId}`);
     };
 
     const onHandleCancel = () => {
         console.log("Clicked cancel button");
-        dispatch(allActions.customActions.visibleSectionNo());
+        dispatch(allActions.modalActions.visibleSectionNo());
         reset({ subject: "", sectionDescription: "" });
     };
 
@@ -53,7 +53,7 @@ const CreateSectionForm = ({ length }) => {
         <>
             <Tooltip
                 title={length >= 4 ? "Limit of 4 sections reached" : ""}
-                placement="bottom"
+                placement="bottomLeft"
                 color="#05b523"
             >
                 <Button
@@ -103,12 +103,11 @@ const CreateSectionForm = ({ length }) => {
                         </Link>
                     </p>
                 </div> */}
-                {id && (
+                {testId && (
                     <SectionFormGroup
                         control={control}
                         errors={errors}
-                        id={id}
-                        secNum={tests[id].sectionData.length + 1}
+                        secNum={tests[testId].sectionData.length + 1}
                         setValue={setValue}
                     />
                 )}

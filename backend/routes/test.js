@@ -6,20 +6,20 @@ import {
     editTest,
     deleteTest,
 } from "../controllers/test.js";
-import { isAuthor, requireSignin } from "../middlewares/index.js";
+import { isTestAuthor, requireSignin } from "../middlewares/index.js";
 import catchAsync from "../utils/catchAsync.js";
 
 const router = express.Router();
 
 router
-    .route("/")
+    .route("/:id/tests")
     .get(requireSignin, catchAsync(index))
     .post(catchAsync(createTest));
 
 router
-    .route("/:id")
+    .route("/:id/tests/:testId")
     .get(catchAsync(getOneTest))
-    .patch(requireSignin, catchAsync(isAuthor), catchAsync(editTest))
-    .delete(requireSignin, catchAsync(isAuthor), catchAsync(deleteTest));
+    .patch(requireSignin, catchAsync(isTestAuthor), catchAsync(editTest))
+    .delete(requireSignin, catchAsync(isTestAuthor), catchAsync(deleteTest));
 
 export default router;

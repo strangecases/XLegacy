@@ -4,6 +4,7 @@ import { createWrapper } from "next-redux-wrapper";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 import rootReducer from "./reducers";
 
 const initialState = {};
@@ -11,7 +12,7 @@ const initialState = {};
 const persistConfig = {
     key: "persistStore",
     storage,
-    whitelist: ["auth", "custom", "questions", "answers", "exam"],
+    whitelist: ["auth", "custom", "questions", "answers", "exam", "schools"],
 };
 
 const middleware = [thunk];

@@ -6,6 +6,14 @@ export const FETCH_TEST = "FETCH_TEST";
 export const CREATE_TEST = "CREATE_TEST";
 export const DELETE_TEST = "DELETE_TEST";
 export const EDIT_TEST = "EDIT_TEST";
+export const EMPTY_TESTS = "EMPTY_TESTS";
+
+export const FETCH_SCHOOLS = "FETCH_SCHOOLS";
+export const FETCH_SCHOOL = "FETCH_SCHOOL";
+export const CREATE_SCHOOL = "CREATE_SCHOOL";
+export const DELETE_SCHOOL = "DELETE_SCHOOL";
+export const EDIT_SCHOOL = "EDIT_SCHOOL";
+export const EMPTY_SCHOOLS = "EMPTY_SCHOOLS";
 
 export const VISIBLE_TEST_YES = "VISIBLE_YES";
 export const VISIBLE_TEST_NO = "VISIBLE_NO";
@@ -29,6 +37,19 @@ export const FETCH_ANSWERS = "FETCH_ANSWERS";
 export const EDIT_ANSWER = "EDIT_ANSWER";
 export const EMPTY_ANSWERS = "EMPTY_ANSWERS";
 
-export const EXAM_ID = "EXAM_ID";
 export const CREATE_EXAM = "CREATE_EXAM";
 export const DELETE_EXAM = "DELETE_EXAM";
+export const EXAMS_LIST = "EXAMS_LIST";
+export const DONUT_EXAMS = "DONUT_EXAMS";
+export const OUTOF = "OUTOF";
+export const EXAM_RESULT = "EXAM_RESULT";
+export const EMPTY_EXAM = "EMPTY_EXAM";
+
+export const FETCH_EXAMS = "FETCH_EXAMS";
+export const FETCH_EXAM = "FETCH_EXAM";
+export const EMPTY_EXAMS = "EMPTY_EXAMS";
+
+export const TOTAL_TESTS = "TOTAL_TESTS";
+export const SELECTED_CLASS = "SELECTED_CLASS";
+export const EXAM_SAVED = "EXAM_SAVED";
+export const EXAM_SUCCESS = "EXAM_SUCCESS";
