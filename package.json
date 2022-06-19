@@ -4,8 +4,7 @@
     "description": "final",
     "main": "index.js",
     "scripts": {
-        "lint": "eslint ./",
-        "build": "next build"
+        "lint": "eslint ./"
     },
     "repository": {
         "type": "git",
