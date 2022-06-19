@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
-import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import Spinner from "../Spinner";
 import allActions from "../../store/actions";

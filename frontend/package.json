@@ -3,7 +3,7 @@
     "private": true,
     "scripts": {
         "dev": "node server.js",
-        "build": "next build",
+        "build": "[my-framework] build --output public",
         "start": "next start",
         "lint": "next lint"
     },
