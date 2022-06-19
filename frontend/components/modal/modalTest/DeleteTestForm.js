@@ -1,11 +1,9 @@
 import { Tooltip } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
-import axios from "axios";
 import { CloseCircleFilled } from "@ant-design/icons";
 import allActions from "../../../store/actions";
 import ModalCreateTest from "../ModalCreate";
-import { DELETE_TEST } from "../../../store/types";
 
 const DeleteTestForm = ({ type = "" }) => {
     const { tests } = useSelector((state) => state);
@@ -25,11 +23,7 @@ const DeleteTestForm = ({ type = "" }) => {
     };
 
     const onSubmit = async () => {
-        const res = await axios.delete(`/api/schools/${id}/tests/${testId}`);
-        dispatch({ type: DELETE_TEST, payload: testId });
-        dispatch(allActions.modalActions.visibleDeleteTestNo());
-        console.log(res.data);
-        router.push(`/schools/${id}/tests`);
+        dispatch(allActions.testActions.deleteTest(id, testId));
     };
 
     const onOtherTestSubmit = () => {
@@ -60,7 +54,6 @@ const DeleteTestForm = ({ type = "" }) => {
                 />
             </Tooltip>
             <ModalCreateTest
-                style={{ top: 20 }}
                 onOk={type !== "otherTests" ? onSubmit : onOtherTestSubmit}
                 title="Delete Test"
                 handleCancel={onHandleCancel}

@@ -1,10 +1,8 @@
 import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
-import { Row, Col, Card, Button, Badge, Space } from "antd";
-import { useEffect } from "react";
+import { Row, Col, Card, Button, Badge } from "antd";
 import allActions from "../../store/actions";
-import { EMPTY_ANSWERS, EMPTY_QUESTIONS } from "../../store/types";
+import questionStyle from "../../styles/modules/componentStyles/Questions.module.css";
 
 const QuestionList = () => {
     const router = useRouter();
@@ -14,10 +12,10 @@ const QuestionList = () => {
     const { tests } = useSelector((state) => state);
     const { questions } = useSelector((state) => state);
     const { answers } = useSelector((state) => state);
-    const { examId } = useSelector((state) => state.exam);
 
-    const { selectedQuestion, selectedSectionId, selectedSectionNo } =
-        useSelector((state) => state.custom);
+    const { selectedQuestion, selectedSectionId } = useSelector(
+        (state) => state.custom
+    );
 
     const dispatch = useDispatch();
 
@@ -45,16 +43,13 @@ const QuestionList = () => {
 
     const onSectionClick = async (sectionId, sectionNo) => {
         if (sectionId !== selectedSectionId) {
-            const list = Object.values(questions);
-            await axios.patch(
-                `/api/tests/${testId}/sections/${selectedSectionId}`,
-                { questions: list }
+            dispatch(
+                allActions.questionActions.onSectionClick({
+                    testId,
+                    sectionId,
+                    sectionNo,
+                })
             );
-            console.log("hiii");
-            dispatch(allActions.customActions.selectedSectionId(sectionId));
-            dispatch(allActions.customActions.selectedSectionNo(sectionNo));
-            dispatch(allActions.questionActions.emptyQuestions());
-            dispatch(allActions.customActions.selectedQuestion(1));
         }
     };
 
@@ -68,28 +63,6 @@ const QuestionList = () => {
                     sectionNo
                 )
             );
-            // const answersObj = {
-            //     selectedSectionId,
-            //     selectedSectionNo,
-            //     answers,
-            // };
-
-            // const exam = await axios.patch(
-            //     `/api/schools/${id}/tests/${testId}/exams/${examId}`,
-            //     answersObj
-            // );
-            // // dispatch({ type: "FETCH_ANSWERS", payload: exam });
-
-            // dispatch(allActions.customActions.selectedSectionId(sectionId));
-            // dispatch(allActions.customActions.selectedSectionNo(sectionNo));
-            // dispatch(allActions.answerActions.emptyAnswers());
-            // dispatch(allActions.questionActions.emptyQuestions());
-            // dispatch(
-            //     allActions.answerActions.fetchAnwers(
-            //         exam.data.answers[sectionNo]
-            //     )
-            // );
-            // dispatch(allActions.customActions.selectedQuestion(1));
         }
     };
 
@@ -104,7 +77,6 @@ const QuestionList = () => {
                     sm={8}
                     span={4}
                     onClick={() => onQuestionClick(question.questionNo)}
-                    // style={{ marginLeft: 10 }}
                 >
                     <Badge
                         status="success"
@@ -134,14 +106,14 @@ const QuestionList = () => {
     const onMapSections = () => {
         return sections.map((section) => {
             return (
-                <Col key={section.sectionId} offset={0} xl={12}>
+                <Col key={section.sectionId} offset={0} md={12}>
                     <Button
                         type={
                             selectedSectionId === section.sectionId
                                 ? "primary"
                                 : ""
                         }
-                        style={{ width: "100%", overflow: "hidden" }}
+                        className={questionStyle["question-list-button"]}
                         onClick={
                             path && path.includes("tests")
                                 ? () =>
@@ -170,20 +142,10 @@ const QuestionList = () => {
                 size="small"
                 title="Question Numbers"
                 className="question-list-card"
-                // style={{
-                //     margin: "1vh 0.5vh",
-                //     overflowY: "auto",
-                //     // height: "52vh",
-                // }}
             >
                 <Card
                     type="inner"
                     bordered={false}
-                    // style={{
-                    //     padding: "2.5vh",
-                    //     background: "#f0efed",
-                    //     borderRadius: "6px",
-                    // }}
                     className="inner-card-padding-two"
                 >
                     <Row gutter={[16, 16]}>
@@ -195,26 +157,17 @@ const QuestionList = () => {
                 bordered={false}
                 size="small"
                 title="Sections"
-                // style={{
-                //     margin: "1vh 0.5vh",
-                //     overflowY: "auto",
-                // }}
                 className="question-list-card"
             >
                 <Card
                     type="inner"
                     bordered={false}
-                    // style={{
-                    //     padding: "2.5vh",
-                    //     background: "#f0efed",
-                    //     borderRadius: "6px",
-                    // }}
                     className="inner-card-padding-two"
                 >
                     <Row
-                        justify="center"
+                        justify="start"
                         gutter={[8, 16]}
-                        style={{ overflow: "hidden" }}
+                        className={questionStyle["question-list-overflow"]}
                     >
                         {/* <Space size={[60, 16]} align="center" wrap> */}
                         {sections && onMapSections()}

@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import { Col, Empty, Row } from "antd";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import allComponentsStyle from "../styles/modules/componentStyles/AllComponents.module.css";
 
 const DonutChart = () => {
     const { donutExams } = useSelector((state) => state.exam);
@@ -9,8 +10,6 @@ const DonutChart = () => {
     useEffect(() => {
         function drawChart(width, height) {
             const outerRadius = 100;
-            const innerRadius = 75;
-
             const radius = Math.min(width, height) / 2;
 
             // const colors = ["#ff7e05", "#fcb25d", "#ffc98c", "#fc941c"];
@@ -198,23 +197,6 @@ const DonutChart = () => {
 
     console.log(donutExams.length);
 
-    // const renderr = () => {
-    //     if (donutExams.length !== 0) {
-    //         return (
-    //             <Col key="1" span={24}>
-    //                 <svg />
-    //             </Col>
-    //         );
-    //     }
-    //     if (donutExams.length === 0) {
-    //         return (
-    //             <Col key="2" span={24} style={{ height: 200 }}>
-    //                 <Empty style={{ position: "relative", top: 30 }} />
-    //             </Col>
-    //         );
-    //     }
-    // };
-
     return (
         <Row>
             {/* {renderr} */}
@@ -224,13 +206,14 @@ const DonutChart = () => {
             </Col>
 
             {donutExams.length === 0 && (
-                <Col span={24} style={{ height: 178 }}>
+                <Col
+                    span={24}
+                    className={allComponentsStyle["donut-chart-col"]}
+                >
                     <Empty
-                        style={{
-                            position: "relative",
-                            top: 18,
-                            textAlign: "center",
-                        }}
+                        className={
+                            allComponentsStyle["donut-chart-empty-position"]
+                        }
                     />
                 </Col>
             )}

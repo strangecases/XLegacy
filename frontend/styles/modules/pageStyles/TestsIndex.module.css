@@ -1,0 +1,40 @@
+.tests-index-section {
+    text-align: right;
+}
+
+.tests-index-card {
+    margin-bottom: 20px;
+}
+
+.tests-index-space {
+    display: flex;
+}
+
+.tests-index-schoolname {
+    font-weight: 700;
+    color: black;
+    margin-left: 9px;
+    margin-top: 4px;
+}
+
+.tests-index-button {
+    background-color: #22aff5;
+    border-color: #22aff5;
+    color: white;
+}
+
+.tests-index-align {
+    text-align: center;
+}
+
+.tests-index-published {
+    background-color: #fce09d;
+}
+
+.tests-index-align .tests-index-input {
+    width: 90%;
+}
+
+.tests-index-button-icon {
+    color: #89f702;
+}

@@ -11,6 +11,7 @@ const ExamCountDown = ({ time = 40 }) => {
     const router = useRouter();
     const { id, testId } = router.query;
     const { answers } = useSelector((state) => state);
+    const { examId } = useSelector((state) => state.exam);
 
     const dispatch = useDispatch();
 
@@ -20,8 +21,12 @@ const ExamCountDown = ({ time = 40 }) => {
         };
 
         const onChange = (val) => {
-            if (9.95 * 60 * 1000 < val && val < 10 * 60 * 1000) {
+            if (4.95 * 60 * 1000 < val && val < 5 * 60 * 1000) {
+                console.log("ffddfdee");
                 setCountDownColor("red");
+            }
+            if (9.85 * 1000 < val && val < 10 * 1000) {
+                dispatch(allActions.customActions.examSaved(true));
             }
         };
         return (
@@ -74,7 +79,7 @@ const ExamCountDown = ({ time = 40 }) => {
             renderer={renderer}
             onStart={() => {
                 // Save the end date
-                if (localStorage.getItem("end_date") == null)
+                if (localStorage.getItem("end_date") == null && examId)
                     localStorage.setItem(
                         "end_date",
                         JSON.stringify(data.date + data.delay)

@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
-import { Spin } from "antd";
+import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-import { SyncOutlined } from "@ant-design/icons";
-import allActions from "../../store/actions";
+import Spinner from "../Spinner";
 
 const AdminRoute = ({ children }) => {
     const [ok, setOk] = useState(true);
@@ -23,27 +22,18 @@ const AdminRoute = ({ children }) => {
                 }
             } catch (err) {
                 console.log(err);
-                dispatch(allActions.adminActions.logOut());
-                setOk(false);
+                toast.error("Please login to visit this page", {
+                    autoClose: 2200,
+                    hideProgressBar: true,
+                });
                 router.push("/login");
+                setOk(false);
             }
         };
         fetchAdmin();
     }, [router, ok, dispatch, admin]);
 
-    return (
-        <div>
-            {ok ? (
-                <> {children} </>
-            ) : (
-                <Spin
-                    size="large"
-                    style={{ position: "relative", top: "21vh", left: "45%" }}
-                    indicator={<SyncOutlined spin style={{ fontSize: 72 }} />}
-                />
-            )}
-        </div>
-    );
+    return <div>{ok ? <> {children} </> : <Spinner />}</div>;
 };
 
 export default AdminRoute;

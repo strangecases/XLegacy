@@ -9,6 +9,7 @@ import {
     Divider,
     Tooltip,
     Popconfirm,
+    Space,
 } from "antd";
 import {
     PlusCircleFilled,
@@ -16,8 +17,11 @@ import {
     SyncOutlined,
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import FormItem from "../formitems/FormItem";
 import ClassGroup from "./ClassGroup";
+import DeleteSchoolForm from "../modal/modalSchool/DeleteSchoolForm";
+import allActions from "../../store/actions";
 
 const SchoolForm = ({
     control,
@@ -38,9 +42,15 @@ const SchoolForm = ({
         });
     }, [appe]);
 
+    const dispatch = useDispatch();
+
     const appending = () => {
         append({});
         setAppe((prev) => !prev);
+    };
+
+    const onDelete = () => {
+        dispatch(allActions.modalActions.visibleDeleteSchoolYes());
     };
 
     return (
@@ -57,6 +67,7 @@ const SchoolForm = ({
                             label="School Name"
                             labelColmn={7}
                             wrapperColmn={17}
+                            redLabel
                         />
                     </Col>
                     <Col span={24}>
@@ -69,6 +80,7 @@ const SchoolForm = ({
                             label="School Code"
                             labelColmn={7}
                             wrapperColmn={17}
+                            redLabel
                         />
                     </Col>
                     <Col span={24}>
@@ -186,14 +198,38 @@ const SchoolForm = ({
                         </Tooltip>
                     </Col>
                     <Col>
-                        <Button
-                            disabled={!isDirty || isSubmitting}
-                            type="primary"
-                            htmlType="submit"
-                        >
-                            {isSubmitting ? <SyncOutlined spin /> : "Submit"}
-                        </Button>
+                        <Space size={[16, 8]} wrap>
+                            <Button
+                                disabled={!isDirty || isSubmitting}
+                                type="primary"
+                                htmlType="submit"
+                            >
+                                {isSubmitting ? (
+                                    <SyncOutlined spin />
+                                ) : (
+                                    "Submit"
+                                )}
+                            </Button>
+                            {path === "edit" && (
+                                <>
+                                    <Button
+                                        disabled={!isDirty || isSubmitting}
+                                        danger
+                                        type="primary"
+                                        onClick={onDelete}
+                                    >
+                                        {isSubmitting ? (
+                                            <SyncOutlined spin />
+                                        ) : (
+                                            "Delete"
+                                        )}
+                                    </Button>
+                                    <DeleteSchoolForm />
+                                </>
+                            )}
+                        </Space>
                     </Col>
+
                     {console.log(isSubmitting, isDirty)}
                 </Row>
             </Card>

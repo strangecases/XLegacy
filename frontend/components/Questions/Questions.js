@@ -7,6 +7,7 @@ import QuestionDetail from "./QuestionDetail";
 import allActions from "../../store/actions";
 import ExamDetail from "./ExamDetail";
 import { EMPTY_QUESTIONS } from "../../store/types";
+import questionStyle from "../../styles/modules/componentStyles/Questions.module.css";
 
 const Questions = () => {
     const router = useRouter();
@@ -56,23 +57,9 @@ const Questions = () => {
     }, [testId, selectedSectionId, tests]);
 
     return (
-        <Layout
-            style={{
-                height: "100vh",
-            }}
-        >
-            <Row
-                style={{
-                    margin: "10px 16px",
-                    overflow: "none",
-                }}
-                gutter={16}
-            >
-                <Col
-                    className="gutter-row display-question-bar"
-                    span={9}
-                    style={{}}
-                >
+        <Layout className={questionStyle["questions-layout"]}>
+            <Row className={questionStyle["questions-row"]} gutter={16}>
+                <Col className="gutter-row display-question-bar" span={9}>
                     <QuestionList />
                 </Col>
                 <Col className="gutter-row" xs={24} md={15} span={15}>

@@ -8,6 +8,8 @@ import CustomLayout from "../../../../../../components/nav/CustomLayout";
 import DonutChart from "../../../../../../components/DonutChart";
 import allActions from "../../../../../../store/actions";
 import AdminRoute from "../../../../../../components/routes/AdminRoute";
+import classAbrv from "../../../../../../utils";
+import resultStyle from "../../../../../../styles/modules/pageStyles/Results.module.css";
 
 const { Column } = Table;
 const { Option } = Select;
@@ -81,7 +83,7 @@ const Results = () => {
                                     schools[id] &&
                                     schools[id].schoolName.toUpperCase()
                                 }
-                                style={{ height: 240 }}
+                                className={resultStyle["results-index-card"]}
                             >
                                 <p>
                                     results for {tests[testId]?.testTitle} test
@@ -90,27 +92,43 @@ const Results = () => {
                                 <Row gutter={8} justify="center">
                                     <Col span={8}>
                                         <Input
-                                            style={{ textAlign: "center" }}
+                                            className={
+                                                resultStyle[
+                                                    "results-index-input"
+                                                ]
+                                            }
                                             disabled
                                             name="classNo"
-                                            // value={
-                                            //     tests[testId] &&
-                                            //     tests[testId].classNo
-                                            // }
-                                            value="9th class"
+                                            value={
+                                                tests[testId] &&
+                                                `${
+                                                    tests[testId].classNo
+                                                }${classAbrv(
+                                                    tests[testId].classNo
+                                                )}`
+                                            }
                                         />
                                     </Col>
                                     <Col span={8}>
                                         <Select
                                             defaultValue="v"
-                                            style={{
-                                                width: "100%",
-                                                textAlign: "center",
-                                            }}
+                                            className={
+                                                resultStyle[
+                                                    "results-index-select"
+                                                ]
+                                            }
                                             onChange={onGroupSelect}
                                             name="group"
                                         >
-                                            <Option key="v" value="v">
+                                            <Option
+                                                className={
+                                                    resultStyle[
+                                                        "results-index-input"
+                                                    ]
+                                                }
+                                                key="v"
+                                                value="v"
+                                            >
                                                 All
                                             </Option>
                                             {schools[id] &&
@@ -129,6 +147,11 @@ const Results = () => {
                                                     .groups.map((grp) => {
                                                         return (
                                                             <Option
+                                                                className={
+                                                                    resultStyle[
+                                                                        "results-index-input"
+                                                                    ]
+                                                                }
                                                                 key={grp.group}
                                                                 value={
                                                                     grp.group
@@ -143,7 +166,11 @@ const Results = () => {
                         </Col>
 
                         <Col span={11}>
-                            <Card style={{ overflow: "hidden" }}>
+                            <Card
+                                className={
+                                    resultStyle["results-index-overflow"]
+                                }
+                            >
                                 <DonutChart donutExams={donutExams} />
                             </Card>
                         </Col>

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Section from "./section.js";
+import Exam from "./exam.js";
 
 const { Schema } = mongoose;
 
@@ -61,6 +62,10 @@ testSchema.post("findOneAndDelete", async (doc) => {
             _id: {
                 $in: doc.sections,
             },
+        });
+
+        await Exam.deleteMany({
+            testId: doc._id,
         });
     }
 });

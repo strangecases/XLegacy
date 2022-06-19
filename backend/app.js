@@ -50,7 +50,7 @@ app.get("/api/csrf-token", (req, res) => {
 //     res.send("bye");
 // });
 
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
     const { statusCode = 500, message = "Oh No, Something Went Wrong!" } = err;
     res.status(statusCode).send(message);
 });

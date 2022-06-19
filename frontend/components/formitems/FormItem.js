@@ -14,6 +14,7 @@ const FormItem = ({
     labelColmn = "",
     wrapperColmn = "",
     resize = true,
+    redLabel = false,
 }) => {
     return (
         <Form.Item
@@ -23,10 +24,11 @@ const FormItem = ({
                 errors[name] && errors[name].message ? "error" : "success"
             }
             label={label}
+            required={redLabel}
             labelCol={
                 labelColmn && {
                     sm: { span: 24 },
-                    md: { span: 12 },
+                    md: { span: labelColmn + 4 },
                     lg: { span: labelColmn + 2 },
                     xl: { span: labelColmn },
                 }
@@ -34,7 +36,7 @@ const FormItem = ({
             wrapperCol={
                 wrapperColmn && {
                     sm: { span: 24 },
-                    md: { span: 12 },
+                    md: { span: wrapperColmn - 4 },
                     lg: { span: wrapperColmn - 2 },
                     xl: { span: wrapperColmn },
                 }

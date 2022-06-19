@@ -70,8 +70,8 @@ export const registerSchema = yup
 export const questionSchema = yup.object().shape({
     question: yup
         .string()
-        .min(10, "question should be minimum 10 characters long")
-        .max(300, "question should be maximum 300 characters long")
+        .min(10, "question should be minimum 10 characters")
+        .max(300, "question should be maximum 300 characters")
         .required("question is required"),
     options: yup.object().shape({
         a: yup
@@ -100,6 +100,7 @@ export const examSchema = yup
     .shape({
         studentName: yup.string().required("name is required"),
         schoolCode: yup.string().required("school code is required"),
+        testCode: yup.string().required("test code is required"),
         parentsPhNo: yup
             .string()
             .matches(/^$|^\d{10}$/, "not a valid phone no"),

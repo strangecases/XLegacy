@@ -37,7 +37,7 @@ export const showSection = async (req, res) => {
 
 export const editSection = async (req, res) => {
     console.log(req.body);
-    const section = await Section.findByIdAndUpdate(
+    await Section.findByIdAndUpdate(
         req.params.sectionId,
         { questions: req.body.questions },
         {
@@ -45,7 +45,7 @@ export const editSection = async (req, res) => {
             new: true,
         }
     );
-    let test;
+
     if (req.body.isPublished) {
         await Test.findByIdAndUpdate(
             req.params.testId,
@@ -57,7 +57,11 @@ export const editSection = async (req, res) => {
         );
     }
     if (req.body.subject || req.body.sectionNo || req.body.sectionDescription) {
-        test = await Test.findOneAndUpdate(
+        await Section.findByIdAndUpdate(req.params.sectionId, req.body, {
+            upsert: true,
+            new: true,
+        });
+        await Test.findOneAndUpdate(
             {
                 _id: req.params.testId,
             },
@@ -81,7 +85,7 @@ export const editSection = async (req, res) => {
 };
 
 export const deleteSection = async (req, res) => {
-    const test = await Test.findByIdAndUpdate(
+    await Test.findByIdAndUpdate(
         req.params.testId,
         {
             $pull: {

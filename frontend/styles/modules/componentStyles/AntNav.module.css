@@ -1,0 +1,59 @@
+.top-nav-menu {
+    height: 46px;
+    border: 0;
+}
+
+:global(.ant-layout) .sidebar-sider {
+    overflow: auto;
+    height: 100vh;
+    position: sticky;
+    left: 0;
+    top: 0;
+    bottom: 0;
+}
+
+:global(.ant-layout) .sidebar-menu {
+    padding: 30px 0;
+}
+
+:global(.ant-layout) .header-nav {
+    position: sticky;
+    z-index: 1000;
+    width: 100%;
+    top: 0;
+    padding: 0;
+    height: 46px;
+    line-height: 46px;
+    background-color: #fff;
+}
+
+:global(.ant-layout) .header-nav .header-nav-submenu {
+    margin-left: auto;
+    position: relative;
+}
+
+.exam-nav-menu {
+    height: 46px;
+    border: 0;
+    position: relative;
+    display: flex;
+}
+
+.exam-nav-menu .exam-nav-item {
+    position: relative !important;
+    top: 6px !important;
+    left: 35vw;
+}
+
+.custom-layout-content {
+    margin: 10px 16px 0;
+    overflow: initial;
+}
+
+.custom-layout-footer {
+    text-align: center;
+}
+
+.header-bold {
+    font-weight: 600;
+}

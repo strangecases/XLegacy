@@ -5,6 +5,7 @@ const initialState = {
     modalSectionVisible: false,
     popTestVisible: false,
     popSectionVisible: false,
+    popSchoolVisible: false,
 };
 
 const modalReducer = (state = initialState, action) => {
@@ -25,6 +26,10 @@ const modalReducer = (state = initialState, action) => {
             return { ...state, popSectionVisible: true };
         case types.VISIBLE_DELETE_SECTION_NO:
             return { ...state, popSectionVisible: false };
+        case types.VISIBLE_DELETE_SCHOOL_YES:
+            return { ...state, popSchoolVisible: true };
+        case types.VISIBLE_DELETE_SCHOOL_NO:
+            return { ...state, popSchoolVisible: false };
         default:
             return state;
     }

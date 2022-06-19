@@ -1,0 +1,11 @@
+.schools-index-card-height {
+    min-height: 270px;
+}
+
+.school-index-tag {
+    font-weight: 700;
+}
+
+.school-index-add-button {
+    text-align: center;
+}

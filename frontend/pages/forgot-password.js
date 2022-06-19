@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
 import { SyncOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -8,13 +6,11 @@ import { toast } from "react-toastify";
 import { Button, Form, Card, Row, Col } from "antd";
 import { useForm } from "react-hook-form";
 import FormInput from "../components/formitems/FormInput";
-import authStyles from "../styles/modules/Auth.module.css";
+import authStyles from "../styles/modules/pageStyles/Auth.module.css";
 import { forgotPasswordSchema } from "../yupUtil";
+import IsNotLoggedIn from "../components/routes/isNotLoggedIn";
 
 const ForgotPassword = () => {
-    // state
-    const { admin } = useSelector((state) => state.auth);
-
     // router
     const router = useRouter();
 
@@ -26,13 +22,6 @@ const ForgotPassword = () => {
         mode: "onBlur",
         resolver: yupResolver(forgotPasswordSchema),
     });
-
-    // redirect if admin is logged in
-    useEffect(() => {
-        if (admin !== null) {
-            router.push("/");
-        }
-    }, [admin, router]);
 
     const onSubmit = async ({ email }) => {
         console.log(email);
@@ -48,7 +37,7 @@ const ForgotPassword = () => {
     };
 
     return (
-        <>
+        <IsNotLoggedIn>
             <h2 className={authStyles.headingAuth}>Forgot Password</h2>
             <Row justify="center">
                 <Col xs={22} sm={12} md={10} lg={8} span={8}>
@@ -81,7 +70,7 @@ const ForgotPassword = () => {
                     </Card>
                 </Col>
             </Row>
-        </>
+        </IsNotLoggedIn>
     );
 };
 

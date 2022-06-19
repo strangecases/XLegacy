@@ -9,11 +9,9 @@ import {
     LogoutOutlined,
     CoffeeOutlined,
 } from "@ant-design/icons";
-import axios from "axios";
-import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-import css from "../../styles/modules/TopNav.module.css";
 import allActions from "../../store/actions";
+import antNavStyle from "../../styles/modules/componentStyles/AntNav.module.css";
 
 const { Item, SubMenu } = Menu;
 
@@ -34,10 +32,7 @@ const TopNav = ({ children }) => {
     }, [router.pathname]);
 
     const logout = async () => {
-        const { data } = await axios.get("/api/logout");
-        toast(data.message);
         dispatch(allActions.adminActions.logOut());
-        router.push("/login");
     };
 
     console.log("topnac hiii");
@@ -49,14 +44,15 @@ const TopNav = ({ children }) => {
                     mode="horizontal"
                     onClick={(e) => setCurrent(e.key)}
                     selectedKeys={[current]}
-                    style={{
-                        height: 46,
-                        border: 0,
-                    }}
+                    className={antNavStyle["top-nav-menu"]}
                 >
-                    <Item key="/" icon={<AppstoreOutlined />}>
+                    <Item
+                        key="/"
+                        icon={<AppstoreOutlined />}
+                        className={antNavStyle["header-bold"]}
+                    >
                         <Link href="/">
-                            <a>App</a>
+                            <a>ScholarX</a>
                         </Link>
                     </Item>
 

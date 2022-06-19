@@ -1,0 +1,15 @@
+.exam-detail-input-position {
+    position: fixed;
+}
+
+.exam-detail-input-center {
+    text-align: center;
+}
+
+.exam-detail-space {
+    display: flex;
+}
+
+.exam-detail-label {
+    display: inline;
+}

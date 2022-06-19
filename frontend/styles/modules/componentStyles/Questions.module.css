@@ -1,0 +1,35 @@
+.segmented-section {
+    display: none;
+    width: 100%;
+    overflow-x: auto;
+}
+
+.questions-layout {
+    height: 100%;
+    overflow: hidden;
+}
+
+.questions-row {
+    margin: 5px 5px !important;
+    overflow: hidden;
+}
+
+.question-list-button {
+    width: 100%;
+    overflow: hidden;
+}
+
+.question-list-overflow {
+    overflow: hidden;
+}
+
+.controller-input {
+    width: 25vw;
+}
+
+@media (max-width: 767px) {
+    .segmented-section {
+        display: flex;
+        justify-content: center;
+    }
+}

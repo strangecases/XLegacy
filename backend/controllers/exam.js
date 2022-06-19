@@ -1,5 +1,7 @@
 import Exam from "../models/exam.js";
 import Section from "../models/section.js";
+import School from "../models/school.js";
+import Test from "../models/test.js";
 import ExpressError from "../utils/ExpressError.js";
 
 export const index = async (req, res) => {
@@ -27,10 +29,16 @@ export const index = async (req, res) => {
 };
 
 export const createExam = async (req, res) => {
-    // console.log(req.body);
-    // console.log(req.params);
-    // res.json({ _id: "hi" });
-    const exam = new Exam(req.body);
+    const school = await School.findById(req.params.id);
+    if (school.schoolCode !== req.body.schoolCode) {
+        throw new ExpressError("School code is not correct", 400);
+    }
+    const test = await Test.findById(req.params.testId);
+    if (test.testCode !== req.body.testCode) {
+        throw new ExpressError("Test code is not correct", 400);
+    }
+
+    const exam = await new Exam(req.body);
     exam.schoolId = req.params.id;
     exam.testId = req.params.testId;
     await exam.save();

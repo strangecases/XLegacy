@@ -17,20 +17,18 @@ import {
     CheckCircleFilled,
 } from "@ant-design/icons";
 import { Controller, useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect } from "react";
 import { useRouter } from "next/router";
 import FormItem from "../formitems/FormItem";
 import { questionSchema } from "../../yupUtil";
 import allActions from "../../store/actions";
 import DeleteSectionForm from "../modal/modalSection/DeleteSectionForm";
 import EditSectionForm from "../modal/modalSection/EditSectionForm";
-import styles from "../../styles/modules/TopNav.module.css";
 import FormOption from "../formitems/FormOption";
 import SegmentedSections from "./SegmentedSections";
+import questionDetailStyle from "../../styles/modules/componentStyles/QuestionDetails.module.css";
 
 const QuestionDetail = () => {
     const { selectedQuestion, selectedSectionId } = useSelector(
@@ -53,7 +51,7 @@ const QuestionDetail = () => {
 
     const {
         handleSubmit,
-        formState: { errors, isDirty, isSubmitting },
+        formState: { errors },
         control,
         setValue,
         setError,
@@ -157,11 +155,15 @@ const QuestionDetail = () => {
     const onDeleteQuestion = async () => {
         dispatch(allActions.questionActions.deleteQuestion(selectedQuestion));
         let questionList = Object.values(questions).slice(selectedQuestion);
-        if (Object.values(questions).length > 0) {
+        if (Object.values(questions).length >= 1) {
             console.log("1", questionList);
             questionList = questionList.map((x) => {
                 const d = { ...x };
-                d.questionNo -= 1;
+                if (d.questionNo === 1) {
+                    d.questionNo = 1;
+                } else {
+                    d.questionNo -= 1;
+                }
                 return d;
             });
             console.log("2", questionList);
@@ -173,34 +175,32 @@ const QuestionDetail = () => {
             );
             console.log(questions);
             dispatch(
-                allActions.customActions.selectedQuestion(selectedQuestion - 1)
+                allActions.customActions.selectedQuestion(
+                    selectedQuestion === 1
+                        ? selectedQuestion
+                        : selectedQuestion - 1
+                )
             );
             console.log(selectedQuestion);
         }
     };
 
     const onSave = async (publish) => {
-        const questionsList = Object.values(questions);
-
         if (!publish) {
-            await axios.patch(
-                `/api/tests/${testId}/sections/${selectedSectionId}`,
-                { questions: questionsList }
+            dispatch(
+                allActions.questionActions.onSectionClick({
+                    testId,
+                    save: true,
+                })
             );
-            toast.success("Saved", {
-                hideProgressBar: true,
-                autoClose: 1200,
-            });
         } else {
-            await axios.patch(
-                `/api/tests/${testId}/sections/${selectedSectionId}`,
-                { questions: questionsList, isPublished: publish }
+            dispatch(
+                allActions.questionActions.onSectionClick({
+                    testId,
+                    publish: true,
+                    id,
+                })
             );
-            toast.success("Published", {
-                hideProgressBar: true,
-                autoClose: 1200,
-            });
-            router.push(`/schools/${id}/tests/${testId}`);
         }
     };
 
@@ -208,308 +208,330 @@ const QuestionDetail = () => {
         dispatch(allActions.modalActions.visibleDeleteSectionYes());
     };
 
+    console.log(errors);
+
     return (
         <>
             <SegmentedSections />
 
-            <Card
-                bordered={false}
-                // style={{
-                //     margin: "1vh 0.5vh",
-                //     overflow: "none",
-                // }}
+            <Form
+                onFinish={handleSubmit(onSubmit)}
+                className={questionDetailStyle["question-detail-form"]}
             >
                 <Card
-                    style={{ overflow: "hidden" }}
-                    type="inner"
-                    bordered={false}
-                    // style={{
-                    //     padding: "2.5vh",
-                    //     background: "#f0efed",
-                    //     borderRadius: "6px",
-                    // }}
+                    className={`scroll-bar-none ${
+                        questionDetailStyle["question-detail-card"]
+                    } ${
+                        !errors?.question?.message
+                            ? questionDetailStyle[
+                                  "question-detail-card-no-error"
+                              ]
+                            : questionDetailStyle["question-detail-card-error"]
+                    }`}
                 >
-                    <Form onFinish={handleSubmit(onSubmit)}>
-                        <Row gutter={16}>
-                            <Col xs={6} sm={4} lg={3} span={3}>
-                                <Controller
-                                    value={setValue(
-                                        "questionNo",
-                                        selectedQuestion
-                                    )}
-                                    control={control}
-                                    name="questionNo"
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            style={{
-                                                textAlign: "center",
-                                            }}
-                                            readOnly
-                                        />
-                                    )}
-                                />
-                            </Col>
-                            <Col xs={13} sm={16} lg={17} span={17}>
-                                <FormItem
-                                    control={control}
-                                    errors={errors}
-                                    name="question"
-                                    placeholder="Enter Question"
-                                    type="text"
-                                />
-                            </Col>
-                            <Col xs={5} sm={4} md={4} lg={3} span={3}>
-                                <Row
-                                    gutter={{
-                                        xs: 32,
-                                        sm: 16,
-                                        md: 28,
-                                        lg: 32,
-                                    }}
+                    <Row
+                        gutter={16}
+                        className={questionDetailStyle["question-detail-row"]}
+                    >
+                        <Col xs={6} sm={4} lg={3} span={3}>
+                            <Controller
+                                value={setValue("questionNo", selectedQuestion)}
+                                control={control}
+                                name="questionNo"
+                                render={({ field }) => (
+                                    <Input
+                                        {...field}
+                                        className={
+                                            questionDetailStyle[
+                                                "question-detail-center"
+                                            ]
+                                        }
+                                        readOnly
+                                    />
+                                )}
+                            />
+                        </Col>
+                        <Col xs={13} sm={16} lg={17} span={17}>
+                            <FormItem
+                                control={control}
+                                errors={errors}
+                                name="question"
+                                placeholder="Enter Question"
+                                type="text"
+                            />
+                        </Col>
+                        <Col xs={5} sm={4} md={4} lg={3} span={3}>
+                            <Row
+                                gutter={{
+                                    xs: 32,
+                                    sm: 16,
+                                    md: 28,
+                                    lg: 32,
+                                }}
+                            >
+                                <Col
+                                    xs={8}
+                                    sm={8}
+                                    md={6}
+                                    lg={8}
+                                    xl={5}
+                                    span={8}
                                 >
-                                    <Col
-                                        xs={8}
-                                        sm={8}
-                                        md={6}
-                                        lg={8}
-                                        xl={5}
-                                        span={8}
+                                    <Tooltip
+                                        title="Save Question"
+                                        placement="bottom"
+                                        color="#71a832"
                                     >
-                                        <Tooltip
-                                            title="Save Question"
-                                            placement="bottom"
-                                            color="#71a832"
-                                            // style={{ marginRight: "auto" }}
-                                        >
-                                            <CheckCircleFilled
-                                                onClick={handleSubmit(onSubmit)}
-                                                style={{
-                                                    verticalAlign: "-0.2em",
-                                                }}
-                                                className="hover-icon-submit test-submit-delete"
-                                            />
-                                        </Tooltip>
-                                    </Col>
-                                    <Col
-                                        xs={8}
-                                        sm={8}
-                                        md={6}
-                                        lg={8}
-                                        xl={5}
-                                        span={8}
+                                        <CheckCircleFilled
+                                            onClick={handleSubmit(onSubmit)}
+                                            className={`hover-icon-submit test-submit-delete ${questionDetailStyle["question-detail-tooltip"]}`}
+                                        />
+                                    </Tooltip>
+                                </Col>
+                                <Col
+                                    xs={8}
+                                    sm={8}
+                                    md={6}
+                                    lg={8}
+                                    xl={5}
+                                    span={8}
+                                >
+                                    <Tooltip
+                                        title="Delete Question"
+                                        placement="bottom"
+                                        color="#f20707"
                                     >
-                                        <Tooltip
-                                            title="Delete Question"
-                                            placement="bottom"
-                                            color="#f20707"
+                                        <CloseCircleFilled
+                                            onClick={onDeleteQuestion}
+                                            className={`hover-icon-delete test-submit-delete ${questionDetailStyle["question-detail-tooltip"]}`}
+                                        />
+                                    </Tooltip>
+                                </Col>
+                            </Row>
+                        </Col>
+                    </Row>
+                </Card>
+                <Card
+                    className={
+                        questionDetailStyle["question-detail-inner-card"]
+                    }
+                >
+                    <Controller
+                        defaultValue="c"
+                        control={control}
+                        name="answer"
+                        render={({ field }) => (
+                            <Radio.Group {...field} id="hii">
+                                <Row>
+                                    <Col
+                                        xs={24}
+                                        sm={24}
+                                        md={16}
+                                        lg={16}
+                                        span={16}
+                                    >
+                                        <Space
+                                            direction="vertical"
+                                            className={
+                                                questionDetailStyle[
+                                                    "question-detail-space"
+                                                ]
+                                            }
                                         >
-                                            <CloseCircleFilled
-                                                onClick={onDeleteQuestion}
-                                                style={{
-                                                    verticalAlign: "-0.2em",
-                                                }}
-                                                className="hover-icon-delete test-submit-delete"
-                                            />
-                                        </Tooltip>
+                                            <Card
+                                                className={`test-card ${
+                                                    questionDetailStyle[
+                                                        "question-detail-option-card"
+                                                    ]
+                                                } ${
+                                                    !errors?.options?.a
+                                                        ? questionDetailStyle[
+                                                              "question-detail-option-card-no-error"
+                                                          ]
+                                                        : questionDetailStyle[
+                                                              "question-detail-option-card-error"
+                                                          ]
+                                                }`}
+                                            >
+                                                <Row gutter={16}>
+                                                    <Col
+                                                        xs={2}
+                                                        lg={2}
+                                                        xl={1}
+                                                        span={2}
+                                                    >
+                                                        <Radio
+                                                            className={`hiii ${questionDetailStyle["question-detail-radio"]}`}
+                                                            value="a"
+                                                        />
+                                                    </Col>
+                                                    <Col
+                                                        xs={15}
+                                                        md={18}
+                                                        lg={19}
+                                                        offset={1}
+                                                    >
+                                                        <FormOption
+                                                            control={control}
+                                                            errors={errors}
+                                                            name="options.a"
+                                                            option="a"
+                                                            placeholder="Enter option"
+                                                            type="text"
+                                                        />
+                                                    </Col>
+                                                </Row>
+                                            </Card>
+
+                                            <Card
+                                                className={`test-card ${
+                                                    questionDetailStyle[
+                                                        "question-detail-option-card"
+                                                    ]
+                                                } ${
+                                                    !errors?.options?.b
+                                                        ? questionDetailStyle[
+                                                              "question-detail-option-card-no-error"
+                                                          ]
+                                                        : questionDetailStyle[
+                                                              "question-detail-option-card-error"
+                                                          ]
+                                                }`}
+                                            >
+                                                <Row gutter={16}>
+                                                    <Col
+                                                        xs={2}
+                                                        lg={2}
+                                                        xl={1}
+                                                        span={2}
+                                                    >
+                                                        <Radio
+                                                            value="b"
+                                                            className={`hiii ${questionDetailStyle["question-detail-radio"]}`}
+                                                        />
+                                                    </Col>
+                                                    <Col
+                                                        xs={16}
+                                                        md={18}
+                                                        lg={19}
+                                                        offset={1}
+                                                    >
+                                                        <FormOption
+                                                            control={control}
+                                                            errors={errors}
+                                                            name="options.b"
+                                                            option="b"
+                                                            placeholder="Enter option"
+                                                            type="text"
+                                                        />
+                                                    </Col>
+                                                </Row>
+                                            </Card>
+                                            <Card
+                                                className={`test-card ${
+                                                    questionDetailStyle[
+                                                        "question-detail-option-card"
+                                                    ]
+                                                } ${
+                                                    !errors?.options?.c
+                                                        ? questionDetailStyle[
+                                                              "question-detail-option-card-no-error"
+                                                          ]
+                                                        : questionDetailStyle[
+                                                              "question-detail-option-card-error"
+                                                          ]
+                                                }`}
+                                            >
+                                                <Row gutter={16}>
+                                                    <Col
+                                                        xs={2}
+                                                        lg={2}
+                                                        xl={1}
+                                                        span={2}
+                                                    >
+                                                        <Radio
+                                                            className={`hiii ${questionDetailStyle["question-detail-radio"]}`}
+                                                            value="c"
+                                                        />
+                                                    </Col>
+                                                    <Col
+                                                        xs={16}
+                                                        md={18}
+                                                        lg={19}
+                                                        offset={1}
+                                                    >
+                                                        <FormOption
+                                                            control={control}
+                                                            errors={errors}
+                                                            name="options.c"
+                                                            option="c"
+                                                            placeholder="Enter option"
+                                                            type="text"
+                                                        />
+                                                    </Col>
+                                                </Row>
+                                            </Card>
+                                            <Card
+                                                className={`test-card ${
+                                                    questionDetailStyle[
+                                                        "question-detail-option-card"
+                                                    ]
+                                                } ${
+                                                    !errors?.options?.d
+                                                        ? questionDetailStyle[
+                                                              "question-detail-option-card-no-error"
+                                                          ]
+                                                        : questionDetailStyle[
+                                                              "question-detail-option-card-error"
+                                                          ]
+                                                }`}
+                                            >
+                                                <Row gutter={16}>
+                                                    <Col
+                                                        xs={2}
+                                                        lg={2}
+                                                        xl={1}
+                                                        span={2}
+                                                    >
+                                                        <Radio
+                                                            className={`hiii ${questionDetailStyle["question-detail-radio"]}`}
+                                                            value="d"
+                                                        />
+                                                    </Col>
+                                                    <Col
+                                                        xs={16}
+                                                        md={18}
+                                                        lg={19}
+                                                        offset={1}
+                                                    >
+                                                        <FormOption
+                                                            control={control}
+                                                            errors={errors}
+                                                            name="options.d"
+                                                            option="d"
+                                                            placeholder="Enter option"
+                                                            type="text"
+                                                        />
+                                                    </Col>
+                                                </Row>
+                                            </Card>
+                                        </Space>
                                     </Col>
                                 </Row>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col span={24}>
-                                <Controller
-                                    defaultValue="c"
-                                    control={control}
-                                    name="answer"
-                                    render={({ field }) => (
-                                        <Radio.Group
-                                            {...field}
-                                            style={{ width: "55vw" }}
-                                            id="hii"
-                                        >
-                                            <Row>
-                                                <Col span={24}>
-                                                    <Space
-                                                        direction="vertical"
-                                                        style={{
-                                                            display: "flex",
-                                                        }}
-                                                    >
-                                                        <Row gutter={16}>
-                                                            <Col
-                                                                xs={2}
-                                                                lg={2}
-                                                                xl={1}
-                                                                span={2}
-                                                            >
-                                                                <Radio
-                                                                    className="hiii"
-                                                                    value="a"
-                                                                />
-                                                            </Col>
-                                                            <Col
-                                                                xs={16}
-                                                                md={13}
-                                                                lg={10}
-                                                            >
-                                                                {/* <ControllerInput
-                                                                control={
-                                                                    control
-                                                                }
-                                                                name="options.a"                                                                                                       
-                                                            /> */}
-                                                                <FormOption
-                                                                    control={
-                                                                        control
-                                                                    }
-                                                                    errors={
-                                                                        errors
-                                                                    }
-                                                                    name="options.a"
-                                                                    option="a"
-                                                                    placeholder="Enter option"
-                                                                    type="text"
-                                                                    // width="25vw"
-                                                                />
-                                                            </Col>
-                                                        </Row>
-                                                        <Row gutter={16}>
-                                                            <Col
-                                                                xs={2}
-                                                                lg={2}
-                                                                xl={1}
-                                                                span={2}
-                                                            >
-                                                                <Radio
-                                                                    className="hiii"
-                                                                    value="b"
-                                                                />
-                                                            </Col>
-                                                            <Col
-                                                                xs={16}
-                                                                md={13}
-                                                                lg={10}
-                                                            >
-                                                                {/* <ControllerInput
-                                                                control={
-                                                                    control
-                                                                }
-                                                                name="options.b"
-                                                                option="b"
-                                                                x={setValue}
-                                                            /> */}
-                                                                <FormOption
-                                                                    control={
-                                                                        control
-                                                                    }
-                                                                    errors={
-                                                                        errors
-                                                                    }
-                                                                    name="options.b"
-                                                                    option="b"
-                                                                    placeholder="Enter option"
-                                                                    type="text"
-                                                                    // width="25vw"
-                                                                />
-                                                            </Col>
-                                                        </Row>
-                                                        <Row gutter={16}>
-                                                            <Col
-                                                                xs={2}
-                                                                lg={2}
-                                                                xl={1}
-                                                                span={2}
-                                                            >
-                                                                <Radio
-                                                                    className="hiii"
-                                                                    value="c"
-                                                                />
-                                                            </Col>
-                                                            <Col
-                                                                xs={16}
-                                                                md={13}
-                                                                lg={10}
-                                                            >
-                                                                {/* <ControllerInput
-                                                                control={
-                                                                    control
-                                                                }
-                                                                name="options.c"
-                                                                option="c"
-                                                                x={setValue}
-                                                            /> */}
-                                                                <FormOption
-                                                                    control={
-                                                                        control
-                                                                    }
-                                                                    errors={
-                                                                        errors
-                                                                    }
-                                                                    name="options.c"
-                                                                    option="c"
-                                                                    placeholder="Enter option"
-                                                                    type="text"
-                                                                    // width="25vw"
-                                                                />
-                                                            </Col>
-                                                        </Row>
-                                                        <Row gutter={16}>
-                                                            <Col
-                                                                xs={2}
-                                                                lg={2}
-                                                                xl={1}
-                                                                span={2}
-                                                            >
-                                                                <Radio
-                                                                    className="hiii"
-                                                                    value="d"
-                                                                />
-                                                            </Col>
-                                                            <Col
-                                                                xs={16}
-                                                                md={13}
-                                                                lg={10}
-                                                            >
-                                                                {/* <ControllerInput
-                                                                control={
-                                                                    control
-                                                                }
-                                                                name="options.d"
-                                                                option="d"
-                                                                x={setValue}
-                                                            /> */}
-                                                                <FormOption
-                                                                    control={
-                                                                        control
-                                                                    }
-                                                                    errors={
-                                                                        errors
-                                                                    }
-                                                                    name="options.d"
-                                                                    option="d"
-                                                                    placeholder="Enter option"
-                                                                    type="text"
-                                                                    // width="25vw"
-                                                                />
-                                                            </Col>
-                                                        </Row>
-                                                    </Space>
-                                                </Col>
-                                            </Row>
-                                        </Radio.Group>
-                                    )}
-                                />
-                            </Col>
-                        </Row>
-                    </Form>
+                            </Radio.Group>
+                        )}
+                    />
+
                     <Divider />
-                    <Row>
+                    <Row
+                        className={
+                            questionDetailStyle["question-detail-divider-row"]
+                        }
+                    >
                         <Col span={8}>
                             <Button
                                 danger
                                 onClick={handleSubmit(onAddQuestion)}
-                                // style={{ marginRight: 20 }}
                             >
                                 Add Question
                             </Button>
@@ -518,7 +540,12 @@ const QuestionDetail = () => {
                             <Row gutter={32} justify="center">
                                 <Col span={5}>
                                     <LeftOutlined
-                                        className="hover-icon-next test-submit-delete"
+                                        className={`hover-icon-next test-submit-delete ${
+                                            selectedQuestion === 1 &&
+                                            questionDetailStyle[
+                                                "question-detail-left-outlined-display"
+                                            ]
+                                        }`}
                                         onClick={() =>
                                             selectedQuestion > 1 &&
                                             dispatch(
@@ -531,7 +558,14 @@ const QuestionDetail = () => {
                                 </Col>
                                 <Col span={5}>
                                     <RightOutlined
-                                        className="hover-icon-next test-submit-delete"
+                                        className={`hover-icon-next test-submit-delete ${
+                                            selectedQuestion ===
+                                                Object.values(questions)
+                                                    .length &&
+                                            questionDetailStyle[
+                                                "question-detail-left-outlined-display"
+                                            ]
+                                        }`}
                                         onClick={() =>
                                             selectedQuestion <
                                                 Object.values(questions)
@@ -548,66 +582,56 @@ const QuestionDetail = () => {
                         </Col>
                     </Row>
                 </Card>
-            </Card>
+            </Form>
+
             <Card
                 bordered={false}
-                // style={{
-                //     margin: "1vh 0.5vh",
-                //     overflow: "none",
-                // }}
+                className={questionDetailStyle["question-detail-save-card"]}
             >
-                <Card
-                    type="inner"
-                    bordered={false}
-                    // style={{
-                    //     padding: "0vh",
-                    //     background: "#f0efed",
-                    //     borderRadius: "6px",
-                    // }}
-                    className="inner-card-padding"
+                <Row
+                    gutter={[8, 16]}
+                    className={
+                        questionDetailStyle["question-detail-save-card-row"]
+                    }
                 >
-                    <Row gutter={[8, 16]} style={{ overflow: "hidden" }}>
-                        <Col
-                            xs={{ span: 24, offset: 1 }}
-                            sm={{ span: 9, offset: 0 }}
-                            md={{ span: 10, offset: 0 }}
-                            lg={{ span: 8, offset: 1 }}
-                            xl={{ span: 8, offset: 1 }}
-                        >
-                            <Space size={[16, 12]} wrap>
-                                <Button
-                                    type="primary"
-                                    onClick={() => onSave(false)}
-                                >
-                                    save
+                    <Col
+                        xs={{ span: 24, offset: 1 }}
+                        sm={{ span: 9, offset: 0 }}
+                        md={{ span: 10, offset: 0 }}
+                        lg={{ span: 8, offset: 1 }}
+                        xl={{ span: 8, offset: 1 }}
+                    >
+                        <Space size={[16, 12]} wrap>
+                            <Button
+                                type="primary"
+                                onClick={() => onSave(false)}
+                            >
+                                save
+                            </Button>
+                            {tests && !tests[testId]?.isPublished && (
+                                <Button onClick={() => onSave(true)}>
+                                    publish
                                 </Button>
-                                {tests && !tests[testId]?.isPublished && (
-                                    <Button onClick={() => onSave(true)}>
-                                        publish
-                                    </Button>
-                                )}
-                            </Space>
-                        </Col>
+                            )}
+                        </Space>
+                    </Col>
 
-                        <Col
-                            xs={{ span: 24, offset: 1 }}
-                            sm={{ span: 14, offset: 1 }}
-                            md={{ span: 14, offset: 0 }}
-                            lg={{ span: 12, offset: 3 }}
-                            xl={{ span: 10, offset: 5 }}
-                        >
-                            <Space size={[16, 12]} wrap>
-                                {section && (
-                                    <EditSectionForm section={section} />
-                                )}
-                                <Button onClick={showPopConfirm} danger>
-                                    Delete Section
-                                </Button>
-                                <DeleteSectionForm />
-                            </Space>
-                        </Col>
-                    </Row>
-                </Card>
+                    <Col
+                        xs={{ span: 24, offset: 1 }}
+                        sm={{ span: 14, offset: 1 }}
+                        md={{ span: 14, offset: 0 }}
+                        lg={{ span: 12, offset: 3 }}
+                        xl={{ span: 10, offset: 5 }}
+                    >
+                        <Space size={[16, 12]} wrap>
+                            {section && <EditSectionForm section={section} />}
+                            <Button onClick={showPopConfirm} danger>
+                                Delete Section
+                            </Button>
+                            <DeleteSectionForm />
+                        </Space>
+                    </Col>
+                </Row>
             </Card>
         </>
     );

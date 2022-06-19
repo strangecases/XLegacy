@@ -1,16 +1,10 @@
-import { Button, Tooltip } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
-import axios from "axios";
-import { CloseCircleFilled } from "@ant-design/icons";
 import allActions from "../../../store/actions";
 import ModalCreateTest from "../ModalCreate";
 
 const DeleteSectionForm = () => {
-    const { tests } = useSelector((state) => state);
-    const { selectedSectionNo, selectedSectionId } = useSelector(
-        (state) => state.custom
-    );
+    const { selectedSectionNo } = useSelector((state) => state.custom);
 
     const dispatch = useDispatch();
 
@@ -22,29 +16,7 @@ const DeleteSectionForm = () => {
     // };
 
     const onSubmit = async () => {
-        const res = await axios.delete(
-            `/api/tests/${testId}/sections/${selectedSectionId}`
-        );
-        console.log(res.data.sectionNo);
-        if (res.data.sectionNo < tests[testId].sectionData.length) {
-            console.log("sections update");
-            console.log(tests[testId].sectionData.slice(res.data.sectionNo));
-            tests[testId].sectionData
-                .slice(res.data.sectionNo)
-                .forEach(async (sect) => {
-                    console.log(sect);
-                    const sectionNum = sect.sectionNo - 1;
-                    const sectionData = { ...sect, sectionNo: sectionNum };
-                    console.log(sectionData);
-                    await axios.patch(
-                        `/api/tests/${testId}/sections/${sect.sectionId}`,
-                        sectionData
-                    );
-                });
-        }
-        dispatch(allActions.modalActions.visibleDeleteSectionNo());
-        router.push(`/schools/${id}/tests/${testId}`);
-        console.log("finish");
+        dispatch(allActions.testActions.deleteSectionOnTest(id, testId));
     };
 
     const onHandleCancel = () => {
@@ -74,7 +46,6 @@ const DeleteSectionForm = () => {
             </Tooltip> */}
 
             <ModalCreateTest
-                style={{ top: 20 }}
                 onOk={onSubmit}
                 title="Delete Section"
                 handleCancel={onHandleCancel}

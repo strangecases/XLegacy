@@ -6,11 +6,23 @@ import customActions from "./customActions";
 import questionActions from "./questionActions";
 import answerActions from "./answerActions";
 
-const createExam = (data) => {
-    return {
-        type: types.CREATE_EXAM,
-        payload: data,
-    };
+const createExam = (id, testId, formValues) => async (dispatch) => {
+    try {
+        const response = await axios.post(
+            `/api/schools/${id}/tests/${testId}/exams`,
+            formValues
+        );
+        dispatch({
+            type: types.CREATE_EXAM,
+            payload: response.data,
+        });
+        Router.push(`/schools/${id}/exams/${testId}`);
+    } catch (err) {
+        toast.error(err.response.data, {
+            autoClose: 2200,
+            hideProgressBar: true,
+        });
+    }
 };
 
 const emptyExam = () => {
@@ -147,7 +159,7 @@ const onSectionSubmit = (id, testId) => async (dispatch, getState) => {
         const ansObj = { selectedSectionId, selectedSectionNo, answers };
 
         if (Object.keys(answers).length !== 0) {
-            const exam = await axios.patch(
+            await axios.patch(
                 `/api/schools/${id}/tests/${testId}/exams/${examId}`,
                 ansObj
             );

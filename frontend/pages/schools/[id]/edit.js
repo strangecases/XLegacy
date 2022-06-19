@@ -8,7 +8,6 @@ import CustomLayout from "../../../components/nav/CustomLayout";
 import { schoolSchema } from "../../../yupUtil";
 import SchoolForm from "../../../components/schools/SchoolForm";
 import allActions from "../../../store/actions";
-import AdminRoute from "../../../components/routes/AdminRoute";
 import AdminIsSchoolAdmin from "../../../components/routes/AdminIsSchoolAdmin";
 
 const SchoolEditForm = () => {

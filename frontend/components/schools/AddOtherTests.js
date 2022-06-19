@@ -2,10 +2,11 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { Col, Row, Card, Form, Input, Button } from "antd";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { addOtherTestSchema } from "../../yupUtil";
 import allActions from "../../store/actions";
+import allComponentsStyle from "../../styles/modules/componentStyles/AllComponents.module.css";
 
 const AddOtherTests = () => {
     // const { selectedClass } = useSelector((state) => state.custom);
@@ -17,7 +18,7 @@ const AddOtherTests = () => {
 
     const {
         handleSubmit,
-        formState: { errors, isDirty, isSubmitting },
+        formState: { errors, isSubmitting },
         control,
     } = useForm({
         mode: "onBlur",
@@ -38,47 +39,63 @@ const AddOtherTests = () => {
     return (
         <Col span={24}>
             <Card
-                style={{ overflow: "hidden" }}
-                className="inner-card-padding-small-marginbottom"
+                className={`inner-card-padding-small-marginbottom ${allComponentsStyle["add-other-tests-overflow"]}`}
             >
                 <Row justify="center" gutter={0}>
-                    <Col>
+                    <Col span={21}>
                         <Form
                             layout="inline"
                             onFinish={handleSubmit(onSubmit)}
                             autoComplete="off"
+                            className={
+                                allComponentsStyle["add-other-tests-form"]
+                            }
                         >
-                            <Form.Item
-                                className="inline-form"
-                                help={errors.link ? errors.link?.message : ""}
-                                validateStatus={
-                                    errors.link && errors.link.message
-                                        ? "error"
-                                        : "success"
-                                }
-                                style={{
-                                    width: "45vw",
-                                }}
-                            >
-                                <Controller
-                                    control={control}
-                                    name="link"
-                                    render={({ field }) => (
-                                        <Input
-                                            placeholder="Provide test link here"
-                                            {...field}
+                            <Row gutter={[8]} justify="center">
+                                <Col xs={24} sm={12} md={14} lg={18}>
+                                    <Form.Item
+                                        className={`inline-form ${allComponentsStyle["add-other-tests-formItem"]}`}
+                                        help={
+                                            errors.link
+                                                ? errors.link?.message
+                                                : ""
+                                        }
+                                        validateStatus={
+                                            errors.link && errors.link.message
+                                                ? "error"
+                                                : "success"
+                                        }
+                                    >
+                                        <Controller
+                                            control={control}
+                                            name="link"
+                                            render={({ field }) => (
+                                                <Input
+                                                    placeholder="Provide test link here"
+                                                    {...field}
+                                                />
+                                            )}
                                         />
-                                    )}
-                                />
-                            </Form.Item>
-
-                            <Button htmlType="submit" danger>
-                                {isSubmitting ? (
-                                    <LoadingOutlined spin />
-                                ) : (
-                                    "Add Other Schools Test"
-                                )}
-                            </Button>
+                                    </Form.Item>
+                                </Col>
+                                <Col xs={24} sm={12} md={10} lg={6}>
+                                    <Button
+                                        htmlType="submit"
+                                        danger
+                                        className={
+                                            allComponentsStyle[
+                                                "add-other-tests-button"
+                                            ]
+                                        }
+                                    >
+                                        {isSubmitting ? (
+                                            <LoadingOutlined spin />
+                                        ) : (
+                                            "Add Other Schools Test"
+                                        )}
+                                    </Button>
+                                </Col>
+                            </Row>
                         </Form>
                     </Col>
                 </Row>

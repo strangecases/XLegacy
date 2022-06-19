@@ -1,6 +1,4 @@
 import { Form, Input, Row, Col } from "antd";
-import Link from "next/link";
-import { useRouter } from "next/router";
 import { Controller } from "react-hook-form";
 import FormItem from "../../formitems/FormItem";
 
@@ -10,9 +8,6 @@ const SectionFormGroup = ({
     setValue = () => {},
     secNum = "",
 }) => {
-    const router = useRouter();
-    const { id, testId } = router.query;
-
     return (
         <Row justify="center">
             <Col span={18}>

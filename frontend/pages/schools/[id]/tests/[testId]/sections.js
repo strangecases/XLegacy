@@ -1,6 +1,5 @@
 import Questions from "../../../../../components/questions/Questions";
 
-import AdminRoute from "../../../../../components/routes/AdminRoute";
 import AdminIsAuthor from "../../../../../components/routes/AdminIsAuthor";
 
 const Section = () => {

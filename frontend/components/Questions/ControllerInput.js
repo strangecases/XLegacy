@@ -1,5 +1,6 @@
 import { Controller } from "react-hook-form";
 import { Input } from "antd";
+import questionStyle from "../../styles/modules/componentStyles/Questions.module.css";
 
 const { TextArea } = Input;
 
@@ -13,9 +14,7 @@ const ControllerInput = ({ control, name }) => {
                     {...field}
                     placeholder="Enter Option"
                     autoSize
-                    style={{
-                        width: "25vw",
-                    }}
+                    className={questionStyle["controller-input"]}
                 />
             )}
             name={name}

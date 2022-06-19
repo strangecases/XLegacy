@@ -1,10 +1,12 @@
-import { Card, Layout, Row, Col, Button, Select, Pagination } from "antd";
+import { Card, Layout, Row, Col, Select, Badge } from "antd";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import ExamNav from "../../../../components/nav/ExamNav";
 import allActions from "../../../../store/actions";
+import classAbrv from "../../../../utils";
+import examStyle from "../../../../styles/modules/pageStyles/Exams.module.css";
 
 const { Option } = Select;
 
@@ -53,7 +55,7 @@ const Exams = () => {
     const renderTests = () => {
         return (
             <Col xs={20} sm={20} lg={9} span={12}>
-                <h6 style={{ textAlign: "center", marginTop: "10vh" }}>
+                <h6 className={examStyle["exams-index-nothing"]}>
                     Select class number for tests
                 </h6>
             </Col>
@@ -69,36 +71,45 @@ const Exams = () => {
             schools[id].tests[selectedClass][year].map((schoolTest) => {
                 return (
                     <Col xs={20} sm={20} lg={9} span={10} key={schoolTest._id}>
-                        <Card
-                            loading={
-                                !schools[id].tests[selectedClass][year][0]
-                                    .testTitle
+                        <Badge.Ribbon
+                            text={
+                                schoolTest.isPublished
+                                    ? "Published"
+                                    : "Not published"
                             }
-                            hoverable
-                            title={schoolTest.testTitle}
-                            extra={
-                                <Link
-                                    href={`/schools/${id}/exams/${schoolTest._id}/info`}
-                                    passHref
-                                >
-                                    <Button>Exam</Button>
-                                </Link>
+                            color={
+                                schoolTest.isPublished ? "green" : "#ec000cb0"
                             }
-                            style={{
-                                marginBottom: 0,
-                                borderRadius: 8,
-                                overflow: "hidden",
-                            }}
                         >
-                            <p>Class No : {schoolTest.classNo}</p>
-                            <p>Test Time : {schoolTest.testTime}</p>
-                        </Card>
+                            <Link
+                                href={
+                                    schoolTest.isPublished
+                                        ? `/schools/${id}/exams/${schoolTest._id}/info`
+                                        : `/schools/${id}/exams`
+                                }
+                                passHref
+                            >
+                                <Card
+                                    loading={
+                                        !schools[id].tests[selectedClass][
+                                            year
+                                        ][0].testTitle
+                                    }
+                                    hoverable
+                                    title={schoolTest.testTitle}
+                                    className={examStyle["exams-index-card"]}
+                                >
+                                    <p>Class No : {schoolTest.classNo}</p>
+                                    <p>Test Time : {schoolTest.testTime}</p>
+                                </Card>
+                            </Link>
+                        </Badge.Ribbon>
                     </Col>
                 );
             })
         ) : (
             <Col span={24}>
-                <h6 style={{ textAlign: "center", marginTop: "10vh" }}>
+                <h6 className={examStyle["exams-index-nothing"]}>
                     No tests Found
                 </h6>
             </Col>
@@ -106,12 +117,12 @@ const Exams = () => {
     };
 
     return (
-        <Layout style={{ height: "100vh", overflowX: "hidden" }}>
+        <Layout className={examStyle["exams-index-layout"]}>
             <div className="">
                 <Row
                     gutter={[12, 16]}
                     justify="center"
-                    style={{ marginTop: 30 }}
+                    className={examStyle["exams-index-row"]}
                 >
                     <Col span={20}>
                         <Card
@@ -120,20 +131,14 @@ const Exams = () => {
                                 schools[id] &&
                                 schools[id].schoolName.toUpperCase()
                             }
-                            style={{ overflow: "hidden" }}
+                            className={examStyle["exams-index-overflow"]}
                         >
                             <Row gutter={[8, 8]}>
-                                <Col
-                                    xs={24}
-                                    sm={12}
-                                    md={9}
-                                    lg={5}
-                                    style={{
-                                        fontWeight: "bolder",
-                                    }}
-                                >
+                                <Col xs={24} sm={12} md={9} lg={5}>
                                     <Select
-                                        style={{ width: "100%" }}
+                                        className={
+                                            examStyle["exams-index-select"]
+                                        }
                                         onChange={onClassNoSelect}
                                         defaultValue={selectedClass || "v"}
                                         value={selectedClass || "v"}
@@ -146,7 +151,8 @@ const Exams = () => {
                                                         values={cls.classNo}
                                                         key={cls.classNo}
                                                     >
-                                                        {cls.classNo}th class
+                                                        {cls.classNo}
+                                                        {classAbrv(cls.classNo)}
                                                     </Option>
                                                 );
                                             })}
@@ -155,18 +161,12 @@ const Exams = () => {
                                         </Option>
                                     </Select>
                                 </Col>
-                                <Col
-                                    xs={24}
-                                    sm={12}
-                                    md={9}
-                                    lg={5}
-                                    style={{
-                                        fontWeight: "bolder",
-                                    }}
-                                >
+                                <Col xs={24} sm={12} md={9} lg={5}>
                                     <Select
                                         defaultValue={year}
-                                        style={{ width: "100%" }}
+                                        className={
+                                            examStyle["exams-index-select"]
+                                        }
                                         onChange={onYearSelect}
                                         value={year}
                                     >

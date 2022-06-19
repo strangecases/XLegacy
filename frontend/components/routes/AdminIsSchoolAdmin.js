@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { SyncOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { message } from "antd";
+import Spinner from "../Spinner";
 
 const AdminIsSchoolAdmin = ({ children }) => {
     const [ok, setOk] = useState(false);
@@ -31,18 +31,7 @@ const AdminIsSchoolAdmin = ({ children }) => {
         fetchAdmin();
     }, [router, ok, id]);
 
-    return (
-        <div>
-            {ok ? (
-                <> {children} </>
-            ) : (
-                <SyncOutlined
-                    spin
-                    className="d-flex justify-content-center display-1 text-primary p-5"
-                />
-            )}
-        </div>
-    );
+    return <div>{ok ? <> {children} </> : <Spinner />}</div>;
 };
 
 export default AdminIsSchoolAdmin;

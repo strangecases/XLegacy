@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import CustomLayout from "../../components/nav/CustomLayout";
 import allActions from "../../store/actions";
 import AdminRoute from "../../components/routes/AdminRoute";
+import schoolStyle from "../../styles/modules/pageStyles/Schools.module.css";
 
 const Schools = () => {
     const { schools } = useSelector((state) => state);
@@ -21,7 +22,7 @@ const Schools = () => {
             return (
                 <Col key={school._id} xs={24} sm={12} md={8} span={24}>
                     <Card
-                        style={{ minHeight: 270 }}
+                        className={schoolStyle["schools-index-card-height"]}
                         hoverable
                         title={school.schoolName}
                         extra={
@@ -43,7 +44,10 @@ const Schools = () => {
                         }
                     >
                         <Row gutter={[16, 16]}>
-                            <Col span={24} style={{ fontWeight: "bold" }}>
+                            <Col
+                                span={24}
+                                className={schoolStyle["school-index-tag"]}
+                            >
                                 <Tag color="#85ccb4">classes</Tag>
                             </Col>
                             {school &&
@@ -81,7 +85,7 @@ const Schools = () => {
             <Row justify="" gutter={[16, 16]}>
                 {onRenderSchools()}
             </Row>
-            <h1 style={{ textAlign: "center" }}>
+            <h1 className={schoolStyle["school-index-add-button"]}>
                 <Link href="/schools/new" passHref>
                     <Button danger>Add School</Button>
                 </Link>

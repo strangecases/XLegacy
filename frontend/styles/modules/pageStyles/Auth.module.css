@@ -7,6 +7,7 @@
 
 .blue-tint {
     background-color: #f1f2f878;
+    margin-bottom: 30px;
 }
 
 :global(.ant-card .ant-card-body) .dark-blue-tint {
@@ -46,4 +47,23 @@
 
 .width-100 {
     width: 100%;
+}
+
+.admin-row {
+    background-color: white;
+    height: 100%;
+}
+
+.admin-card {
+    overflow: auto;
+    height: 87vh;
+}
+
+.admin-spin-position {
+    position: relative;
+    left: 45%;
+}
+
+.admin-spin-position .admin-spin-icon {
+    font-size: 72px;
 }

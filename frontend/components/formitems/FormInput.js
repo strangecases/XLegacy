@@ -13,6 +13,7 @@ const FormInput = ({
     label = "",
     labelColmn = "",
     wrapperColmn = "",
+    redLabel = true,
 }) => {
     return (
         <Form.Item
@@ -22,10 +23,11 @@ const FormInput = ({
                 errors[name] && errors[name].message ? "error" : "success"
             }
             label={label}
+            required={redLabel}
             labelCol={
                 labelColmn && {
                     sm: { span: 24 },
-                    md: { span: 12 },
+                    md: { span: labelColmn + 4 },
                     lg: { span: labelColmn + 2 },
                     xl: { span: labelColmn },
                 }
@@ -33,7 +35,7 @@ const FormInput = ({
             wrapperCol={
                 wrapperColmn && {
                     sm: { span: 24 },
-                    md: { span: 12 },
+                    md: { span: wrapperColmn - 4 },
                     lg: { span: wrapperColmn - 2 },
                     xl: { span: wrapperColmn },
                 }

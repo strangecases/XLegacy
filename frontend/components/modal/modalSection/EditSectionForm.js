@@ -1,12 +1,10 @@
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
 import { useRouter } from "next/router";
 import { Button } from "antd";
 import { useEffect } from "react";
 import ModalCreate from "../ModalCreate";
-import { EDIT_TEST } from "../../../store/types";
 import { sectionSchema } from "../../../yupUtil";
 import allActions from "../../../store/actions";
 import SectionFormGroup from "./SectionFormGroup";
@@ -21,8 +19,6 @@ const EditSectionForm = ({ section }) => {
     //     const { sectionDescription, sectionNo, subject } = section;
     //     sectionData = { sectionDescription, sectionNo, subject };
     // }
-
-    const { selectedSectionId } = useSelector((state) => state.custom);
 
     const dispatch = useDispatch();
 
@@ -50,13 +46,7 @@ const EditSectionForm = ({ section }) => {
     }, [section]);
 
     const onSubmit = async (data) => {
-        const res = await axios.patch(
-            `/api/tests/${testId}/sections/${selectedSectionId}`,
-            data
-        );
-        console.log(res.data.test);
-        dispatch(allActions.modalActions.visibleSectionNo());
-        router.push(`/schools/${id}/tests/${testId}/sections`);
+        dispatch(allActions.testActions.editSectionOnTest(id, testId, data));
     };
 
     const onHandleCancel = () => {

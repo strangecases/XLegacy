@@ -4,6 +4,7 @@ const initialState = {
     selectedSectionId: null,
     selectedQuestion: 1,
     selectedSectionNo: 1,
+    totalClassTests: 50,
     totalTests: 50,
     selectedClass: "",
     examSaved: false,
@@ -20,6 +21,8 @@ const customizeReducer = (state = initialState, action) => {
             return { ...state, selectedSectionNo: action.payload };
         case types.TOTAL_TESTS:
             return { ...state, totalTests: action.payload };
+        case types.TOTAL_CLASS_TESTS:
+            return { ...state, totalClassTests: action.payload };
         case types.SELECTED_CLASS:
             return { ...state, selectedClass: action.payload };
         case types.EXAM_SAVED:

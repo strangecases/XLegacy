@@ -2,7 +2,6 @@ import { Col, Form, Row } from "antd";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useRouter } from "next/router";
 import CustomLayout from "../../components/nav/CustomLayout";
 import { schoolSchema } from "../../yupUtil";
 import SchoolForm from "../../components/schools/SchoolForm";
@@ -11,8 +10,6 @@ import AdminRoute from "../../components/routes/AdminRoute";
 
 const SchoolNewForm = () => {
     const dispatch = useDispatch();
-
-    const router = useRouter();
 
     const {
         handleSubmit,
@@ -30,7 +27,6 @@ const SchoolNewForm = () => {
 
     const onSubmit = async (data) => {
         dispatch(allActions.schoolActions.createSchool(data));
-        router.push(`/schools/`);
     };
 
     return (

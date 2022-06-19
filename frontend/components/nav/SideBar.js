@@ -8,13 +8,13 @@ import {
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
+import antNavStyle from "../../styles/modules/componentStyles/AntNav.module.css";
 
 const { Sider } = Layout;
 
 const SideBar = ({ type }) => {
     const [collapsed, setCollapsed] = useState(false);
     const [showMobileSideBar, setShowMobileSideBar] = useState(false);
-    const [current, setCurrent] = useState("");
 
     const { schools } = useSelector((state) => state);
 
@@ -54,14 +54,7 @@ const SideBar = ({ type }) => {
             collapsible={showMobileSideBar}
             collapsed={collapsed}
             onCollapse={onCollapse}
-            style={{
-                overflow: "auto",
-                height: "100vh",
-                position: "sticky",
-                left: 0,
-                top: 0,
-                bottom: 0,
-            }}
+            className={antNavStyle["sidebar-sider"]}
             width={200}
         >
             <img
@@ -82,7 +75,7 @@ const SideBar = ({ type }) => {
                             : router.asPath
                     }
                     defaultSelectedKeys={[`/schools/${id}/edit`]}
-                    style={{ padding: "20px 0" }}
+                    className={antNavStyle["sidebar-menu"]}
                 >
                     <Menu.Item
                         key={`/schools/${id}/tests`}
@@ -114,7 +107,7 @@ const SideBar = ({ type }) => {
                     // onClick={(e) => setCurrent(e.key)}
                     selectedKeys={router.asPath}
                     // defaultSelectedKeys={["1"]}
-                    style={{ padding: "20px 0" }}
+                    className={antNavStyle["sidebar-menu"]}
                 >
                     <Menu.Item key="/admin" icon={<UserOutlined />}>
                         <Link href="/admin">

@@ -1,18 +1,15 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
 import { useRouter } from "next/router";
 import { PlusCircleFilled } from "@ant-design/icons";
-import { Button, Tooltip } from "antd";
+import { Tooltip } from "antd";
 import TestFormGroup from "./TestFormGroup";
 import ModalCreate from "../ModalCreate";
-import { EDIT_TEST } from "../../../store/types";
 import { testSchema } from "../../../yupUtil";
 import allActions from "../../../store/actions";
 
 const EditTestForm = () => {
-    const { admin } = useSelector((state) => state.auth);
     const { tests } = useSelector((state) => state);
 
     const router = useRouter();
@@ -42,13 +39,7 @@ const EditTestForm = () => {
     });
 
     const onEditSubmit = async (data) => {
-        const x = { ...data };
-        console.log(x);
-        const res = await axios.patch(`/api/schools/${id}/tests/${testId}`, x);
-        console.log(res.data);
-        dispatch({ type: EDIT_TEST, payload: res.data.test });
-        dispatch(allActions.modalActions.visibleTestNo());
-        router.push(`/schools/${id}/tests/${testId}`);
+        dispatch(allActions.testActions.editTest(id, testId, data));
     };
 
     const onHandleCancel = () => {

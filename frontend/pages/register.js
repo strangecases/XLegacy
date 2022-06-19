@@ -1,22 +1,16 @@
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { SyncOutlined } from "@ant-design/icons";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { Form, Button, Row, Col, Card } from "antd";
 import FormInput from "../components/formitems/FormInput";
-import authStyles from "../styles/modules/Auth.module.css";
+import authStyles from "../styles/modules/pageStyles/Auth.module.css";
 import { registerSchema } from "../yupUtil";
+import IsNotLoggedIn from "../components/routes/isNotLoggedIn";
 
 const Register = () => {
-    const { admin } = useSelector((state) => state.auth);
-
-    const router = useRouter();
-
     const {
         handleSubmit,
         control,
@@ -25,12 +19,6 @@ const Register = () => {
         mode: "onBlur",
         resolver: yupResolver(registerSchema),
     });
-
-    useEffect(() => {
-        if (admin !== null) {
-            router.push("/");
-        }
-    }, [admin, router]);
 
     const onSubmit = async (data) => {
         const { name, email, password, adminCode } = data;
@@ -50,7 +38,7 @@ const Register = () => {
     };
 
     return (
-        <>
+        <IsNotLoggedIn>
             <h2 className={authStyles.headingAuth}>Sign Up</h2>
 
             <Row justify="center">
@@ -114,7 +102,7 @@ const Register = () => {
                     </Card>
                 </Col>
             </Row>
-        </>
+        </IsNotLoggedIn>
     );
 };
 export default Register;

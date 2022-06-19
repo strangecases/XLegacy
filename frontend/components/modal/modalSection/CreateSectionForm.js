@@ -1,11 +1,9 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
 import { useRouter } from "next/router";
 import { Button, Tooltip } from "antd";
 import ModalCreate from "../ModalCreate";
-import { EDIT_TEST } from "../../../store/types";
 import { sectionSchema } from "../../../yupUtil";
 import allActions from "../../../store/actions";
 import SectionFormGroup from "./SectionFormGroup";
@@ -34,13 +32,8 @@ const CreateSectionForm = ({ length }) => {
     });
 
     const onSubmit = async (data) => {
-        console.log(data);
-        const res = await axios.post(`/api/tests/${testId}/sections`, data);
-        console.log(res.data.test);
-        dispatch({ type: EDIT_TEST, payload: res.data.test });
-        dispatch(allActions.modalActions.visibleSectionNo());
+        dispatch(allActions.testActions.createSectionOnTest(id, testId, data));
         reset({ subject: "", sectionDescription: "" });
-        router.push(`/schools/${id}/tests/${testId}`);
     };
 
     const onHandleCancel = () => {

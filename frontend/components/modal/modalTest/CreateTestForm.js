@@ -1,18 +1,15 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
 import { useRouter } from "next/router";
 
 import { useEffect } from "react";
 import TestFormGroup from "./TestFormGroup";
 import ModalCreate from "../ModalCreate";
-import { CREATE_TEST } from "../../../store/types";
 import { testSchema } from "../../../yupUtil";
 import allActions from "../../../store/actions";
 
 const CreateTestForm = () => {
-    const { admin } = useSelector((state) => state.auth);
     const { selectedClass } = useSelector((state) => state.custom);
 
     const router = useRouter();
@@ -25,7 +22,7 @@ const CreateTestForm = () => {
         handleSubmit,
         formState: { errors, isDirty, isSubmitting },
         control,
-        reset,
+
         setValue,
     } = useForm({
         mode: "onBlur",
@@ -42,19 +39,12 @@ const CreateTestForm = () => {
     }, [selectedClass]);
 
     const onSubmit = async (data) => {
-        const x = { ...data, author: admin._id };
-        const res = await axios.post(`/api/schools/${id}/tests`, x);
-        console.log(res.data);
-        dispatch({ type: CREATE_TEST, payload: res.data });
-        dispatch(allActions.modalActions.visibleTestNo());
-        console.log(`/schools/${id}/tests/${res.data._id}`);
-        router.push(`/schools/${id}/tests/${res.data._id}`);
+        dispatch(allActions.testActions.createTest(id, data));
     };
 
     const onHandleCancel = () => {
         console.log("Clicked cancel button");
         dispatch(allActions.modalActions.visibleTestNo());
-        // reset({ classNo: selectedClass });
     };
 
     return (

@@ -1,5 +1,6 @@
 import { Controller } from "react-hook-form";
 import { Form, Select } from "antd";
+import modalStyle from "../../styles/modules/componentStyles/Modal.module.css";
 
 const { Option } = Select;
 
@@ -12,6 +13,7 @@ const SelectOption = ({
     label = "",
     first = "",
     check = "",
+    redLabel = false,
 }) => {
     return (
         <Form.Item
@@ -21,6 +23,7 @@ const SelectOption = ({
                 errors[name] && errors[name].message ? "error" : "success"
             }
             label={label}
+            required={redLabel}
         >
             <Controller
                 render={({ field }) => (
@@ -28,7 +31,7 @@ const SelectOption = ({
                         defaultValue="Select"
                         {...field}
                         disabled={path === "edit"}
-                        style={{ textAlign: "center" }}
+                        className={modalStyle["select-options"]}
                     >
                         {first && <Option value="0">{first}</Option>}
                         {list &&
@@ -37,7 +40,7 @@ const SelectOption = ({
                                     <Option
                                         value={ele[check]}
                                         key={ele[check]}
-                                        style={{ textAlign: "center" }}
+                                        className={modalStyle["select-options"]}
                                     >
                                         {ele[check]}
                                     </Option>

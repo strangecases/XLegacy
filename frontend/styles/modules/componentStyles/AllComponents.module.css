@@ -1,0 +1,35 @@
+.donut-chart-col {
+    height: 178px;
+}
+
+.donut-chart-empty-position {
+    position: relative;
+    top: 18px;
+    text-align: center;
+}
+
+.add-other-tests-overflow {
+    overflow: hidden;
+}
+
+.add-other-tests-formItem {
+    width: 100%;
+}
+
+.add-other-tests-button {
+    margin-bottom: 14px;
+}
+
+.add-other-tests-form {
+    display: inline;
+}
+
+.all-spin-position {
+    position: relative;
+    top: 21vh;
+    left: 45%;
+}
+
+.all-spin-position .all-spin-icon {
+    font-size: 72px;
+}

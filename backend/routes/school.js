@@ -5,6 +5,7 @@ import {
     editSchool,
     showSchool,
     searchSchool,
+    deleteSchool,
 } from "../controllers/school.js";
 import { requireSignin } from "../middlewares/index.js";
 import catchAsync from "../utils/catchAsync.js";
@@ -18,7 +19,10 @@ router
 
 router.route("/search").get(catchAsync(searchSchool));
 
-router.route("/:id").get(catchAsync(showSchool)).patch(catchAsync(editSchool));
-// .delete(catchAsync(deleteSchool));
+router
+    .route("/:id")
+    .get(catchAsync(showSchool))
+    .patch(catchAsync(editSchool))
+    .delete(catchAsync(deleteSchool));
 
 export default router;

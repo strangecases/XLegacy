@@ -1,0 +1,13 @@
+.modal-top {
+    top: 20px;
+}
+
+.select-options {
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .modal-test {
+        top: 20px;
+    }
+}

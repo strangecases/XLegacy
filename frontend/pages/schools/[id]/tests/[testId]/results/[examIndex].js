@@ -5,8 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import CustomLayout from "../../../../../../components/nav/CustomLayout";
 import allActions from "../../../../../../store/actions";
-import homeStyles from "../../../../../../styles/modules/Home.module.css";
 import AdminRoute from "../../../../../../components/routes/AdminRoute";
+import resultStyle from "../../../../../../styles/modules/pageStyles/Results.module.css";
 
 const { TabPane } = Tabs;
 
@@ -66,13 +66,12 @@ const ExamIndex = () => {
 
     return (
         <AdminRoute>
-            {/* <h1 style={{ textAlign: "center" }}>Exam Index</h1> */}
             <Row gutter={[8, 32]} justify="center">
                 <Col span={20}>
                     <Card
                         title={examResult?.studentName?.toUpperCase()}
                         size="small"
-                        style={{ marginBottom: 20, borderRadius: 6 }}
+                        className={resultStyle["results-card"]}
                         hoverable
                         bordered={false}
                         extra={grew.current}
@@ -84,9 +83,9 @@ const ExamIndex = () => {
                                 1
                             )} `}
                             has scored{" "}
-                            <strong style={{ color: "red" }}>
+                            <span className={resultStyle["results-marks-span"]}>
                                 {examResult.marks}
-                            </strong>{" "}
+                            </span>{" "}
                             {examResult.marks > 1 ? "marks" : "mark"} in test{" "}
                             <strong>
                                 {tests[testId] && tests[testId].testTitle}
@@ -115,7 +114,11 @@ const ExamIndex = () => {
                                         >
                                             <Row
                                                 gutter={[16, 4]}
-                                                style={{ marginTop: -12 }}
+                                                className={
+                                                    resultStyle[
+                                                        "results-tabpane"
+                                                    ]
+                                                }
                                                 justify="center"
                                             >
                                                 {questions &&
@@ -149,11 +152,11 @@ const ExamIndex = () => {
                                                                                         .questionNo
                                                                                 ] ? (
                                                                                     <span
-                                                                                        style={{
-                                                                                            color: "red",
-                                                                                            fontSize: 12,
-                                                                                            opacity: 0.5,
-                                                                                        }}
+                                                                                        className={
+                                                                                            resultStyle[
+                                                                                                "results-tabpane-extra"
+                                                                                            ]
+                                                                                        }
                                                                                     >
                                                                                         Not
                                                                                         answered
@@ -167,11 +170,11 @@ const ExamIndex = () => {
                                                                                         1
                                                                                 ] && (
                                                                                     <span
-                                                                                        style={{
-                                                                                            color: "red",
-                                                                                            fontSize: 12,
-                                                                                            opacity: 0.5,
-                                                                                        }}
+                                                                                        className={
+                                                                                            resultStyle[
+                                                                                                "results-tabpane-extra"
+                                                                                            ]
+                                                                                        }
                                                                                     >
                                                                                         Not
                                                                                         answered
@@ -200,28 +203,28 @@ const ExamIndex = () => {
                                                                                 ] ===
                                                                                     question.answer ? (
                                                                                     <CheckOutlined
-                                                                                        style={{
-                                                                                            marginLeft: 10,
-                                                                                            verticalAlign: 0,
-                                                                                            color: "green",
-                                                                                            fontSize: 18,
-                                                                                        }}
+                                                                                        className={
+                                                                                            resultStyle[
+                                                                                                "results-tabpane-icon-check"
+                                                                                            ]
+                                                                                        }
                                                                                     />
                                                                                 ) : (
                                                                                     <CloseOutlined
-                                                                                        style={{
-                                                                                            marginLeft: 10,
-                                                                                            verticalAlign: 0,
-                                                                                            color: "red",
-                                                                                            fontSize: 18,
-                                                                                        }}
+                                                                                        className={
+                                                                                            resultStyle[
+                                                                                                "results-tabpane-icon-close"
+                                                                                            ]
+                                                                                        }
                                                                                     />
                                                                                 )}
                                                                             </div>
                                                                         }
-                                                                        style={{
-                                                                            minHeight: 120,
-                                                                        }}
+                                                                        className={
+                                                                            resultStyle[
+                                                                                "results-tabpane-card"
+                                                                            ]
+                                                                        }
                                                                     >
                                                                         <Row
                                                                             gutter={[
@@ -263,7 +266,7 @@ const ExamIndex = () => {
                                                                                             question
                                                                                                 .options
                                                                                                 .a
-                                                                                            ? homeStyles.backgroundQuestionAnswer
+                                                                                            ? resultStyle.backgroundQuestionAnswer
                                                                                             : ""
                                                                                     } ${
                                                                                         examResult
@@ -289,7 +292,7 @@ const ExamIndex = () => {
                                                                                                 .questionNo
                                                                                         ] ===
                                                                                             "a"
-                                                                                            ? homeStyles.backgroundRedAnswer
+                                                                                            ? resultStyle.backgroundRedAnswer
                                                                                             : ""
                                                                                     }`}
                                                                                 >
@@ -311,7 +314,7 @@ const ExamIndex = () => {
                                                                                             question
                                                                                                 .options
                                                                                                 .b
-                                                                                            ? homeStyles.backgroundQuestionAnswer
+                                                                                            ? resultStyle.backgroundQuestionAnswer
                                                                                             : ""
                                                                                     } ${
                                                                                         examResult
@@ -337,7 +340,7 @@ const ExamIndex = () => {
                                                                                                 .questionNo
                                                                                         ] ===
                                                                                             "b"
-                                                                                            ? homeStyles.backgroundRedAnswer
+                                                                                            ? resultStyle.backgroundRedAnswer
                                                                                             : ""
                                                                                     }`}
                                                                                 >
@@ -360,7 +363,7 @@ const ExamIndex = () => {
                                                                                             question
                                                                                                 .options
                                                                                                 .c
-                                                                                            ? homeStyles.backgroundQuestionAnswer
+                                                                                            ? resultStyle.backgroundQuestionAnswer
                                                                                             : ""
                                                                                     } ${
                                                                                         examResult
@@ -386,7 +389,7 @@ const ExamIndex = () => {
                                                                                                 .questionNo
                                                                                         ] ===
                                                                                             "c"
-                                                                                            ? homeStyles.backgroundRedAnswer
+                                                                                            ? resultStyle.backgroundRedAnswer
                                                                                             : ""
                                                                                     }`}
                                                                                 >
@@ -409,7 +412,7 @@ const ExamIndex = () => {
                                                                                             question
                                                                                                 .options
                                                                                                 .d
-                                                                                            ? homeStyles.backgroundQuestionAnswer
+                                                                                            ? resultStyle.backgroundQuestionAnswer
                                                                                             : ""
                                                                                     } ${
                                                                                         examResult
@@ -435,7 +438,7 @@ const ExamIndex = () => {
                                                                                                 .questionNo
                                                                                         ] ===
                                                                                             "d"
-                                                                                            ? homeStyles.backgroundRedAnswer
+                                                                                            ? resultStyle.backgroundRedAnswer
                                                                                             : ""
                                                                                     }`}
                                                                                 >

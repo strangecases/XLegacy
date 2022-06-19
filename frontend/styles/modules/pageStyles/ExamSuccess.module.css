@@ -1,0 +1,10 @@
+.exam-success-position {
+    position: relative;
+    top: 15vh;
+}
+
+.exam-success-button {
+    color: white;
+    background-color: #0da5fc;
+    border-color: #0da5fc;
+}

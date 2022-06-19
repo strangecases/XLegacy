@@ -11,7 +11,8 @@ export const index = async (req, res) => {
         "-tests"
     )
         .skip(pageSize * page - pageSize)
-        .limit(pageSize);
+        .limit(pageSize)
+        .sort({ createdAt: -1 });
     const numOfTests = await Test.countDocuments({
         author: req.user._id,
         school: req.params.id,
@@ -90,7 +91,7 @@ export const deleteTest = async (req, res) => {
     const year = test.createdAt.getFullYear();
     const select = `tests.${test.classNo}.${year}`;
     const selectOther = `tests.otherTests.${year}`;
-    const school = await School.findByIdAndUpdate(id, {
+    await School.findByIdAndUpdate(id, {
         $pull: {
             [select]: test._id,
             [selectOther]: test._id,

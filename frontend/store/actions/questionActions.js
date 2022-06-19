@@ -1,6 +1,8 @@
 import axios from "axios";
+import Router from "next/router";
 import { toast } from "react-toastify";
 import * as types from "../types";
+import customActions from "./customActions";
 
 const fetchQuestions = (testId, sectionId) => async (dispatch) => {
     try {
@@ -55,12 +57,60 @@ const emptyQuestions = () => {
     };
 };
 
+const onSectionClick =
+    ({
+        testId,
+        sectionId,
+        sectionNo,
+        save = false,
+        publish = false,
+        id = "",
+    }) =>
+    async (dispatch, getState) => {
+        try {
+            const { questions } = getState();
+            const { selectedSectionId } = getState().custom;
+            const questionList = Object.values(questions);
+
+            if (!publish) {
+                await axios.patch(
+                    `/api/tests/${testId}/sections/${selectedSectionId}`,
+                    { questions: questionList }
+                );
+                if (!save) {
+                    dispatch(customActions.selectedSectionId(sectionId));
+                    dispatch(customActions.selectedSectionNo(sectionNo));
+                    dispatch(emptyQuestions());
+                    dispatch(customActions.selectedQuestion(1));
+                } else if (save) {
+                    toast.success("Saved", {
+                        hideProgressBar: true,
+                        autoClose: 1200,
+                    });
+                }
+            } else if (publish) {
+                await axios.patch(
+                    `/api/tests/${testId}/sections/${selectedSectionId}`,
+                    { questions: questionList, isPublished: publish }
+                );
+                toast.success("Published", {
+                    hideProgressBar: true,
+                    autoClose: 1200,
+                });
+                Router.push(`/schools/${id}/tests/${testId}`);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
 const questionActions = {
     fetchQuestions,
     editQuestion,
     deleteQuestion,
     upOnDeletion,
     emptyQuestions,
+    onSectionClick,
 };
 
 export default questionActions;

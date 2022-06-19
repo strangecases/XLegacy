@@ -1,8 +1,9 @@
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { Menu } from "antd";
 import { AppstoreOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import ExamCountDown from "./ExamCountDown";
+import antNavStyle from "../../styles/modules/componentStyles/AntNav.module.css";
 
 const { Item } = Menu;
 
@@ -10,11 +11,8 @@ const ExamNav = ({ children, type = "exam" }) => {
     const { tests } = useSelector((state) => state);
     const { examData } = useSelector((state) => state.exam);
 
-    const dispatch = useDispatch();
-
     const router = useRouter();
-    const { id, testId } = router.query;
-    const path = router.pathname;
+    const { testId } = router.query;
 
     // useEffect(() => {
     //     if (path.includes("exams") && !examId) {
@@ -29,28 +27,20 @@ const ExamNav = ({ children, type = "exam" }) => {
             <Menu
                 mode="horizontal"
                 // onClick={(e) => setCurrent(e.key)}
-                selectedKeys="/"
-                style={{
-                    height: 46,
-                    border: 0,
-                    position: "relative",
-                    display: "flex",
-                }}
+                selectedKeys="#"
+                className={antNavStyle["exam-nav-menu"]}
             >
-                <Item key="/" icon={<AppstoreOutlined />}>
-                    App
+                <Item
+                    key="/"
+                    icon={<AppstoreOutlined />}
+                    className={antNavStyle["header-bold"]}
+                >
+                    ScholarX
                 </Item>
 
                 {type === "exam" && (
                     <>
-                        <Item
-                            key="#"
-                            style={{
-                                position: "absolute",
-                                top: 6,
-                                left: "44vw",
-                            }}
-                        >
+                        <Item key="#" className={antNavStyle["exam-nav-item"]}>
                             {/* <Countdown
                         value={
                             tests &&

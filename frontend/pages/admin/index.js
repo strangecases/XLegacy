@@ -4,12 +4,10 @@ import { useForm } from "react-hook-form";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
-import { toast } from "react-toastify";
 import CustomLayout from "../../components/nav/CustomLayout";
 import AdminRoute from "../../components/routes/AdminRoute";
 import FormInput from "../../components/formitems/FormInput";
-import authStyles from "../../styles/modules/Auth.module.css";
+import authStyles from "../../styles/modules/pageStyles/Auth.module.css";
 import AdminCard from "../../components/AdminCard";
 import allActions from "../../store/actions";
 import { adminDetailsEditSchema } from "../../yupUtil";
@@ -37,46 +35,18 @@ const AdminIndex = () => {
     }, [admin]);
 
     const onSubmit = async (data) => {
-        // console.log({ ...data, id: admin._id });
-        try {
-            const adm = await axios.patch(`/api/register/${admin._id}`, data);
-            console.log(adm.data);
-            dispatch(allActions.adminActions.editAdmin(adm.data));
-            toast.success("Changes were successfully applied", {
-                autoClose: 2200,
-                hideProgressBar: true,
-            });
-        } catch (err) {
-            if (err.response.data.includes("E11000")) {
-                toast.error("email or name  already taken, try another", {
-                    autoClose: 2200,
-                    hideProgressBar: true,
-                });
-            } else {
-                toast.error(err.response.data, {
-                    autoClose: 2200,
-                    hideProgressBar: true,
-                });
-            }
-        }
+        dispatch(allActions.adminActions.editAdmin(admin._id, data));
     };
 
     return (
         <AdminRoute>
-            {/* <h1 className="jumbotron text-center bg-primary">
-                <pre>{JSON.stringify(admin, null, 4)}</pre>
-            </h1> */}
-
             {admin ? (
                 <Row gutter={[24, 16]} justify="center">
                     <Col xs={24} md={{ span: 20 }} lg={{ span: 15 }} span={15}>
                         <Row
                             justify="center"
                             gutter={[8, 8]}
-                            style={{
-                                backgroundColor: "white",
-                                // marginLeft: 10,
-                            }}
+                            className={authStyles["admin-row"]}
                         >
                             <Col span={24}>
                                 <h5
@@ -100,8 +70,9 @@ const AdminIndex = () => {
                                             placeholder="Enter email"
                                             type="email"
                                             label="Email"
-                                            labelColmn={4}
-                                            wrapperColmn={20}
+                                            labelColmn={3}
+                                            wrapperColmn={21}
+                                            redLabel
                                         />
                                         <FormInput
                                             control={control}
@@ -110,8 +81,9 @@ const AdminIndex = () => {
                                             placeholder="Enter name"
                                             type="name"
                                             label="Name"
-                                            labelColmn={4}
-                                            wrapperColmn={20}
+                                            labelColmn={3}
+                                            wrapperColmn={21}
+                                            redLabel
                                         />
                                     </Card>
                                     <h6
@@ -120,10 +92,7 @@ const AdminIndex = () => {
                                     >
                                         Change Password
                                     </h6>
-                                    <Card
-                                        className={authStyles["blue-tint"]}
-                                        style={{ marginBottom: 30 }}
-                                    >
+                                    <Card className={authStyles["blue-tint"]}>
                                         <FormInput
                                             control={control}
                                             errors={errors}
@@ -168,12 +137,7 @@ const AdminIndex = () => {
                     <Col xs={24} md={{ span: 20 }} lg={{ span: 9 }} span={9}>
                         <Row>
                             <Col span={24}>
-                                <Card
-                                    style={{
-                                        overflow: "auto",
-                                        height: "87vh",
-                                    }}
-                                >
+                                <Card className={authStyles["admin-card"]}>
                                     <AdminCard />
                                 </Card>
                             </Col>
@@ -183,8 +147,13 @@ const AdminIndex = () => {
             ) : (
                 <Spin
                     size="large"
-                    style={{ position: "relative", top: "21vh", left: "45%" }}
-                    indicator={<SyncOutlined spin style={{ fontSize: 72 }} />}
+                    className={authStyles["admin-spin-position"]}
+                    indicator={
+                        <SyncOutlined
+                            spin
+                            className={authStyles["admin-spin-icon"]}
+                        />
+                    }
                 />
             )}
         </AdminRoute>

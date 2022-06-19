@@ -3,9 +3,6 @@ import React, { useEffect, useRef } from "react";
 import { useInView } from "react-intersection-observer";
 import { Row, Card, Col, Input, Button } from "antd";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
-import { toast } from "react-toastify";
-import { useRouter } from "next/router";
 import navStyles from "../styles/modules/Navstyles.module.css";
 import allActions from "../store/actions";
 
@@ -15,8 +12,6 @@ const NavBar = () => {
     const { admin } = useSelector((state) => state.auth);
 
     const dispatch = useDispatch();
-
-    const router = useRouter();
 
     const { ref: containerRef, inView: isVisible } = useInView({
         rootMargin: "-550px 0px 0px 0px",
@@ -75,12 +70,8 @@ const NavBar = () => {
     //     };
     // }, []);
 
-    const onLogOutClick = async (e) => {
-        e.stopPropagation();
-        const { data } = await axios.get("/api/logout");
-        toast(data.message);
+    const onLogOutClick = async () => {
         dispatch(allActions.adminActions.logOut());
-        router.push("/login");
     };
 
     const onSearch = async (value) => {
@@ -463,7 +454,9 @@ const NavBar = () => {
                     </h3>
                     <p>
                         On the left hand side click on{" "}
-                        <span className={navStyles.fontBold}>"Add school"</span>{" "}
+                        <span className={navStyles.fontBold}>
+                            &quot;Add school&quot;
+                        </span>{" "}
                         and you will be taken to a form where you can add
                         details about your school such as school code, address,
                         classes, groups/sections.
@@ -512,7 +505,7 @@ const NavBar = () => {
                         / organizations just by pasting the link that is
                         published by others in{" "}
                         <span className={navStyles.fontBold}>
-                            "Add others tests"
+                            &quot;Add others tests&quot;
                         </span>{" "}
                         form and just publish the link of that added test to
                         examinees.

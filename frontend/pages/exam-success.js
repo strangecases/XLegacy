@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 import Link from "next/link";
-import { SyncOutlined } from "@ant-design/icons";
-import { Result, Button, Spin } from "antd";
+import { Result, Button } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import allActions from "../store/actions";
 import ExamNav from "../components/nav/ExamNav";
+import examSuccessStyle from "../styles/modules/pageStyles/ExamSuccess.module.css";
+import Spinner from "../components/Spinner";
 
 const ExamSuccess = () => {
     const { examSuccess } = useSelector((state) => state.custom);
@@ -28,7 +29,7 @@ const ExamSuccess = () => {
     }, [examSuccess, dispatch, router]);
 
     return (
-        <div style={{ position: "relative", top: "15vh" }}>
+        <div className={examSuccessStyle["exam-success-position"]}>
             {examSuccess === "success" ? (
                 <Result
                     status="success"
@@ -37,11 +38,9 @@ const ExamSuccess = () => {
                     extra={
                         <Link href="/" key="home" passHref>
                             <Button
-                                style={{
-                                    color: "white",
-                                    backgroundColor: "#0da5fc",
-                                    borderColor: "#0da5fc",
-                                }}
+                                className={
+                                    examSuccessStyle["exam-success-button"]
+                                }
                                 type="primary"
                             >
                                 Go Home
@@ -50,16 +49,7 @@ const ExamSuccess = () => {
                     }
                 />
             ) : (
-                // <Skeleton
-                //     active
-                //     paragraph={{ rows: 17, width: "100vw" }}
-                //     title={{ width: "100vw" }}
-                // />
-                <Spin
-                    size="large"
-                    style={{ position: "relative", left: "45%" }}
-                    indicator={<SyncOutlined spin style={{ fontSize: 72 }} />}
-                />
+                <Spinner />
             )}
         </div>
     );

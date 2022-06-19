@@ -1,0 +1,15 @@
+.exam-info-layout {
+    height: 100vh;
+}
+
+.exam-info-row {
+    margin-top: 25px;
+}
+
+.exam-info-align {
+    text-align: center;
+}
+
+.exam-modal-leave {
+    top: 15px;
+}

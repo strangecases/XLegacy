@@ -1,13 +1,14 @@
 import { useEffect } from "react";
-import { Spin, Modal, message } from "antd";
+import { Modal, message } from "antd";
 
-import { SyncOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 
 import ExamNav from "../../../../../components/nav/ExamNav";
 import Questions from "../../../../../components/questions/Questions";
 import allActions from "../../../../../store/actions";
+import examInfoStyle from "../../../../../styles/modules/pageStyles/ExamInfo.module.css";
+import Spinner from "../../../../../components/Spinner";
 
 const ExamsId = () => {
     const { examId } = useSelector((state) => state.exam);
@@ -15,7 +16,6 @@ const ExamsId = () => {
 
     const router = useRouter();
     const { id, testId } = router.query;
-    const path = router.pathname;
 
     const dispatch = useDispatch();
 
@@ -42,7 +42,7 @@ const ExamsId = () => {
 
         const confirm = () => {
             Modal.confirm({
-                style: { top: 15 },
+                className: examInfoStyle["exam-modal-leave"],
                 title: "Oh no!",
                 content: warningText,
                 okText: "Leave",
@@ -62,17 +62,21 @@ const ExamsId = () => {
 
         const historyChange = (url) => {
             if (router.asPath !== window.location.pathname) {
-                window.history.pushState("", "", router.asPath);
+                console.log(router.asPath, window.location.pathname);
+                window.history.pushState({}, "", router.asPath);
             }
-            // if (window.confirm(warningText)) return;
-            confirm();
+
+            if (router.asPath !== url) confirm();
             router.events.emit("routeChangeError");
-            throw "routeChange aborted.";
+            throw new Error("routeChange aborted.");
         };
 
         const handleWindowClose = (e) => {
             e.preventDefault();
-            // return (e.returnValue = warningText);
+            console.log(router.asPath === window.location.pathname);
+            if (router.asPath === window.location.pathname) {
+                e.returnValue = "fdfd";
+            }
         };
 
         const preventBack = () => {
@@ -80,20 +84,24 @@ const ExamsId = () => {
             router.events.on("routeChangeStart", historyChange);
         };
 
-        if (!examSaved) {
+        if (!examSaved && id && testId) {
             preventBack();
         } else if (examSaved) {
-            console.log("removed");
-            window.removeEventListener("beforeunload", handleWindowClose);
+            // window.removeEventListener("beforeunload", handleWindowClose);
             router.events.off("routeChangeStart", historyChange);
         }
-        console.log("exam saved", examSaved);
+        console.log(
+            "exam saved",
+            examSaved,
+            router.asPath,
+            window.location.pathname
+        );
 
         return () => {
             window.removeEventListener("beforeunload", handleWindowClose);
             router.events.off("routeChangeStart", historyChange);
         };
-    }, [examSaved, router]);
+    }, [examSaved, testId, id, router]);
 
     useEffect(() => {
         if (!examId) {
@@ -102,15 +110,7 @@ const ExamsId = () => {
         }
     }, [examId, id, testId]);
 
-    return examId && examId ? (
-        <Questions />
-    ) : (
-        <Spin
-            size="large"
-            style={{ position: "relative", top: "21vh", left: "45%" }}
-            indicator={<SyncOutlined spin style={{ fontSize: 72 }} />}
-        />
-    );
+    return examId && examId ? <Questions /> : <Spinner />;
 };
 
 ExamsId.getLayout = (page) => <ExamNav>{page}</ExamNav>;

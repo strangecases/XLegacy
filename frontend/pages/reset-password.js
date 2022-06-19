@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { SyncOutlined } from "@ant-design/icons";
@@ -8,13 +6,11 @@ import { useRouter } from "next/router";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import FormInput from "../components/formitems/FormInput";
-import authStyles from "../styles/modules/Auth.module.css";
+import authStyles from "../styles/modules/pageStyles/Auth.module.css";
 import { resetPasswordSchema } from "../yupUtil";
+import IsNotLoggedIn from "../components/routes/isNotLoggedIn";
 
 const ResetPassword = () => {
-    // state
-    const { admin } = useSelector((state) => state.auth);
-
     // router
     const router = useRouter();
 
@@ -26,13 +22,6 @@ const ResetPassword = () => {
         mode: "onBlur",
         resolver: yupResolver(resetPasswordSchema),
     });
-
-    // redirect if user is logged in
-    useEffect(() => {
-        if (admin !== null) {
-            router.push("/");
-        }
-    }, [admin, router]);
 
     const onResetPassword = async ({ email, code, newPassword }) => {
         try {
@@ -50,7 +39,7 @@ const ResetPassword = () => {
     };
 
     return (
-        <>
+        <IsNotLoggedIn>
             <h2 className={authStyles.headingAuth}>Reset Password</h2>
             <Row justify="center">
                 <Col xs={22} sm={12} md={10} lg={8} span={8}>
@@ -97,7 +86,7 @@ const ResetPassword = () => {
                     </Card>
                 </Col>
             </Row>
-        </>
+        </IsNotLoggedIn>
     );
 };
 

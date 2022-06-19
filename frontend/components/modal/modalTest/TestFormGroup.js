@@ -1,12 +1,10 @@
 import { Form, Select, Tooltip, Row, Col } from "antd";
 import Link from "next/link";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Controller } from "react-hook-form";
 import { useRouter } from "next/router";
 import FormItem from "../../formitems/FormItem";
-import allActions from "../../../store/actions";
-import SelectOption from "../../formitems/SelectOption";
+import classAbrv from "../../../utils";
 
 const { Option } = Select;
 
@@ -16,8 +14,6 @@ const TestFormGroup = ({ control, errors, path = "test" }) => {
 
     const router = useRouter();
     const { id } = router.query;
-
-    const dispatch = useDispatch();
 
     // useEffect(() => {
     //     // if (id && path==='edit') dispatch(allActions.schoolActions.fetchSchool(id));
@@ -34,6 +30,10 @@ const TestFormGroup = ({ control, errors, path = "test" }) => {
                         name="testTitle"
                         placeholder="Enter test title"
                         type="text"
+                        label="title"
+                        redLabel
+                        labelColmn={6}
+                        wrapperColmn={18}
                     />
                     <FormItem
                         control={control}
@@ -41,6 +41,10 @@ const TestFormGroup = ({ control, errors, path = "test" }) => {
                         name="testTime"
                         placeholder="Enter test time"
                         type="number"
+                        label="test time"
+                        redLabel
+                        labelColmn={6}
+                        wrapperColmn={18}
                     />
                     <Tooltip
                         color="#40e68b"
@@ -58,6 +62,20 @@ const TestFormGroup = ({ control, errors, path = "test" }) => {
                                     ? "error"
                                     : "success"
                             }
+                            label="class No"
+                            required
+                            labelCol={{
+                                sm: { span: 24 },
+                                md: { span: 10 },
+                                lg: { span: 8 },
+                                xl: { span: 6 },
+                            }}
+                            wrapperCol={{
+                                sm: { span: 24 },
+                                md: { span: 14 },
+                                lg: { span: 16 },
+                                xl: { span: 18 },
+                            }}
                         >
                             <Controller
                                 control={control}
@@ -90,6 +108,7 @@ const TestFormGroup = ({ control, errors, path = "test" }) => {
                                                         key={cls.classNo}
                                                     >
                                                         {cls.classNo}
+                                                        {classAbrv(cls.classNo)}
                                                     </Option>
                                                 );
                                             })}
@@ -123,6 +142,10 @@ const TestFormGroup = ({ control, errors, path = "test" }) => {
                         name="testCode"
                         placeholder="Enter test code"
                         type="text"
+                        label="test code"
+                        redLabel
+                        labelColmn={6}
+                        wrapperColmn={18}
                     />
                 </Form>
                 <p className="text-center">

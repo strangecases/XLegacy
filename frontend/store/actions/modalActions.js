@@ -48,6 +48,18 @@ const visibleDeleteSectionNo = () => {
     };
 };
 
+const visibleDeleteSchoolYes = () => {
+    return {
+        type: types.VISIBLE_DELETE_SCHOOL_YES,
+    };
+};
+
+const visibleDeleteSchoolNo = () => {
+    return {
+        type: types.VISIBLE_DELETE_SCHOOL_NO,
+    };
+};
+
 const modalActions = {
     visibleTestYes,
     visibleTestNo,
@@ -57,6 +69,8 @@ const modalActions = {
     visibleDeleteTestNo,
     visibleDeleteSectionYes,
     visibleDeleteSectionNo,
+    visibleDeleteSchoolYes,
+    visibleDeleteSchoolNo,
 };
 
 export default modalActions;

@@ -7,8 +7,6 @@ import {
     CloseCircleFilled,
     RightCircleFilled,
     CopyOutlined,
-    CheckOutlined,
-    CheckCircleOutlined,
     CheckCircleFilled,
 } from "@ant-design/icons";
 import Link from "next/link";
@@ -31,6 +29,7 @@ import AdminRoute from "../../../../../components/routes/AdminRoute";
 import EditTestForm from "../../../../../components/modal/modalTest/EditTestForm";
 import DeleteTestForm from "../../../../../components/modal/modalTest/DeleteTestForm";
 import DeleteSectionForm from "../../../../../components/modal/modalSection/DeleteSectionForm";
+import testsIndexStyle from "../../../../../styles/modules/pageStyles/TestsIndex.module.css";
 
 const { Panel } = Collapse;
 
@@ -74,9 +73,10 @@ const TestId = () => {
         }
     }, [id, testId, router.query]);
 
-    const dispatchSelectedSection = (sectionId) => {
+    const dispatchSelectedSection = (sectionId, sectionNo) => {
         dispatch(allActions.customActions.selectedSectionId(sectionId));
         dispatch(allActions.customActions.selectedQuestion(1));
+        dispatch(allActions.customActions.selectedSectionNo(sectionNo));
     };
 
     const showPopConfirm = (secNum, secId) => {
@@ -120,20 +120,17 @@ const TestId = () => {
                                 {adminIsAuthor && (
                                     <Col span={4}>
                                         <Row
-                                            style={{
-                                                textAlign: "right",
-                                            }}
+                                            className={
+                                                testsIndexStyle[
+                                                    "tests-index-section"
+                                                ]
+                                            }
                                             gutter={10}
                                         >
                                             <Col span={18}>
                                                 <Link
                                                     href={`/schools/${id}/tests/${testId}/sections`}
                                                     passHref
-                                                    style={{
-                                                        height: 0,
-                                                        lineHeight: 0,
-                                                        verticalAlign: 0,
-                                                    }}
                                                 >
                                                     <Tooltip
                                                         title="Edit Section"
@@ -143,14 +140,10 @@ const TestId = () => {
                                                         <RightCircleFilled
                                                             onClick={() =>
                                                                 dispatchSelectedSection(
-                                                                    section.sectionId
+                                                                    section.sectionId,
+                                                                    section.sectionNo
                                                                 )
                                                             }
-                                                            // style={{
-                                                            //     fontSize: 20,
-                                                            //     color: "#0755f0",
-                                                            //     top: 0,
-                                                            // }}
                                                             className="hover-icon-edit test-submit-delete"
                                                             // className="hover-icon-delete-edit test-submit-delete-edit"
                                                         />
@@ -170,11 +163,6 @@ const TestId = () => {
                                                                 section.sectionId
                                                             )
                                                         }
-                                                        // style={{
-                                                        //     fontSize: 20,
-                                                        //     color: "#939090",
-                                                        //     paddingTop: 5,
-                                                        // }}
                                                         className="hover-icon-delete test-submit-delete"
                                                     />
                                                 </Tooltip>
@@ -197,12 +185,12 @@ const TestId = () => {
                 title={tests[testId].testTitle}
                 key={tests[testId]._id}
                 extra={renderButton()}
-                style={{ marginBottom: 20 }}
+                className={testsIndexStyle["tests-index-card"]}
             >
                 <Space
                     direction="vertical"
                     size="middle"
-                    style={{ display: "flex" }}
+                    className={testsIndexStyle["tests-index-space"]}
                 >
                     {renderSection()}
                 </Space>
@@ -239,11 +227,11 @@ const TestId = () => {
                                     lg={14}
                                     xl={18}
                                     span={18}
-                                    style={{
-                                        fontWeight: "bold",
-                                        color: "black",
-                                        marginLeft: 9,
-                                    }}
+                                    className={
+                                        testsIndexStyle[
+                                            "tests-index-schoolname"
+                                        ]
+                                    }
                                 >
                                     {schools[id] &&
                                         schools[id].schoolName.toUpperCase()}
@@ -267,12 +255,11 @@ const TestId = () => {
                                                 passHref
                                             >
                                                 <Button
-                                                    style={{
-                                                        backgroundColor:
-                                                            "#22aff5",
-                                                        borderColor: "#22aff5",
-                                                        color: "white",
-                                                    }}
+                                                    className={
+                                                        testsIndexStyle[
+                                                            "tests-index-button"
+                                                        ]
+                                                    }
                                                 >
                                                     Results
                                                 </Button>
@@ -283,9 +270,11 @@ const TestId = () => {
                                                 xs={12}
                                                 sm={12}
                                                 span={12}
-                                                style={{
-                                                    textAlign: "center",
-                                                }}
+                                                className={
+                                                    testsIndexStyle[
+                                                        "tests-index-align"
+                                                    ]
+                                                }
                                             >
                                                 <CreateSectionForm
                                                     length={
@@ -301,17 +290,11 @@ const TestId = () => {
                         </Card>
                     </Col>
                     <Col span={20}>{renderTest()}</Col>
-                    {/* <Col span={4} style={{ textAlign: "center" }}>
-                            <CreateSectionForm
-                                length={tests[testId].sectionData.length}
-                            />
-                        </Col> */}
 
                     {tests && tests[testId].isPublished && (
                         <Col span={20}>
                             <Card
-                                className="inner-card-padding-small"
-                                style={{ backgroundColor: "#fce09d" }}
+                                className={`inner-card-padding-small ${testsIndexStyle["tests-index-published"]}`}
                             >
                                 <Divider
                                     orientation="left"
@@ -322,12 +305,16 @@ const TestId = () => {
                                 <Card className="inner-card-padding inner-card-padding-small">
                                     <Input.Group
                                         compact
-                                        style={{ textAlign: "center" }}
+                                        className={
+                                            testsIndexStyle["tests-index-align"]
+                                        }
                                     >
                                         <Input
-                                            style={{
-                                                width: "90%",
-                                            }}
+                                            className={
+                                                testsIndexStyle[
+                                                    "tests-index-input"
+                                                ]
+                                            }
                                             defaultValue={`http://localhost:3000/schools/${id}/exams/${testId}/info`}
                                             readOnly
                                         />
@@ -350,9 +337,11 @@ const TestId = () => {
                                                             <CopyOutlined />
                                                         ) : (
                                                             <CheckCircleFilled
-                                                                style={{
-                                                                    color: "#89f702",
-                                                                }}
+                                                                className={
+                                                                    testsIndexStyle[
+                                                                        "tests-index-button-icon"
+                                                                    ]
+                                                                }
                                                             />
                                                         )
                                                     }

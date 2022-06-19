@@ -53,19 +53,23 @@ export const createSchool = async (req, res) => {
 
 export const showSchool = async (req, res) => {
     let school;
+    let noOfClassTests = 4;
     console.log(req.query);
-    const { year, classNo } = req.query;
+    const { year, classNo, page, pageSize } = req.query;
 
     if (!year || !classNo) {
         console.log(classNo);
         school = await School.findById(req.params.id);
-    } else {
+    } else if (page && year && classNo) {
         console.log("wwww");
         school = await School.findById(req.params.id)
             .populate(
                 {
                     path: `tests.${classNo}.${year}`,
-                    select: "testTitle classNo testTime",
+                    select: "testTitle classNo testTime isPublished",
+                    limit: pageSize,
+                    skip: (page - 1) * pageSize,
+                    options: { sort: { createdAt: -1 } },
                     model: "Test",
                 }
                 // `tests.${classNo}.${year}`,
@@ -73,12 +77,15 @@ export const showSchool = async (req, res) => {
                 // "Test"
             )
             .exec();
+
+        noOfClassTests = await School.findById(req.params.id, `tests`);
+        noOfClassTests = noOfClassTests.tests[classNo][year].length;
     }
 
     if (!school)
         throw new ExpressError("School not found, try again later", 400);
-
-    return res.json(school);
+    console.log(school);
+    return res.json({ school, noOfClassTests });
 };
 
 export const editSchool = async (req, res) => {
@@ -180,4 +187,14 @@ export const editSchool = async (req, res) => {
         throw new ExpressError("Something went wrong, try again later", 400);
 
     return res.json(school);
+};
+
+export const deleteSchool = async (req, res) => {
+    const school = await School.findByIdAndDelete(req.params.id);
+    console.log(school);
+
+    if (!school)
+        throw new ExpressError("Something went wrong, try again later", 400);
+
+    res.json({ ok: true });
 };

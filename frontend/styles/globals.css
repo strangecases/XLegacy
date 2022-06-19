@@ -95,6 +95,10 @@ body::-webkit-scrollbar-track {
     border-radius: 4px;
 }
 
+.ant-form .scroll-bar-none:hover {
+    overflow-y: auto;
+}
+
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -167,21 +171,21 @@ li {
 
 .ant-card .ant-card-body .ant-card {
     padding: 2.5vh;
-    background: #f0efed;
+    background: #f0f0f0;
     border-radius: 6px;
 }
 
 .ant-card .ant-card-body .inner-card-padding {
     padding: 0;
     margin: 0;
-    background: #f0efed;
+    background: #f0f0f0;
     border-radius: 6px;
 }
 
 .ant-card .ant-card-body .inner-card-padding-two {
     padding: 1vh;
     margin: 0;
-    background: #f0efed;
+    background: #e6e6e666;
     border-radius: 6px;
 }
 
@@ -198,6 +202,11 @@ li {
     background: #f4f5ec;
     overflow: hidden;
     border-radius: 8px;
+}
+
+.ant-space .test-card .ant-card-body {
+    padding: 10px 0 0 20px;
+    margin: 4px 0 0 10px;
 }
 
 .ant-col .ant-card .option-card {
@@ -274,12 +283,16 @@ li {
 }
 
 .ant-card .ant-card-body .inner-divider {
-    margin: 4px 0;
+    margin: 4px 0 10px 0;
     color: black;
 }
 
 .ant-message .ant-message-notice-content .anticon {
     top: -2px;
+}
+
+.ant-menu .anticon {
+    vertical-align: 1px;
 }
 
 @media only screen and (max-width: 520px) {
@@ -292,8 +305,8 @@ li {
     .display-question-bar {
         display: none !important;
     }
-    .segmentedAnt {
+    /* .segmentedAnt {
         display: flex !important;
         justify-content: center !important;
-    }
+    } */
 }

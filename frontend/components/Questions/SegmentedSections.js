@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { useRouter } from "next/router";
 import allActions from "../../store/actions";
+import questionStyle from "../../styles/modules/componentStyles/Questions.module.css";
 
 const SegmentedSections = () => {
     const [smallScreenData, setSmallScreenData] = useState({});
@@ -67,10 +68,7 @@ const SegmentedSections = () => {
     };
 
     return (
-        <div
-            style={{ display: "none", width: "100vw", overflowX: "auto" }}
-            className="segmentedAnt"
-        >
+        <div className={questionStyle["segmented-section"]}>
             <Segmented
                 options={smallScreenData && Object.keys(smallScreenData)}
                 onChange={

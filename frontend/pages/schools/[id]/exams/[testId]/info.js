@@ -1,7 +1,6 @@
-import { Card, Form, Row, Col, Button, Input, Select, Layout } from "antd";
+import { Card, Form, Row, Col, Button, Input, Layout } from "antd";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
 import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -11,6 +10,7 @@ import { examSchema } from "../../../../../yupUtil";
 import FormInput from "../../../../../components/formitems/FormInput";
 import SelectOption from "../../../../../components/formitems/SelectOption";
 import ExamNav from "../../../../../components/nav/ExamNav";
+import examInfoStyle from "../../../../../styles/modules/pageStyles/ExamInfo.module.css";
 
 // const { Option } = Select;
 
@@ -33,14 +33,7 @@ const Info = () => {
     });
 
     const onSubmit = async (data) => {
-        // console.log(data);
-        const res = await axios.post(
-            `/api/schools/${id}/tests/${testId}/exams`,
-            data
-        );
-        console.log(res.data);
-        dispatch(allActions.examActions.createExam(res.data));
-        router.push(`/schools/${id}/exams/${testId}`);
+        dispatch(allActions.examActions.createExam(id, testId, data));
     };
 
     useEffect(() => {
@@ -58,11 +51,12 @@ const Info = () => {
         dispatch(allActions.questionActions.emptyQuestions());
         dispatch(allActions.customActions.selectedSectionId(undefined));
         dispatch(allActions.customActions.selectedSectionNo(1));
+        dispatch(allActions.customActions.selectedQuestion(1));
     }, []);
 
     return (
-        <Layout style={{ height: "100vh" }}>
-            <Row justify="center" style={{ marginTop: 25 }}>
+        <Layout className={examInfoStyle["exam-info-layout"]}>
+            <Row justify="center" className={examInfoStyle["exam-info-row"]}>
                 <Col xs={16} sm={12} lg={10} span={10}>
                     <Card>
                         <Form
@@ -92,10 +86,20 @@ const Info = () => {
                             <FormInput
                                 control={control}
                                 errors={errors}
+                                name="testCode"
+                                placeholder="Enter test code"
+                                type="text"
+                                label="Test code"
+                                labelColmn={7}
+                                wrapperColmn={17}
+                            />
+                            <FormInput
+                                control={control}
+                                errors={errors}
                                 name="parentsPhNo"
                                 placeholder="Enter school code"
                                 type="text"
-                                label="Parents Phone No"
+                                label="Parent PhoneNo"
                                 labelColmn={7}
                                 wrapperColmn={17}
                             />
@@ -110,9 +114,11 @@ const Info = () => {
                                                         {...field}
                                                         type="number"
                                                         readOnly
-                                                        style={{
-                                                            textAlign: "center",
-                                                        }}
+                                                        className={
+                                                            examInfoStyle[
+                                                                "exam-info-align"
+                                                            ]
+                                                        }
                                                     />
                                                 );
                                             }}

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Card } from "antd";
-import authStyles from "../styles/modules/Auth.module.css";
+import authStyles from "../styles/modules/pageStyles/Auth.module.css";
 
 const AdminCard = () => {
     return (
@@ -36,7 +36,8 @@ const AdminCard = () => {
                     </li>
                     <li>
                         Click one of the schools and on next page click{" "}
-                        <b> "Add Test"</b> button on topright of your screen.
+                        <b> &quot;Add Test&quot;</b> button on topright of your
+                        screen.
                     </li>
                     <li>
                         Create you test for a particular class and assign secret
