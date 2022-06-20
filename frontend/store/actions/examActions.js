@@ -1,14 +1,14 @@
-import axios from "axios";
 import Router from "next/router";
 import { toast } from "react-toastify";
 import * as types from "../types";
 import customActions from "./customActions";
 import questionActions from "./questionActions";
 import answerActions from "./answerActions";
+import axiosFetch from "../../axiosFetch";
 
 const createExam = (id, testId, formValues) => async (dispatch) => {
     try {
-        const response = await axios.post(
+        const response = await axiosFetch.post(
             `/api/schools/${id}/tests/${testId}/exams`,
             formValues
         );
@@ -53,7 +53,7 @@ const outOf = (number) => {
 
 const examResult = (id, testId, examId) => async (dispatch) => {
     try {
-        const exam = await axios.get(
+        const exam = await axiosFetch.get(
             `/api/schools/${id}/tests/${testId}/exams/${examId}`
         );
         dispatch({ type: "EXAM_RESULT", payload: exam.data });
@@ -66,7 +66,7 @@ const examsList =
     (id, testId, v = "", classNo = "") =>
     async (dispatch) => {
         try {
-            const exams = await axios.get(
+            const exams = await axiosFetch.get(
                 `/api/schools/${id}/tests/${testId}/exams`,
                 {
                     params: { classNo: 9, group: v },
@@ -159,7 +159,7 @@ const onSectionSubmit = (id, testId) => async (dispatch, getState) => {
         const ansObj = { selectedSectionId, selectedSectionNo, answers };
 
         if (Object.keys(answers).length !== 0) {
-            await axios.patch(
+            await axiosFetch.patch(
                 `/api/schools/${id}/tests/${testId}/exams/${examId}`,
                 ansObj
             );
@@ -192,7 +192,7 @@ const onSectionChange =
             const { examId } = getState().exam;
             const ansObj = { selectedSectionId, selectedSectionNo, answers };
 
-            const exam = await axios.patch(
+            const exam = await axiosFetch.patch(
                 `/api/schools/${id}/tests/${testId}/exams/${examId}`,
                 ansObj
             );

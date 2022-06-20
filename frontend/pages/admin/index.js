@@ -40,6 +40,7 @@ const AdminIndex = () => {
 
     return (
         <AdminRoute>
+            {console.log(process.env.NEXT_PUBLIC_BACK_URL)}
             {admin ? (
                 <Row gutter={[24, 16]} justify="center">
                     <Col xs={24} md={{ span: 20 }} lg={{ span: 15 }} span={15}>

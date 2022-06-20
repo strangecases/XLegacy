@@ -1,10 +1,10 @@
 import { Segmented } from "antd";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
 import { useRouter } from "next/router";
 import allActions from "../../store/actions";
 import questionStyle from "../../styles/modules/componentStyles/Questions.module.css";
+import axiosFetch from "../../axiosFetch";
 
 const SegmentedSections = () => {
     const [smallScreenData, setSmallScreenData] = useState({});
@@ -35,7 +35,7 @@ const SegmentedSections = () => {
         const data = smallScreenData[value];
         if (data.sectionId !== selectedSectionId) {
             const list = Object.values(questions);
-            await axios.patch(
+            await axiosFetch.patch(
                 `/api/tests/${testId}/sections/${selectedSectionId}`,
                 { questions: list }
             );

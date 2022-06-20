@@ -1,13 +1,13 @@
-import axios from "axios";
 import Router from "next/router";
 import { toast } from "react-toastify";
 import * as types from "../types";
 import modalActions from "./modalActions";
+import axiosFetch from "../../axiosFetch";
 
 const createTest = (id, formValues) => async (dispatch, getState) => {
     try {
         const { admin } = getState().auth;
-        const response = await axios.post(`/api/schools/${id}/tests`, {
+        const response = await axiosFetch.post(`/api/schools/${id}/tests`, {
             ...formValues,
             author: admin._id,
         });
@@ -28,7 +28,7 @@ const fetchTests =
     (id, page = 1, pageSize = 4) =>
     async (dispatch) => {
         try {
-            const response = await axios.get(`/api/schools/${id}/tests`, {
+            const response = await axiosFetch.get(`/api/schools/${id}/tests`, {
                 params: { page, pageSize },
             });
             dispatch({ type: types.EMPTY_TESTS });
@@ -45,7 +45,9 @@ const fetchTests =
 
 const fetchTest = (id, testId) => async (dispatch) => {
     try {
-        const response = await axios.get(`/api/schools/${id}/tests/${testId}`);
+        const response = await axiosFetch.get(
+            `/api/schools/${id}/tests/${testId}`
+        );
         dispatch({ type: types.FETCH_TEST, payload: response.data });
     } catch (err) {
         console.log(err);
@@ -54,7 +56,7 @@ const fetchTest = (id, testId) => async (dispatch) => {
 
 const editTest = (id, testId, formValues) => async (dispatch) => {
     try {
-        const response = await axios.patch(
+        const response = await axiosFetch.patch(
             `/api/schools/${id}/tests/${testId}`,
             formValues
         );
@@ -73,7 +75,7 @@ const editTest = (id, testId, formValues) => async (dispatch) => {
 
 const deleteTest = (id, testId) => async (dispatch) => {
     try {
-        await axios.delete(`/api/schools/${id}/tests/${testId}`);
+        await axiosFetch.delete(`/api/schools/${id}/tests/${testId}`);
         dispatch({ type: types.DELETE_TEST, payload: testId });
         dispatch(modalActions.visibleDeleteTestNo());
         Router.push(`/schools/${id}/tests`);
@@ -89,7 +91,7 @@ const deleteTest = (id, testId) => async (dispatch) => {
 
 const createSectionOnTest = (id, testId, formValues) => async (dispatch) => {
     try {
-        const response = await axios.post(
+        const response = await axiosFetch.post(
             `/api/tests/${testId}/sections`,
             formValues
         );
@@ -110,7 +112,7 @@ const editSectionOnTest =
     (id, testId, formValues) => async (dispatch, getState) => {
         try {
             const { selectedSectionId } = getState().custom;
-            await axios.patch(
+            await axiosFetch.patch(
                 `/api/tests/${testId}/sections/${selectedSectionId}`,
                 formValues
             );
@@ -130,7 +132,7 @@ const deleteSectionOnTest = (id, testId) => async (dispatch, getState) => {
     try {
         const { selectedSectionId } = getState().custom;
         const { tests } = getState();
-        const response = await axios.delete(
+        const response = await axiosFetch.delete(
             `/api/tests/${testId}/sections/${selectedSectionId}`
         );
         console.log(response.data.sectionNo);
@@ -146,7 +148,7 @@ const deleteSectionOnTest = (id, testId) => async (dispatch, getState) => {
                     const sectionNum = sect.sectionNo - 1;
                     const sectionData = { ...sect, sectionNo: sectionNum };
                     console.log(sectionData);
-                    await axios.patch(
+                    await axiosFetch.patch(
                         `/api/tests/${testId}/sections/${sect.sectionId}`,
                         sectionData
                     );

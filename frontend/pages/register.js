@@ -1,4 +1,3 @@
-import axios from "axios";
 import { toast } from "react-toastify";
 import { SyncOutlined } from "@ant-design/icons";
 import Link from "next/link";
@@ -9,6 +8,7 @@ import FormInput from "../components/formitems/FormInput";
 import authStyles from "../styles/modules/pageStyles/Auth.module.css";
 import { registerSchema } from "../yupUtil";
 import IsNotLoggedIn from "../components/routes/isNotLoggedIn";
+import axiosFetch from "../axiosFetch";
 
 const Register = () => {
     const {
@@ -24,7 +24,7 @@ const Register = () => {
         const { name, email, password, adminCode } = data;
 
         try {
-            await axios.post("/api/register", {
+            await axiosFetch.post("/api/register", {
                 name,
                 email,
                 password,

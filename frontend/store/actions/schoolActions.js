@@ -1,8 +1,8 @@
-import axios from "axios";
 import Router from "next/router";
 import { toast } from "react-toastify";
 import modalActions from "./modalActions";
 import * as types from "../types";
+import axiosFetch from "../../axiosFetch";
 
 const createSchool = (formValues) => async (dispatch, getState) => {
     try {
@@ -12,7 +12,7 @@ const createSchool = (formValues) => async (dispatch, getState) => {
         });
         const data = { ...formValues, classes };
         console.log(data);
-        const response = await axios.post(`/api/schools`, {
+        const response = await axiosFetch.post(`/api/schools`, {
             ...data,
             admin: admin._id,
         });
@@ -31,7 +31,7 @@ const createSchool = (formValues) => async (dispatch, getState) => {
 
 const fetchSchools = () => async (dispatch) => {
     try {
-        const response = await axios.get(`/api/schools`);
+        const response = await axiosFetch.get(`/api/schools`);
         dispatch({ type: types.EMPTY_SCHOOLS });
         dispatch({ type: types.FETCH_SCHOOLS, payload: response.data });
     } catch (err) {
@@ -43,7 +43,7 @@ const fetchSchool =
     (id, classNo = "", year = "", page = 1, pageSize = 4) =>
     async (dispatch) => {
         try {
-            const response = await axios.get(`/api/schools/${id}`, {
+            const response = await axiosFetch.get(`/api/schools/${id}`, {
                 params: { year, classNo, page, pageSize },
             });
             console.log(response);
@@ -66,7 +66,7 @@ const editSchool = (id, formValues) => async (dispatch) => {
             return a.classNo - b.classNo;
         });
         const data = { ...formValues, classes };
-        const response = await axios.patch(`/api/schools/${id}`, data);
+        const response = await axiosFetch.patch(`/api/schools/${id}`, data);
         dispatch({ type: types.EDIT_SCHOOL, payload: response.data });
     } catch (err) {
         console.log(err.response.data);
@@ -76,7 +76,7 @@ const editSchool = (id, formValues) => async (dispatch) => {
 const deleteSchool = (id) => async (dispatch, getState) => {
     try {
         const { schools } = getState();
-        await axios.delete(`/api/schools/${id}`);
+        await axiosFetch.delete(`/api/schools/${id}`);
         toast.success(`${schools[id].schoolName} is deleted`, {
             autoClose: 2200,
             hideProgressBar: true,
@@ -91,7 +91,7 @@ const deleteSchool = (id) => async (dispatch, getState) => {
 
 const createTestOnSchool = (id, formValues) => async (dispatch) => {
     try {
-        const response = await axios.post(
+        const response = await axiosFetch.post(
             `/api/schools/${id}/tests`,
             formValues
         );
@@ -103,7 +103,7 @@ const createTestOnSchool = (id, formValues) => async (dispatch) => {
 
 const getSchoolOnSearch = (formValue) => async (dispatch) => {
     try {
-        const response = await axios.get("/api/schools/search", {
+        const response = await axiosFetch.get("/api/schools/search", {
             params: {
                 schoolCode: formValue.toLowerCase(),
                 type: "search",

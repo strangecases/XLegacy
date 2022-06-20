@@ -1,12 +1,12 @@
-import axios from "axios";
 import Router from "next/router";
 import { toast } from "react-toastify";
 import * as types from "../types";
 import customActions from "./customActions";
+import axiosFetch from "../../axiosFetch";
 
 const fetchQuestions = (testId, sectionId) => async (dispatch) => {
     try {
-        const response = await axios.get(
+        const response = await axiosFetch.get(
             `/api/tests/${testId}/sections/${sectionId}`
         );
 
@@ -21,7 +21,7 @@ const fetchQuestions = (testId, sectionId) => async (dispatch) => {
 
 const editQuestion = (formValues) => async (dispatch) => {
     try {
-        // const response = await axios.patch(
+        // const response = await axiosFetch.patch(
         //     `/api/tests/${testId}/sections/${sectionId}`,
         //     formValues
         // );
@@ -37,7 +37,7 @@ const editQuestion = (formValues) => async (dispatch) => {
 
 const deleteQuestion = (questionNo) => async (dispatch) => {
     try {
-        // await axios.delete(`/api/tests/${testId}/sections/${sectionId}`);
+        // await axiosFetch.delete(`/api/tests/${testId}/sections/${sectionId}`);
         dispatch({ type: types.DELETE_QUESTION, payload: questionNo });
     } catch (err) {
         console.log(err);
@@ -73,7 +73,7 @@ const onSectionClick =
             const questionList = Object.values(questions);
 
             if (!publish) {
-                await axios.patch(
+                await axiosFetch.patch(
                     `/api/tests/${testId}/sections/${selectedSectionId}`,
                     { questions: questionList }
                 );
@@ -89,7 +89,7 @@ const onSectionClick =
                     });
                 }
             } else if (publish) {
-                await axios.patch(
+                await axiosFetch.patch(
                     `/api/tests/${testId}/sections/${selectedSectionId}`,
                     { questions: questionList, isPublished: publish }
                 );

@@ -1,7 +1,6 @@
 import { SyncOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { Button, Form, Card, Row, Col } from "antd";
 import { useForm } from "react-hook-form";
@@ -9,6 +8,7 @@ import FormInput from "../components/formitems/FormInput";
 import authStyles from "../styles/modules/pageStyles/Auth.module.css";
 import { forgotPasswordSchema } from "../yupUtil";
 import IsNotLoggedIn from "../components/routes/isNotLoggedIn";
+import axiosFetch from "../axiosFetch";
 
 const ForgotPassword = () => {
     // router
@@ -26,7 +26,7 @@ const ForgotPassword = () => {
     const onSubmit = async ({ email }) => {
         console.log(email);
         try {
-            await axios.post("/api/forgot-password", {
+            await axiosFetch.post("/api/forgot-password", {
                 email,
             });
             toast("Check your email for secret code");

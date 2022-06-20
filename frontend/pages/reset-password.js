@@ -1,4 +1,3 @@
-import axios from "axios";
 import { toast } from "react-toastify";
 import { SyncOutlined } from "@ant-design/icons";
 import { Form, Button, Card, Row, Col } from "antd";
@@ -9,6 +8,7 @@ import FormInput from "../components/formitems/FormInput";
 import authStyles from "../styles/modules/pageStyles/Auth.module.css";
 import { resetPasswordSchema } from "../yupUtil";
 import IsNotLoggedIn from "../components/routes/isNotLoggedIn";
+import axiosFetch from "../axiosFetch";
 
 const ResetPassword = () => {
     // router
@@ -25,7 +25,7 @@ const ResetPassword = () => {
 
     const onResetPassword = async ({ email, code, newPassword }) => {
         try {
-            await axios.post("/api/reset-password", {
+            await axiosFetch.post("/api/reset-password", {
                 email,
                 code,
                 newPassword,

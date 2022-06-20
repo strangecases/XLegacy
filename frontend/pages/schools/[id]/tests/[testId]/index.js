@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import axios from "axios";
 import {
     CloseCircleFilled,
     RightCircleFilled,
@@ -30,6 +29,7 @@ import EditTestForm from "../../../../../components/modal/modalTest/EditTestForm
 import DeleteTestForm from "../../../../../components/modal/modalTest/DeleteTestForm";
 import DeleteSectionForm from "../../../../../components/modal/modalSection/DeleteSectionForm";
 import testsIndexStyle from "../../../../../styles/modules/pageStyles/TestsIndex.module.css";
+import axiosFetch from "../../../../../axiosFetch";
 
 const { Panel } = Collapse;
 
@@ -51,7 +51,7 @@ const TestId = () => {
         const fetchAdmin = async () => {
             try {
                 if (testId !== undefined) {
-                    const { data } = await axios.get(
+                    const { data } = await axiosFetch.get(
                         `/api/admin-is-author/${testId}`
                     );
                     if (data.ok) {

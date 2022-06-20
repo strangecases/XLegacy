@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import axios from "axios";
 import { message } from "antd";
 import Spinner from "../Spinner";
+import axiosFetch from "../../axiosFetch";
 
 const AdminIsAuthor = ({ children }) => {
     const [ok, setOk] = useState(false);
@@ -14,7 +14,7 @@ const AdminIsAuthor = ({ children }) => {
         const fetchAdmin = async () => {
             try {
                 if (testId !== undefined) {
-                    const { data } = await axios.get(
+                    const { data } = await axiosFetch.get(
                         `/api/admin-is-author/${testId}`
                     );
                     if (data.ok) {

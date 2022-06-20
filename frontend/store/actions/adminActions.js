@@ -1,11 +1,11 @@
-import axios from "axios";
 import { toast } from "react-toastify";
 import Router from "next/router";
 import * as types from "../types";
+import axiosFetch from "../../axiosFetch";
 
 const logIn = (data) => async (dispatch) => {
     try {
-        const response = await axios.post("/api/login", { ...data });
+        const response = await axiosFetch.post("/api/login", { ...data });
         dispatch({
             type: types.LOGIN,
             payload: response.data,
@@ -25,7 +25,7 @@ const logIn = (data) => async (dispatch) => {
 
 const logOut = () => async (dispatch) => {
     try {
-        await axios.get("/api/logout");
+        await axiosFetch.get("/api/logout");
         dispatch({
             type: types.LOGOUT,
         });
@@ -45,7 +45,7 @@ const logOut = () => async (dispatch) => {
 
 const editAdmin = (adminId, formValues) => async (dispatch) => {
     try {
-        const response = await axios.patch(
+        const response = await axiosFetch.patch(
             `/api/register/${adminId}`,
             formValues
         );

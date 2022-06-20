@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import Spinner from "../Spinner";
+import axiosFetch from "../../axiosFetch";
 
 const AdminRoute = ({ children }) => {
     const [ok, setOk] = useState(true);
@@ -16,7 +16,7 @@ const AdminRoute = ({ children }) => {
     useEffect(() => {
         const fetchAdmin = async () => {
             try {
-                const { data } = await axios.get("/api/current-admin");
+                const { data } = await axiosFetch.get("/api/current-admin");
                 if (data.ok) {
                     setOk(true);
                 }
