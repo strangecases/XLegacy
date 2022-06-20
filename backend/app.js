@@ -38,7 +38,7 @@ const app = express();
 //     credential: true,
 // };
 
-app.use(cors());
+app.use(cors({ credentials: true, origin: "https://x-liart.vercel.app" }));
 app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
