@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 
 import ExamNav from "../../../../../components/nav/ExamNav";
-import Questions from "../../../../../components/questions/Questions";
+import QuestionTests from "../../../../../components/questions/QuestionTests";
 import allActions from "../../../../../store/actions";
 import examInfoStyle from "../../../../../styles/modules/pageStyles/ExamInfo.module.css";
 import Spinner from "../../../../../components/Spinner";
@@ -110,7 +110,7 @@ const ExamsId = () => {
         }
     }, [examId, id, testId]);
 
-    return examId && examId ? <Questions /> : <Spinner />;
+    return examId && examId ? <QuestionTests /> : <Spinner />;
 };
 
 ExamsId.getLayout = (page) => <ExamNav>{page}</ExamNav>;

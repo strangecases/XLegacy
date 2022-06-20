@@ -69,7 +69,7 @@ const examsList =
             const exams = await axiosFetch.get(
                 `/api/schools/${id}/tests/${testId}/exams`,
                 {
-                    params: { classNo: 9, group: v },
+                    params: { classNo, group: v },
                 }
             );
             console.log(exams);

@@ -1,11 +1,11 @@
-import Questions from "../../../../../components/questions/Questions";
+import QuestionTests from "../../../../../components/questions/QuestionTests";
 
 import AdminIsAuthor from "../../../../../components/routes/AdminIsAuthor";
 
 const Section = () => {
     return (
         <AdminIsAuthor>
-            <Questions />
+            <QuestionTests />
         </AdminIsAuthor>
     );
 };

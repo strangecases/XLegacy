@@ -9,7 +9,7 @@ import ExamDetail from "./ExamDetail";
 import { EMPTY_QUESTIONS } from "../../store/types";
 import questionStyle from "../../styles/modules/componentStyles/Questions.module.css";
 
-const Questions = () => {
+const QuestionTests = () => {
     const router = useRouter();
     const { id, testId } = router.query;
     const path = router.pathname;
@@ -74,4 +74,4 @@ const Questions = () => {
     );
 };
 
-export default Questions;
+export default QuestionTests;
