@@ -121,7 +121,8 @@ export const login = async (req, res) => {
     // send token in cookie
     res.cookie("token", token, {
         httpOnly: true,
-        // secure: true, // only works on https
+        secure: true, // only works on https
+        sameSite: "lax",
     });
 
     // send admin as json response
