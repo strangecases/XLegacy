@@ -7,7 +7,6 @@ const baseURL =
 
 const axiosFetch = axios.create({
     baseURL,
-    withCredentials: true,
 });
 
 export default axiosFetch;
