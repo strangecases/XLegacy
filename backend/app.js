@@ -23,7 +23,21 @@ const app = express();
 */
 // apply middleware
 
-app.use(cors());
+const whitelist = [
+    "https://x-liart.vercel.app",
+    "https://scholarxfile.herokuapp.com",
+];
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (whitelist.indexOf(origin) !== -1 || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
