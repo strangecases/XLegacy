@@ -1,4 +1,4 @@
-import QuestionTests from "../../../../../components/questions/QuestionTests";
+import QuestionTests from "../../../../../components/Questions/QuestionTests";
 
 import AdminIsAuthor from "../../../../../components/routes/AdminIsAuthor";
 

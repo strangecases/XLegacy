@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 
 import ExamNav from "../../../../../components/nav/ExamNav";
-import QuestionTests from "../../../../../components/questions/QuestionTests";
+import QuestionTests from "../../../../../components/Questions/QuestionTests";
 import allActions from "../../../../../store/actions";
 import examInfoStyle from "../../../../../styles/modules/pageStyles/ExamInfo.module.css";
 import Spinner from "../../../../../components/Spinner";
