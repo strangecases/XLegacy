@@ -8,7 +8,7 @@ import allActions from "../store/actions";
 import FormInput from "../components/formitems/FormInput";
 import authStyles from "../styles/modules/pageStyles/Auth.module.css";
 import { loginSchema } from "../yupUtil";
-import IsNotLoggedIn from "../components/routes/isNotLoggedIn";
+import IsNotLoggedIn from "../components/routes/IsNotLoggedIn";
 
 const Login = () => {
     const dispatch = useDispatch();

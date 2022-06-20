@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import FormInput from "../components/formitems/FormInput";
 import authStyles from "../styles/modules/pageStyles/Auth.module.css";
 import { forgotPasswordSchema } from "../yupUtil";
-import IsNotLoggedIn from "../components/routes/isNotLoggedIn";
+import IsNotLoggedIn from "../components/routes/IsNotLoggedIn";
 import axiosFetch from "../axiosFetch";
 
 const ForgotPassword = () => {

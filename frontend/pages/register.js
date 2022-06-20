@@ -7,7 +7,7 @@ import { Form, Button, Row, Col, Card } from "antd";
 import FormInput from "../components/formitems/FormInput";
 import authStyles from "../styles/modules/pageStyles/Auth.module.css";
 import { registerSchema } from "../yupUtil";
-import IsNotLoggedIn from "../components/routes/isNotLoggedIn";
+import IsNotLoggedIn from "../components/routes/IsNotLoggedIn";
 import axiosFetch from "../axiosFetch";
 
 const Register = () => {
