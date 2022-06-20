@@ -28,6 +28,10 @@ const Login = () => {
 
     return (
         <IsNotLoggedIn>
+            {console.log(
+                process.env.NEXT_PUBLIC_NODE_ENV,
+                process.env.NEXT_PUBLIC_BACK_URL
+            )}
             <h2 className={authStyles.headingAuth}>Login</h2>
 
             <Row justify="center">
