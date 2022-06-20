@@ -42,6 +42,10 @@ const csrfProtection = csrf({ cookie: true });
 app.use(csrfProtection);
 
 // csrf endpoint
+app.get("/", (req, res) => {
+    res.send("hello backend");
+});
+
 app.get("/api/csrf-token", (req, res) => {
     res.json({ csrfToken: req.csrfToken() });
 });
