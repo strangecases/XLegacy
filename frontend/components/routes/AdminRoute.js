@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import Spinner from "../Spinner";
@@ -10,7 +10,6 @@ const AdminRoute = ({ children }) => {
 
     const router = useRouter();
 
-    const { admin } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -20,6 +19,7 @@ const AdminRoute = ({ children }) => {
                 if (data.ok) {
                     setOk(true);
                 }
+                console.log("adminRoute");
             } catch (err) {
                 console.log(err);
                 toast.error("Please login to visit this page", {
@@ -31,7 +31,7 @@ const AdminRoute = ({ children }) => {
             }
         };
         fetchAdmin();
-    }, [router, ok, dispatch, admin]);
+    }, [router, dispatch]);
 
     return <div>{ok ? <> {children} </> : <Spinner />}</div>;
 };

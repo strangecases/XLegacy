@@ -14,6 +14,7 @@ const logIn = (data) => async (dispatch) => {
             autoClose: 2200,
             hideProgressBar: true,
         });
+        Router.push("/admin");
     } catch (err) {
         toast.error("Username or password is incorrect", {
             autoClose: 2200,

@@ -29,7 +29,7 @@ const AdminIsAuthor = ({ children }) => {
             }
         };
         fetchAdmin();
-    }, [router, ok, testId]);
+    }, [router, testId]);
 
     return <div>{ok ? <> {children} </> : <Spinner />}</div>;
 };

@@ -208,8 +208,6 @@ const QuestionDetail = () => {
         dispatch(allActions.modalActions.visibleDeleteSectionYes());
     };
 
-    console.log(errors);
-
     return (
         <>
             <SegmentedSections />

@@ -12,7 +12,6 @@ import SectionFormGroup from "./SectionFormGroup";
 const EditSectionForm = ({ section }) => {
     const router = useRouter();
     const { id, testId } = router.query;
-    console.log(id, testId);
 
     // let sectionData;
     // if (section) {

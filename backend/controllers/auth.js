@@ -121,8 +121,8 @@ export const login = async (req, res) => {
     // send token in cookie
     res.cookie("token", token, {
         httpOnly: true,
-        secure: true, // only works on https
-        sameSite: "none",
+        secure: process.env.NODE_ENV === "production" && true,
+        sameSite: process.env.NODE_ENV === "production" && "none",
     });
 
     // send admin as json response
@@ -130,7 +130,10 @@ export const login = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-    res.clearCookie("token");
+    res.clearCookie("token", {
+        secure: process.env.NODE_ENV === "production" && true,
+        sameSite: process.env.NODE_ENV === "production" && "none",
+    });
     return res.json({ message: "signout success" });
 };
 

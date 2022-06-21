@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import Spinner from "../Spinner";
 import axiosFetch from "../../axiosFetch";
@@ -10,7 +10,6 @@ const IsNotLoggedIn = ({ children }) => {
 
     const router = useRouter();
 
-    const { admin } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -21,6 +20,7 @@ const IsNotLoggedIn = ({ children }) => {
                     setOk(false);
                     router.push("/admin");
                 }
+                console.log("IsNotLoggedIn");
             } catch (err) {
                 console.log(err.response);
                 setOk(true);
@@ -28,7 +28,7 @@ const IsNotLoggedIn = ({ children }) => {
             }
         };
         fetchAdmin();
-    }, [router, ok, dispatch, admin]);
+    }, [router, dispatch]);
 
     return <div>{ok ? <> {children} </> : <Spinner />}</div>;
 };

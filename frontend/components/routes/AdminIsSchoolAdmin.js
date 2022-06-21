@@ -28,8 +28,8 @@ const AdminIsSchoolAdmin = ({ children }) => {
                 router.push("/admin");
             }
         };
-        fetchAdmin();
-    }, [router, ok, id]);
+        if (id) fetchAdmin();
+    }, [router, id]);
 
     return <div>{ok ? <> {children} </> : <Spinner />}</div>;
 };
