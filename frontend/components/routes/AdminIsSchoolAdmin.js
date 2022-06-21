@@ -13,13 +13,11 @@ const AdminIsSchoolAdmin = ({ children }) => {
     useEffect(() => {
         const fetchAdmin = async () => {
             try {
-                if (id !== undefined) {
-                    const { data } = await axiosFetch.get(
-                        `/api/admin-is-school-admin/${id}`
-                    );
-                    if (data.ok) {
-                        setOk(true);
-                    }
+                const { data } = await axiosFetch.get(
+                    `/api/admin-is-school-admin/${id}`
+                );
+                if (data.ok) {
+                    setOk(true);
                 }
             } catch (err) {
                 console.log(err);

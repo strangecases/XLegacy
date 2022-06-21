@@ -13,13 +13,11 @@ const AdminIsAuthor = ({ children }) => {
     useEffect(() => {
         const fetchAdmin = async () => {
             try {
-                if (testId !== undefined) {
-                    const { data } = await axiosFetch.get(
-                        `/api/admin-is-author/${testId}`
-                    );
-                    if (data.ok) {
-                        setOk(true);
-                    }
+                const { data } = await axiosFetch.get(
+                    `/api/admin-is-author/${testId}`
+                );
+                if (data.ok) {
+                    setOk(true);
                 }
             } catch (err) {
                 console.log(err);
@@ -28,7 +26,7 @@ const AdminIsAuthor = ({ children }) => {
                 router.push("/admin");
             }
         };
-        fetchAdmin();
+        if (testId) fetchAdmin();
     }, [router, testId]);
 
     return <div>{ok ? <> {children} </> : <Spinner />}</div>;
