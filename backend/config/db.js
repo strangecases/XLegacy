@@ -1,8 +1,16 @@
 import mongoose from "mongoose";
 
+let db;
+
+if (process.env.NODE_ENV === "production") {
+    db = process.env.DB_URL;
+} else {
+    db = process.env.DATABASE;
+}
+
 const connectDB = async () => {
     try {
-        const conn = await mongoose.connect(process.env.DB_URL, {
+        const conn = await mongoose.connect(db, {
             useUnifiedTopology: true,
             useNewUrlParser: true,
         });
