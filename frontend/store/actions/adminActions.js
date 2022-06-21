@@ -54,6 +54,7 @@ const editAdmin = (adminId, formValues) => async (dispatch) => {
             formValues.confirmPassword &&
             formValues.newPassword
         ) {
+            await axiosFetch.get("/api/logout");
             dispatch({ type: types.LOGOUT });
             toast.success(
                 "Changes were successfully applied, Login with new password",

@@ -120,7 +120,6 @@ export const login = async (req, res) => {
 
     // send token in cookie
     res.cookie("token", token, {
-        domain: "x-liart.vercel.app",
         httpOnly: true,
         secure: true, // only works on https
         sameSite: "none",
