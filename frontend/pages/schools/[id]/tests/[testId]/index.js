@@ -321,7 +321,15 @@ const TestId = () => {
                                                     "tests-index-input"
                                                 ]
                                             }
-                                            defaultValue={`http://localhost:3000/schools/${id}/exams/${testId}/info`}
+                                            defaultValue={`${
+                                                process.env
+                                                    .NEXT_PUBLIC_NODE_ENV ===
+                                                "development"
+                                                    ? process.env
+                                                          .NEXT_PUBLIC_FRONT_URL_DEV
+                                                    : process.env
+                                                          .NEXT_PUBLIC_FRONT_URL
+                                            }/schools/${id}/exams/${testId}/info`}
                                             readOnly
                                         />
                                         <Tooltip
@@ -333,7 +341,15 @@ const TestId = () => {
                                                 text={
                                                     id &&
                                                     testId &&
-                                                    `http://localhost:3000/schools/${id}/exams/${testId}/info`
+                                                    `${
+                                                        process.env
+                                                            .NEXT_PUBLIC_NODE_ENV ===
+                                                        "development"
+                                                            ? process.env
+                                                                  .NEXT_PUBLIC_FRONT_URL_DEV
+                                                            : process.env
+                                                                  .NEXT_PUBLIC_FRONT_URL
+                                                    }/schools/${id}/exams/${testId}/info`
                                                 }
                                                 onCopy={() => setCopied(true)}
                                             >

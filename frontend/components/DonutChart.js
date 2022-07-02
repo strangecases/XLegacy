@@ -1,13 +1,11 @@
 import * as d3 from "d3";
 import { Col, Empty, Row } from "antd";
 import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import allComponentsStyle from "../styles/modules/componentStyles/AllComponents.module.css";
-import allActions from "../store/actions";
 
 const DonutChart = () => {
     const { donutExams } = useSelector((state) => state.exam);
-    const dispatch = useDispatch();
 
     useEffect(() => {
         function drawChart(width, height, radius) {
