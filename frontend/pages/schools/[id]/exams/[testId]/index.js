@@ -68,7 +68,7 @@ const ExamsId = () => {
 
             if (router.asPath !== url) confirm();
             router.events.emit("routeChangeError");
-            throw "routeChange aborted.";
+            throw new Error("routeChange aborted.");
         };
 
         const handleWindowClose = (e) => {
