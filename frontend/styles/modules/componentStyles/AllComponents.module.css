@@ -2,6 +2,15 @@
     height: 178px;
 }
 
+.donut-chart-row {
+    height: 200px;
+}
+
+.donut-chart-svg-col {
+    max-width: 360px;
+    height: 200px;
+}
+
 .donut-chart-empty-position {
     position: relative;
     top: 18px;
@@ -32,4 +41,20 @@
 
 .all-spin-position .all-spin-icon {
     font-size: 72px;
+}
+
+@media screen and (max-width: 576px) {
+    .all-spin-position {
+        left: 41%;
+    }
+
+    .all-spin-position .all-spin-icon {
+        font-size: 36px;
+    }
+}
+
+@media screen and (min-width: 577px) and (max-width: 821px) {
+    .all-spin-position {
+        left: 41%;
+    }
 }

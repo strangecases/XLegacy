@@ -33,7 +33,7 @@ const SchoolNewForm = () => {
         <AdminRoute>
             <div id="scroll">
                 <Row justify="center">
-                    <Col xs={15} lg={13} span={13}>
+                    <Col xs={24} sm={16} lg={13} span={13}>
                         <Form
                             onFinish={handleSubmit(onSubmit)}
                             autoComplete="off"

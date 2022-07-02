@@ -18,6 +18,7 @@ const createExam = (id, testId, formValues) => async (dispatch) => {
         });
         Router.push(`/schools/${id}/exams/${testId}`);
     } catch (err) {
+        console.log(err.response);
         toast.error(err.response.data, {
             autoClose: 2200,
             hideProgressBar: true,
@@ -168,7 +169,6 @@ const onSectionSubmit = (id, testId) => async (dispatch, getState) => {
             dispatch(questionActions.emptyQuestions());
             dispatch(customActions.selectedQuestion(1));
             dispatch(customActions.selectedSectionNo(1));
-            dispatch(customActions.selectedSectionId(null));
             dispatch(customActions.examSuccess("success"));
             // dispatch(emptyExam());
 

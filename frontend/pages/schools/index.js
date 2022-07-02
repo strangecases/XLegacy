@@ -20,7 +20,7 @@ const Schools = () => {
     const onRenderSchools = () => {
         return Object.values(schools).map((school) => {
             return (
-                <Col key={school._id} xs={24} sm={12} md={8} span={24}>
+                <Col key={school._id} xs={22} sm={12} md={12} lg={8} span={24}>
                     <Card
                         className={schoolStyle["schools-index-card-height"]}
                         hoverable
@@ -82,7 +82,7 @@ const Schools = () => {
 
     return (
         <AdminRoute>
-            <Row justify="" gutter={[16, 16]}>
+            <Row justify="center" gutter={[16, 16]}>
                 {onRenderSchools()}
             </Row>
             <h1 className={schoolStyle["school-index-add-button"]}>

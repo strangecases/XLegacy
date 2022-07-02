@@ -54,7 +54,7 @@ const ExamsId = () => {
                     dispatch(allActions.customActions.examSaved(true));
                     if (localStorage.getItem("end_date") != null)
                         localStorage.removeItem("end_date");
-                    message.success("Successfully saved your work", 4);
+                    message.success("Successfully saved your work", 2);
                     return false;
                 },
             });
@@ -68,7 +68,7 @@ const ExamsId = () => {
 
             if (router.asPath !== url) confirm();
             router.events.emit("routeChangeError");
-            throw new Error("routeChange aborted.");
+            throw "routeChange aborted.";
         };
 
         const handleWindowClose = (e) => {

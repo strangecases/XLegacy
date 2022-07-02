@@ -217,6 +217,7 @@ li {
 
 .ant-radio-wrapper {
     width: 34vw;
+    margin-block: 0;
 }
 
 .ant-col .test-submit-delete {
@@ -301,6 +302,20 @@ li {
     }
 }
 
+@media only screen and (max-width: 576px) {
+    .ant-card-mobile .ant-card-head .ant-card-head-wrapper {
+        flex-direction: column;
+    }
+
+    .ant-card-mobile .ant-card-head-wrapper .ant-card-extra {
+        margin-inline: auto;
+    }
+
+    .ant-card-mobile .ant-card-extra .ant-space {
+        justify-content: center;
+    }
+}
+
 @media only screen and (max-width: 767px) {
     .display-question-bar {
         display: none !important;
@@ -309,4 +324,14 @@ li {
         display: flex !important;
         justify-content: center !important;
     } */
+}
+
+@media only screen and (min-width: 767px) {
+    .ant-col .hover-icon-next:hover {
+        color: white;
+        background-color: #fd9400;
+        transition: background-color 300ms ease-out 50ms;
+        padding-inline: 1px;
+        padding-block: 2px;
+    }
 }

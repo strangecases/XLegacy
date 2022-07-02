@@ -19,6 +19,7 @@ const ExamSuccess = () => {
     useEffect(() => {
         if (examSuccess) {
             dispatch(allActions.examActions.deleteExam());
+            dispatch(allActions.customActions.selectedSectionId(undefined));
         } else if (!examSuccess || examSuccess === "failure") {
             router.push("/");
         }

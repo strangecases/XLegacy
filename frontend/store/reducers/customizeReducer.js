@@ -9,6 +9,8 @@ const initialState = {
     selectedClass: "",
     examSaved: false,
     examSuccess: "",
+    saveSection: false,
+    loading: false,
 };
 
 const customizeReducer = (state = initialState, action) => {
@@ -29,6 +31,10 @@ const customizeReducer = (state = initialState, action) => {
             return { ...state, examSaved: action.payload };
         case types.EXAM_SUCCESS:
             return { ...state, examSuccess: action.payload };
+        case types.SAVE_SECTION:
+            return { ...state, saveSection: action.payload };
+        case types.LOADING:
+            return { ...state, loading: action.payload };
         default:
             return state;
     }

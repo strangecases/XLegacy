@@ -10,6 +10,10 @@
     display: flex;
 }
 
+.tests-index-overflow {
+    overflow: hidden;
+}
+
 .tests-index-schoolname {
     font-weight: 700;
     color: black;
@@ -25,6 +29,8 @@
 
 .tests-index-align {
     text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .tests-index-published {
@@ -37,4 +43,16 @@
 
 .tests-index-button-icon {
     color: #89f702;
+}
+
+@media (max-width: 500px) {
+    .tests-index-align .tests-index-input {
+        width: 75%;
+    }
+}
+
+@media (man-width: 321px) {
+    .tests-index-section {
+        text-align: left;
+    }
 }

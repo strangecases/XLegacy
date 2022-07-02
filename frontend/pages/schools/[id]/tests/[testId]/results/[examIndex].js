@@ -20,12 +20,20 @@ const ExamIndex = () => {
 
     const { tests, questions } = useSelector((state) => state);
     const { examResult } = useSelector((state) => state.exam);
+    const { selectedSectionId } = useSelector((state) => state.custom);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(allActions.testActions.fetchTest(id, testId));
-        dispatch(allActions.examActions.examResult(id, testId, examIndex));
+        if (id && testId && examIndex) {
+            dispatch(allActions.testActions.fetchTest(id, testId));
+            dispatch(allActions.examActions.examResult(id, testId, examIndex));
+        }
+
+        return () => {
+            dispatch(allActions.customActions.selectedSectionId(undefined));
+            dispatch(allActions.questionActions.emptyQuestions());
+        };
     }, [id, testId, examIndex]);
 
     useEffect(() => {
@@ -35,18 +43,29 @@ const ExamIndex = () => {
 
     useEffect(() => {
         if (tests[testId]) {
-            dispatch(allActions.questionActions.emptyQuestions());
             dispatch(
-                allActions.questionActions.fetchQuestions(
-                    testId,
+                allActions.customActions.selectedSectionId(
                     tests[testId].sectionData[0].sectionId
                 )
             );
         }
+    }, [tests, testId]);
+
+    useEffect(() => {
+        if (testId && selectedSectionId) {
+            dispatch(allActions.questionActions.emptyQuestions());
+            dispatch(
+                allActions.questionActions.fetchQuestions(
+                    testId,
+                    selectedSectionId
+                )
+            );
+            console.log("thrice");
+        }
         // return () => {
         //     dispatch(allActions.questionActions.emptyQuestions());
         // };
-    }, [testId, tests]);
+    }, [testId, selectedSectionId]);
 
     useEffect(() => {
         grew.current += 1;

@@ -9,6 +9,7 @@ import {
     Input,
     Col,
     Tooltip,
+    Skeleton,
 } from "antd";
 import {
     CloseCircleFilled,
@@ -19,7 +20,7 @@ import {
 import { Controller, useForm } from "react-hook-form";
 import { useSelector, useDispatch } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import FormItem from "../formitems/FormItem";
 import { questionSchema } from "../../yupUtil";
@@ -31,9 +32,10 @@ import SegmentedSections from "./SegmentedSections";
 import questionDetailStyle from "../../styles/modules/componentStyles/QuestionDetails.module.css";
 
 const QuestionDetail = () => {
-    const { selectedQuestion, selectedSectionId } = useSelector(
-        (state) => state.custom
-    );
+    const [sectionLoading, setSectionLoading] = useState(true);
+
+    const { selectedQuestion, selectedSectionId, saveSection, loading } =
+        useSelector((state) => state.custom);
     const { tests } = useSelector((state) => state);
     const { questions } = useSelector((state) => state);
 
@@ -64,6 +66,7 @@ const QuestionDetail = () => {
     const onSubmit = (data) => {
         console.log(data);
         dispatch(allActions.questionActions.editQuestion(data));
+        dispatch(allActions.customActions.saveSection(false));
     };
 
     useEffect(() => {
@@ -94,8 +97,6 @@ const QuestionDetail = () => {
 
             setValue("answer", questions[selectedQuestion].answer);
             setValue("question", questions[selectedQuestion].question);
-
-            console.log(questions[selectedQuestion]);
         } else {
             setValue("options", {
                 a: "",
@@ -109,10 +110,22 @@ const QuestionDetail = () => {
     }, [selectedQuestion, questions]);
 
     useEffect(() => {
-        const elements = document.getElementsByClassName("hiii");
-        for (let i = 0; i < elements.length; i += 1) {
-            elements[i].addEventListener("change", handleSubmit(onSubmit));
-            console.log("gggg");
+        const timeout = setTimeout(() => {
+            setSectionLoading(loading);
+        }, 200);
+
+        return () => {
+            clearTimeout(timeout);
+        };
+    }, [loading]);
+
+    useEffect(() => {
+        let elements = [];
+        if (!sectionLoading) {
+            elements = document.getElementsByClassName("hiii");
+            for (let i = 0; i < elements.length; i += 1) {
+                elements[i].addEventListener("change", handleSubmit(onSubmit));
+            }
         }
 
         return () => {
@@ -123,17 +136,7 @@ const QuestionDetail = () => {
                 );
             }
         };
-
-        // const element = document.getElementById("hii");
-        // element.addEventListener("change", (e) => {
-        //     if (e.target && e.target.matches("input[type='radio']")) {
-        //         handleSubmit(onSubmit);
-        //     }
-        // });
-        // return () => {
-        //     element.removeEventListener("change", handleSubmit(onSubmit));
-        // };
-    }, []);
+    }, [sectionLoading]);
 
     const onAddQuestion = () => {
         const questionLength = Object.values(questions).length;
@@ -149,6 +152,7 @@ const QuestionDetail = () => {
             dispatch(
                 allActions.customActions.selectedQuestion(questionLength + 1)
             );
+            dispatch(allActions.customActions.saveSection(false));
         }
     };
 
@@ -181,6 +185,7 @@ const QuestionDetail = () => {
                         : selectedQuestion - 1
                 )
             );
+            dispatch(allActions.customActions.saveSection(false));
             console.log(selectedQuestion);
         }
     };
@@ -193,6 +198,7 @@ const QuestionDetail = () => {
                     save: true,
                 })
             );
+            dispatch(allActions.customActions.saveSection(true));
         } else {
             dispatch(
                 allActions.questionActions.onSectionClick({
@@ -201,6 +207,7 @@ const QuestionDetail = () => {
                     id,
                 })
             );
+            dispatch(allActions.customActions.saveSection(true));
         }
     };
 
@@ -227,358 +234,398 @@ const QuestionDetail = () => {
                             : questionDetailStyle["question-detail-card-error"]
                     }`}
                 >
-                    <Row
-                        gutter={16}
-                        className={questionDetailStyle["question-detail-row"]}
-                    >
-                        <Col xs={6} sm={4} lg={3} span={3}>
-                            <Controller
-                                value={setValue("questionNo", selectedQuestion)}
-                                control={control}
-                                name="questionNo"
-                                render={({ field }) => (
-                                    <Input
-                                        {...field}
-                                        className={
-                                            questionDetailStyle[
-                                                "question-detail-center"
-                                            ]
-                                        }
-                                        readOnly
-                                    />
-                                )}
-                            />
-                        </Col>
-                        <Col xs={13} sm={16} lg={17} span={17}>
-                            <FormItem
-                                control={control}
-                                errors={errors}
-                                name="question"
-                                placeholder="Enter Question"
-                                type="text"
-                            />
-                        </Col>
-                        <Col xs={5} sm={4} md={4} lg={3} span={3}>
-                            <Row
-                                gutter={{
-                                    xs: 32,
-                                    sm: 16,
-                                    md: 28,
-                                    lg: 32,
-                                }}
-                            >
-                                <Col
-                                    xs={8}
-                                    sm={8}
-                                    md={6}
-                                    lg={8}
-                                    xl={5}
-                                    span={8}
-                                >
-                                    <Tooltip
-                                        title="Save Question"
-                                        placement="bottom"
-                                        color="#71a832"
-                                    >
-                                        <CheckCircleFilled
-                                            onClick={handleSubmit(onSubmit)}
-                                            className={`hover-icon-submit test-submit-delete ${questionDetailStyle["question-detail-tooltip"]}`}
+                    <Skeleton
+                        active
+                        loading={sectionLoading}
+                        paragraph={{ rows: 0 }}
+                        title={{ width: "100%" }}
+                    />
+                    {!sectionLoading && (
+                        <Row
+                            gutter={16}
+                            className={
+                                questionDetailStyle["question-detail-row"]
+                            }
+                        >
+                            <Col xs={6} sm={4} lg={3} span={3}>
+                                <Controller
+                                    value={setValue(
+                                        "questionNo",
+                                        selectedQuestion
+                                    )}
+                                    control={control}
+                                    name="questionNo"
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            className={
+                                                questionDetailStyle[
+                                                    "question-detail-center"
+                                                ]
+                                            }
+                                            readOnly
                                         />
-                                    </Tooltip>
-                                </Col>
-                                <Col
-                                    xs={8}
-                                    sm={8}
-                                    md={6}
-                                    lg={8}
-                                    xl={5}
-                                    span={8}
+                                    )}
+                                />
+                            </Col>
+                            <Col xs={13} sm={16} lg={17} span={17}>
+                                <FormItem
+                                    control={control}
+                                    errors={errors}
+                                    name="question"
+                                    placeholder="Enter Question"
+                                    type="text"
+                                />
+                            </Col>
+                            <Col xs={5} sm={4} md={4} lg={3} span={3}>
+                                <Row
+                                    gutter={{
+                                        xs: 32,
+                                        sm: 16,
+                                        md: 28,
+                                        lg: 32,
+                                    }}
                                 >
-                                    <Tooltip
-                                        title="Delete Question"
-                                        placement="bottom"
-                                        color="#f20707"
+                                    <Col
+                                        xs={8}
+                                        sm={8}
+                                        md={6}
+                                        lg={8}
+                                        xl={5}
+                                        span={8}
                                     >
-                                        <CloseCircleFilled
-                                            onClick={onDeleteQuestion}
-                                            className={`hover-icon-delete test-submit-delete ${questionDetailStyle["question-detail-tooltip"]}`}
-                                        />
-                                    </Tooltip>
-                                </Col>
-                            </Row>
-                        </Col>
-                    </Row>
+                                        <Tooltip
+                                            title="Save Question"
+                                            placement="bottom"
+                                            color="#71a832"
+                                        >
+                                            <CheckCircleFilled
+                                                onClick={handleSubmit(onSubmit)}
+                                                className={`hover-icon-submit test-submit-delete ${questionDetailStyle["question-detail-tooltip"]}`}
+                                            />
+                                        </Tooltip>
+                                    </Col>
+                                    <Col
+                                        xs={8}
+                                        sm={8}
+                                        md={6}
+                                        lg={8}
+                                        xl={5}
+                                        span={8}
+                                    >
+                                        <Tooltip
+                                            title="Delete Question"
+                                            placement="bottom"
+                                            color="#f20707"
+                                        >
+                                            <CloseCircleFilled
+                                                onClick={onDeleteQuestion}
+                                                className={`hover-icon-delete test-submit-delete ${questionDetailStyle["question-detail-tooltip"]}`}
+                                            />
+                                        </Tooltip>
+                                    </Col>
+                                </Row>
+                            </Col>
+                        </Row>
+                    )}
                 </Card>
                 <Card
                     className={
                         questionDetailStyle["question-detail-inner-card"]
                     }
                 >
-                    <Controller
-                        defaultValue="c"
-                        control={control}
-                        name="answer"
-                        render={({ field }) => (
-                            <Radio.Group {...field} id="hii">
-                                <Row>
-                                    <Col
-                                        xs={24}
-                                        sm={24}
-                                        md={16}
-                                        lg={16}
-                                        span={16}
-                                    >
-                                        <Space
-                                            direction="vertical"
-                                            className={
-                                                questionDetailStyle[
-                                                    "question-detail-space"
-                                                ]
-                                            }
-                                        >
-                                            <Card
-                                                className={`test-card ${
-                                                    questionDetailStyle[
-                                                        "question-detail-option-card"
-                                                    ]
-                                                } ${
-                                                    !errors?.options?.a
-                                                        ? questionDetailStyle[
-                                                              "question-detail-option-card-no-error"
-                                                          ]
-                                                        : questionDetailStyle[
-                                                              "question-detail-option-card-error"
-                                                          ]
-                                                }`}
-                                            >
-                                                <Row gutter={16}>
-                                                    <Col
-                                                        xs={2}
-                                                        lg={2}
-                                                        xl={1}
-                                                        span={2}
-                                                    >
-                                                        <Radio
-                                                            className={`hiii ${questionDetailStyle["question-detail-radio"]}`}
-                                                            value="a"
-                                                        />
-                                                    </Col>
-                                                    <Col
-                                                        xs={15}
-                                                        md={18}
-                                                        lg={19}
-                                                        offset={1}
-                                                    >
-                                                        <FormOption
-                                                            control={control}
-                                                            errors={errors}
-                                                            name="options.a"
-                                                            option="a"
-                                                            placeholder="Enter option"
-                                                            type="text"
-                                                        />
-                                                    </Col>
-                                                </Row>
-                                            </Card>
-
-                                            <Card
-                                                className={`test-card ${
-                                                    questionDetailStyle[
-                                                        "question-detail-option-card"
-                                                    ]
-                                                } ${
-                                                    !errors?.options?.b
-                                                        ? questionDetailStyle[
-                                                              "question-detail-option-card-no-error"
-                                                          ]
-                                                        : questionDetailStyle[
-                                                              "question-detail-option-card-error"
-                                                          ]
-                                                }`}
-                                            >
-                                                <Row gutter={16}>
-                                                    <Col
-                                                        xs={2}
-                                                        lg={2}
-                                                        xl={1}
-                                                        span={2}
-                                                    >
-                                                        <Radio
-                                                            value="b"
-                                                            className={`hiii ${questionDetailStyle["question-detail-radio"]}`}
-                                                        />
-                                                    </Col>
-                                                    <Col
-                                                        xs={16}
-                                                        md={18}
-                                                        lg={19}
-                                                        offset={1}
-                                                    >
-                                                        <FormOption
-                                                            control={control}
-                                                            errors={errors}
-                                                            name="options.b"
-                                                            option="b"
-                                                            placeholder="Enter option"
-                                                            type="text"
-                                                        />
-                                                    </Col>
-                                                </Row>
-                                            </Card>
-                                            <Card
-                                                className={`test-card ${
-                                                    questionDetailStyle[
-                                                        "question-detail-option-card"
-                                                    ]
-                                                } ${
-                                                    !errors?.options?.c
-                                                        ? questionDetailStyle[
-                                                              "question-detail-option-card-no-error"
-                                                          ]
-                                                        : questionDetailStyle[
-                                                              "question-detail-option-card-error"
-                                                          ]
-                                                }`}
-                                            >
-                                                <Row gutter={16}>
-                                                    <Col
-                                                        xs={2}
-                                                        lg={2}
-                                                        xl={1}
-                                                        span={2}
-                                                    >
-                                                        <Radio
-                                                            className={`hiii ${questionDetailStyle["question-detail-radio"]}`}
-                                                            value="c"
-                                                        />
-                                                    </Col>
-                                                    <Col
-                                                        xs={16}
-                                                        md={18}
-                                                        lg={19}
-                                                        offset={1}
-                                                    >
-                                                        <FormOption
-                                                            control={control}
-                                                            errors={errors}
-                                                            name="options.c"
-                                                            option="c"
-                                                            placeholder="Enter option"
-                                                            type="text"
-                                                        />
-                                                    </Col>
-                                                </Row>
-                                            </Card>
-                                            <Card
-                                                className={`test-card ${
-                                                    questionDetailStyle[
-                                                        "question-detail-option-card"
-                                                    ]
-                                                } ${
-                                                    !errors?.options?.d
-                                                        ? questionDetailStyle[
-                                                              "question-detail-option-card-no-error"
-                                                          ]
-                                                        : questionDetailStyle[
-                                                              "question-detail-option-card-error"
-                                                          ]
-                                                }`}
-                                            >
-                                                <Row gutter={16}>
-                                                    <Col
-                                                        xs={2}
-                                                        lg={2}
-                                                        xl={1}
-                                                        span={2}
-                                                    >
-                                                        <Radio
-                                                            className={`hiii ${questionDetailStyle["question-detail-radio"]}`}
-                                                            value="d"
-                                                        />
-                                                    </Col>
-                                                    <Col
-                                                        xs={16}
-                                                        md={18}
-                                                        lg={19}
-                                                        offset={1}
-                                                    >
-                                                        <FormOption
-                                                            control={control}
-                                                            errors={errors}
-                                                            name="options.d"
-                                                            option="d"
-                                                            placeholder="Enter option"
-                                                            type="text"
-                                                        />
-                                                    </Col>
-                                                </Row>
-                                            </Card>
-                                        </Space>
-                                    </Col>
-                                </Row>
-                            </Radio.Group>
-                        )}
+                    <Skeleton
+                        active
+                        loading={sectionLoading}
+                        paragraph={{ rows: 9 }}
                     />
+                    {!sectionLoading && (
+                        <>
+                            <Controller
+                                defaultValue="c"
+                                control={control}
+                                name="answer"
+                                render={({ field }) => (
+                                    <Radio.Group {...field} id="hii">
+                                        <Row>
+                                            <Col
+                                                xs={24}
+                                                sm={24}
+                                                md={16}
+                                                lg={16}
+                                                span={16}
+                                            >
+                                                <Space
+                                                    direction="vertical"
+                                                    className={
+                                                        questionDetailStyle[
+                                                            "question-detail-space"
+                                                        ]
+                                                    }
+                                                >
+                                                    <Card
+                                                        className={`test-card ${
+                                                            questionDetailStyle[
+                                                                "question-detail-option-card"
+                                                            ]
+                                                        } ${
+                                                            !errors?.options?.a
+                                                                ? questionDetailStyle[
+                                                                      "question-detail-option-card-no-error"
+                                                                  ]
+                                                                : questionDetailStyle[
+                                                                      "question-detail-option-card-error"
+                                                                  ]
+                                                        }`}
+                                                    >
+                                                        <Row gutter={16}>
+                                                            <Col
+                                                                xs={2}
+                                                                lg={2}
+                                                                xl={1}
+                                                                span={2}
+                                                            >
+                                                                <Radio
+                                                                    className={`hiii ${questionDetailStyle["question-detail-radio"]}`}
+                                                                    value="a"
+                                                                />
+                                                            </Col>
+                                                            <Col
+                                                                xs={15}
+                                                                md={18}
+                                                                lg={19}
+                                                                offset={1}
+                                                            >
+                                                                <FormOption
+                                                                    control={
+                                                                        control
+                                                                    }
+                                                                    errors={
+                                                                        errors
+                                                                    }
+                                                                    name="options.a"
+                                                                    option="a"
+                                                                    placeholder="Enter option"
+                                                                    type="text"
+                                                                />
+                                                            </Col>
+                                                        </Row>
+                                                    </Card>
 
-                    <Divider />
-                    <Row
-                        className={
-                            questionDetailStyle["question-detail-divider-row"]
-                        }
-                    >
-                        <Col span={8}>
-                            <Button
-                                danger
-                                onClick={handleSubmit(onAddQuestion)}
+                                                    <Card
+                                                        className={`test-card ${
+                                                            questionDetailStyle[
+                                                                "question-detail-option-card"
+                                                            ]
+                                                        } ${
+                                                            !errors?.options?.b
+                                                                ? questionDetailStyle[
+                                                                      "question-detail-option-card-no-error"
+                                                                  ]
+                                                                : questionDetailStyle[
+                                                                      "question-detail-option-card-error"
+                                                                  ]
+                                                        }`}
+                                                    >
+                                                        <Row gutter={16}>
+                                                            <Col
+                                                                xs={2}
+                                                                lg={2}
+                                                                xl={1}
+                                                                span={2}
+                                                            >
+                                                                <Radio
+                                                                    value="b"
+                                                                    className={`hiii ${questionDetailStyle["question-detail-radio"]}`}
+                                                                />
+                                                            </Col>
+                                                            <Col
+                                                                xs={16}
+                                                                md={18}
+                                                                lg={19}
+                                                                offset={1}
+                                                            >
+                                                                <FormOption
+                                                                    control={
+                                                                        control
+                                                                    }
+                                                                    errors={
+                                                                        errors
+                                                                    }
+                                                                    name="options.b"
+                                                                    option="b"
+                                                                    placeholder="Enter option"
+                                                                    type="text"
+                                                                />
+                                                            </Col>
+                                                        </Row>
+                                                    </Card>
+                                                    <Card
+                                                        className={`test-card ${
+                                                            questionDetailStyle[
+                                                                "question-detail-option-card"
+                                                            ]
+                                                        } ${
+                                                            !errors?.options?.c
+                                                                ? questionDetailStyle[
+                                                                      "question-detail-option-card-no-error"
+                                                                  ]
+                                                                : questionDetailStyle[
+                                                                      "question-detail-option-card-error"
+                                                                  ]
+                                                        }`}
+                                                    >
+                                                        <Row gutter={16}>
+                                                            <Col
+                                                                xs={2}
+                                                                lg={2}
+                                                                xl={1}
+                                                                span={2}
+                                                            >
+                                                                <Radio
+                                                                    className={`hiii ${questionDetailStyle["question-detail-radio"]}`}
+                                                                    value="c"
+                                                                />
+                                                            </Col>
+                                                            <Col
+                                                                xs={16}
+                                                                md={18}
+                                                                lg={19}
+                                                                offset={1}
+                                                            >
+                                                                <FormOption
+                                                                    control={
+                                                                        control
+                                                                    }
+                                                                    errors={
+                                                                        errors
+                                                                    }
+                                                                    name="options.c"
+                                                                    option="c"
+                                                                    placeholder="Enter option"
+                                                                    type="text"
+                                                                />
+                                                            </Col>
+                                                        </Row>
+                                                    </Card>
+                                                    <Card
+                                                        className={`test-card ${
+                                                            questionDetailStyle[
+                                                                "question-detail-option-card"
+                                                            ]
+                                                        } ${
+                                                            !errors?.options?.d
+                                                                ? questionDetailStyle[
+                                                                      "question-detail-option-card-no-error"
+                                                                  ]
+                                                                : questionDetailStyle[
+                                                                      "question-detail-option-card-error"
+                                                                  ]
+                                                        }`}
+                                                    >
+                                                        <Row gutter={16}>
+                                                            <Col
+                                                                xs={2}
+                                                                lg={2}
+                                                                xl={1}
+                                                                span={2}
+                                                            >
+                                                                <Radio
+                                                                    className={`hiii ${questionDetailStyle["question-detail-radio"]}`}
+                                                                    value="d"
+                                                                />
+                                                            </Col>
+                                                            <Col
+                                                                xs={16}
+                                                                md={18}
+                                                                lg={19}
+                                                                offset={1}
+                                                            >
+                                                                <FormOption
+                                                                    control={
+                                                                        control
+                                                                    }
+                                                                    errors={
+                                                                        errors
+                                                                    }
+                                                                    name="options.d"
+                                                                    option="d"
+                                                                    placeholder="Enter option"
+                                                                    type="text"
+                                                                />
+                                                            </Col>
+                                                        </Row>
+                                                    </Card>
+                                                </Space>
+                                            </Col>
+                                        </Row>
+                                    </Radio.Group>
+                                )}
+                            />
+
+                            <Divider />
+                            <Row
+                                className={
+                                    questionDetailStyle[
+                                        "question-detail-divider-row"
+                                    ]
+                                }
                             >
-                                Add Question
-                            </Button>
-                        </Col>
-                        <Col span={8} offset={8}>
-                            <Row gutter={32} justify="center">
-                                <Col span={5}>
-                                    <LeftOutlined
-                                        className={`hover-icon-next test-submit-delete ${
-                                            selectedQuestion === 1 &&
-                                            questionDetailStyle[
-                                                "question-detail-left-outlined-display"
-                                            ]
-                                        }`}
-                                        onClick={() =>
-                                            selectedQuestion > 1 &&
-                                            dispatch(
-                                                allActions.customActions.selectedQuestion(
-                                                    selectedQuestion - 1
-                                                )
-                                            )
-                                        }
-                                    />
+                                <Col span={8}>
+                                    <Button
+                                        danger
+                                        onClick={handleSubmit(onAddQuestion)}
+                                    >
+                                        Add Question
+                                    </Button>
                                 </Col>
-                                <Col span={5}>
-                                    <RightOutlined
-                                        className={`hover-icon-next test-submit-delete ${
-                                            selectedQuestion ===
-                                                Object.values(questions)
-                                                    .length &&
-                                            questionDetailStyle[
-                                                "question-detail-left-outlined-display"
-                                            ]
-                                        }`}
-                                        onClick={() =>
-                                            selectedQuestion <
-                                                Object.values(questions)
-                                                    .length &&
-                                            dispatch(
-                                                allActions.customActions.selectedQuestion(
-                                                    selectedQuestion + 1
-                                                )
-                                            )
-                                        }
-                                    />
+                                <Col span={8} offset={8}>
+                                    <Row gutter={32} justify="center">
+                                        <Col span={5}>
+                                            <LeftOutlined
+                                                className={`hover-icon-next test-submit-delete ${
+                                                    selectedQuestion === 1 &&
+                                                    questionDetailStyle[
+                                                        "question-detail-outlined-display"
+                                                    ]
+                                                }`}
+                                                onClick={() =>
+                                                    selectedQuestion > 1 &&
+                                                    dispatch(
+                                                        allActions.customActions.selectedQuestion(
+                                                            selectedQuestion - 1
+                                                        )
+                                                    )
+                                                }
+                                            />
+                                        </Col>
+                                        <Col span={5}>
+                                            <RightOutlined
+                                                className={`hover-icon-next test-submit-delete ${
+                                                    selectedQuestion ===
+                                                        Object.values(questions)
+                                                            .length &&
+                                                    questionDetailStyle[
+                                                        "question-detail-outlined-display"
+                                                    ]
+                                                }`}
+                                                onClick={() =>
+                                                    selectedQuestion <
+                                                        Object.values(questions)
+                                                            .length &&
+                                                    dispatch(
+                                                        allActions.customActions.selectedQuestion(
+                                                            selectedQuestion + 1
+                                                        )
+                                                    )
+                                                }
+                                            />
+                                        </Col>
+                                    </Row>
                                 </Col>
                             </Row>
-                        </Col>
-                    </Row>
+                        </>
+                    )}
                 </Card>
             </Form>
 
@@ -603,6 +650,7 @@ const QuestionDetail = () => {
                             <Button
                                 type="primary"
                                 onClick={() => onSave(false)}
+                                disabled={saveSection}
                             >
                                 save
                             </Button>

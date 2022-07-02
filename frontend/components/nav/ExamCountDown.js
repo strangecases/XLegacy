@@ -25,7 +25,7 @@ const ExamCountDown = ({ time = 40 }) => {
                 console.log("ffddfdee");
                 setCountDownColor("red");
             }
-            if (9.85 * 1000 < val && val < 10 * 1000) {
+            if (2.85 * 1000 < val && val < 3 * 1000) {
                 dispatch(allActions.customActions.examSaved(true));
             }
         };

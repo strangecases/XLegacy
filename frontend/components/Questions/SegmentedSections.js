@@ -10,7 +10,9 @@ const SegmentedSections = () => {
     const [smallScreenData, setSmallScreenData] = useState({});
 
     const { tests, questions } = useSelector((state) => state);
-    const { selectedSectionId } = useSelector((state) => state.custom);
+    const { selectedSectionId, selectedSectionNo } = useSelector(
+        (state) => state.custom
+    );
 
     const dispatch = useDispatch();
 
@@ -34,6 +36,7 @@ const SegmentedSections = () => {
     const onSectionChange = async (value) => {
         const data = smallScreenData[value];
         if (data.sectionId !== selectedSectionId) {
+            dispatch(allActions.customActions.loading(true));
             const list = Object.values(questions);
             await axiosFetch.patch(
                 `/api/tests/${testId}/sections/${selectedSectionId}`,
@@ -56,6 +59,7 @@ const SegmentedSections = () => {
         console.log(data);
 
         if (data.sectionId !== selectedSectionId) {
+            dispatch(allActions.customActions.loading(true));
             dispatch(
                 allActions.examActions.onSectionChange(
                     id,
@@ -71,6 +75,10 @@ const SegmentedSections = () => {
         <div className={questionStyle["segmented-section"]}>
             <Segmented
                 options={smallScreenData && Object.keys(smallScreenData)}
+                value={
+                    smallScreenData &&
+                    Object.keys(smallScreenData)[selectedSectionNo - 1]
+                }
                 onChange={
                     path && path.includes("tests")
                         ? onSectionChange

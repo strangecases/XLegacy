@@ -1,17 +1,18 @@
 import * as d3 from "d3";
 import { Col, Empty, Row } from "antd";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import allComponentsStyle from "../styles/modules/componentStyles/AllComponents.module.css";
+import allActions from "../store/actions";
 
 const DonutChart = () => {
     const { donutExams } = useSelector((state) => state.exam);
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        function drawChart(width, height) {
+        function drawChart(width, height, radius) {
             const outerRadius = 100;
-            const radius = Math.min(width, height) / 2;
-
+            radius = 100;
             // const colors = ["#ff7e05", "#fcb25d", "#ffc98c", "#fc941c"];
             const colors = d3
                 .scaleOrdinal()
@@ -25,10 +26,12 @@ const DonutChart = () => {
             const svg = d3
                 .select("#pie-container")
                 .append("svg")
-                .attr("width", width)
-                .attr("height", height)
-                .append("g")
-                .attr("transform", `translate(${width / 2.2}, ${height / 2})`);
+                .attr("width", "100%")
+                .attr("height", "100%")
+                .attr("viewBox", `-120 -90 ${width / 1.22} ${height}`)
+                .attr("preserveAspectRatio", "xMinYMid")
+                .append("g");
+            // .attr("transform", `translate(${width / 2.7}, ${height / 2})`);
 
             const arcGenerator = d3
                 .arc()
@@ -39,7 +42,7 @@ const DonutChart = () => {
             const outerArc = d3
                 .arc()
                 .innerRadius(radius * 0.82)
-                .outerRadius(radius * 1.1);
+                .outerRadius(radius * 1.2);
 
             const pieGenerator = d3
                 .pie()
@@ -189,7 +192,7 @@ const DonutChart = () => {
         }
 
         if (donutExams && donutExams.length !== 0) {
-            drawChart(390, 200);
+            drawChart(400, 200, 100);
         } else {
             drawChart(0, 0);
         }
@@ -198,10 +201,14 @@ const DonutChart = () => {
     console.log(donutExams.length);
 
     return (
-        <Row>
+        <Row justify="center" className={allComponentsStyle["donut-chart-row"]}>
             {/* {renderr} */}
 
-            <Col span={24} id="pie-container">
+            <Col
+                span={24}
+                id="pie-container"
+                className={allComponentsStyle["donut-chart-svg-col"]}
+            >
                 <svg />
             </Col>
 

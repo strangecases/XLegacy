@@ -111,64 +111,66 @@ const TestId = () => {
             tests[testId] &&
             tests[testId].sectionData.map((section) => {
                 return (
-                    <Collapse key={section.sectionId}>
+                    <Collapse
+                        key={section.sectionId}
+                        className={testsIndexStyle["tests-index-overflow"]}
+                    >
                         <Panel header={section.subject} key={section.sectionId}>
                             <Row>
-                                <Col span={20}>
+                                <Col xs={16} md={18} lg={20} span={20}>
                                     <p>{section.sectionDescription}</p>
                                 </Col>
                                 {adminIsAuthor && (
-                                    <Col span={4}>
-                                        <Row
-                                            className={
-                                                testsIndexStyle[
-                                                    "tests-index-section"
-                                                ]
-                                            }
-                                            gutter={10}
-                                        >
-                                            <Col span={18}>
-                                                <Link
-                                                    href={`/schools/${id}/tests/${testId}/sections`}
-                                                    passHref
-                                                >
-                                                    <Tooltip
-                                                        title="Edit Section"
-                                                        placement="topRight"
-                                                        color="#4287f5"
-                                                    >
-                                                        <RightCircleFilled
-                                                            onClick={() =>
-                                                                dispatchSelectedSection(
-                                                                    section.sectionId,
-                                                                    section.sectionNo
-                                                                )
-                                                            }
-                                                            className="hover-icon-edit test-submit-delete"
-                                                            // className="hover-icon-delete-edit test-submit-delete-edit"
-                                                        />
-                                                    </Tooltip>
-                                                </Link>
-                                            </Col>
-                                            <Col span={6}>
+                                    <Col
+                                        xs={8}
+                                        md={6}
+                                        lg={4}
+                                        span={4}
+                                        className={
+                                            testsIndexStyle[
+                                                "tests-index-section"
+                                            ]
+                                        }
+                                    >
+                                        <Space size={12}>
+                                            <Link
+                                                href={`/schools/${id}/tests/${testId}/sections`}
+                                                passHref
+                                            >
                                                 <Tooltip
-                                                    title="Delete Section"
-                                                    placement="topLeft"
-                                                    color="red"
+                                                    title="Edit Section"
+                                                    placement="topRight"
+                                                    color="#4287f5"
                                                 >
-                                                    <CloseCircleFilled
+                                                    <RightCircleFilled
                                                         onClick={() =>
-                                                            showPopConfirm(
-                                                                section.sectionNo,
-                                                                section.sectionId
+                                                            dispatchSelectedSection(
+                                                                section.sectionId,
+                                                                section.sectionNo
                                                             )
                                                         }
-                                                        className="hover-icon-delete test-submit-delete"
+                                                        className="hover-icon-edit test-submit-delete"
                                                     />
                                                 </Tooltip>
-                                                <DeleteSectionForm />
-                                            </Col>
-                                        </Row>
+                                            </Link>
+
+                                            <Tooltip
+                                                title="Delete Section"
+                                                placement="topLeft"
+                                                color="red"
+                                            >
+                                                <CloseCircleFilled
+                                                    onClick={() =>
+                                                        showPopConfirm(
+                                                            section.sectionNo,
+                                                            section.sectionId
+                                                        )
+                                                    }
+                                                    className="hover-icon-delete test-submit-delete"
+                                                />
+                                            </Tooltip>
+                                            <DeleteSectionForm />
+                                        </Space>
                                     </Col>
                                 )}
                             </Row>
@@ -185,7 +187,7 @@ const TestId = () => {
                 title={tests[testId].testTitle}
                 key={tests[testId]._id}
                 extra={renderButton()}
-                className={testsIndexStyle["tests-index-card"]}
+                className={`${testsIndexStyle["tests-index-card"]} ${testsIndexStyle["tests-index-overflow"]}`}
             >
                 <Space
                     direction="vertical"
@@ -218,13 +220,15 @@ const TestId = () => {
                         />
                     </Col>
                     <Col span={24}>
-                        <Card className="inner-card-padding-small">
-                            <Row gutter={8}>
+                        <Card
+                            className={`inner-card-padding-small ${testsIndexStyle["tests-index-overflow"]}`}
+                        >
+                            <Row gutter={[8, 16]}>
                                 <Col
-                                    xs={10}
+                                    xs={24}
                                     sm={12}
-                                    md={13}
-                                    lg={14}
+                                    md={12}
+                                    lg={16}
                                     xl={18}
                                     span={18}
                                     className={
@@ -237,7 +241,7 @@ const TestId = () => {
                                         schools[id].schoolName.toUpperCase()}
                                 </Col>
                                 <Col offset={0}>
-                                    <Row
+                                    {/* <Row
                                         justify={
                                             adminIsAuthor
                                                 ? "space-between"
@@ -249,42 +253,44 @@ const TestId = () => {
                                             xs={adminIsAuthor ? 12 : 5}
                                             sm={adminIsAuthor ? 12 : 5}
                                             span={12}
+                                        > */}
+                                    <Space size={14}>
+                                        <Link
+                                            href={`/schools/${id}/tests/${testId}/results`}
+                                            passHref
                                         >
-                                            <Link
-                                                href={`/schools/${id}/tests/${testId}/results`}
-                                                passHref
-                                            >
-                                                <Button
-                                                    className={
-                                                        testsIndexStyle[
-                                                            "tests-index-button"
-                                                        ]
-                                                    }
-                                                >
-                                                    Results
-                                                </Button>
-                                            </Link>
-                                        </Col>
-                                        {adminIsAuthor && (
-                                            <Col
-                                                xs={12}
-                                                sm={12}
-                                                span={12}
+                                            <Button
                                                 className={
                                                     testsIndexStyle[
-                                                        "tests-index-align"
+                                                        "tests-index-button"
                                                     ]
                                                 }
                                             >
-                                                <CreateSectionForm
-                                                    length={
-                                                        tests[testId]
-                                                            .sectionData.length
-                                                    }
-                                                />
-                                            </Col>
+                                                Results
+                                            </Button>
+                                        </Link>
+                                        {/* </Col> */}
+                                        {adminIsAuthor && (
+                                            // <Col
+                                            //     xs={12}
+                                            //     sm={12}
+                                            //     span={12}
+                                            //     className={
+                                            //         testsIndexStyle[
+                                            //             "tests-index-align"
+                                            //         ]
+                                            //     }
+                                            // >
+                                            <CreateSectionForm
+                                                length={
+                                                    tests[testId].sectionData
+                                                        .length
+                                                }
+                                            />
+                                            // </Col>
                                         )}
-                                    </Row>
+                                    </Space>
+                                    {/* </Row> */}
                                 </Col>
                             </Row>
                         </Card>

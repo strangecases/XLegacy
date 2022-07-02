@@ -13,7 +13,7 @@
 }
 
 :global(.ant-layout) .sidebar-menu {
-    padding: 30px 0;
+    padding: 12px 0 30px 0;
 }
 
 :global(.ant-layout) .header-nav {
@@ -35,14 +35,20 @@
 .exam-nav-menu {
     height: 46px;
     border: 0;
-    position: relative;
+    position: sticky;
+    z-index: 1000;
+    top: 0;
     display: flex;
+    justify-content: center;
 }
 
 .exam-nav-menu .exam-nav-item {
-    position: relative !important;
-    top: 6px !important;
-    left: 35vw;
+    position: absolute !important;
+    margin-inline: auto;
+}
+
+.exam-nav-menu :global(.ant-menu-item-disabled) {
+    color: rgb(241, 121, 9) !important;
 }
 
 .custom-layout-content {
@@ -55,5 +61,34 @@
 }
 
 .header-bold {
-    font-weight: 600;
+    font-weight: 700;
+    color: rgb(241, 121, 9);
 }
+
+.header-div {
+    margin-top: 15px;
+    color: rgb(232, 126, 13);
+    text-align: center;
+    font-size: 20px;
+    font-weight: 900;
+    transform: scale(0.5);
+    opacity: 0;
+    animation: header-div 1.5s cubic-bezier(0.42, 0, 0.54, 1.27) forwards;
+}
+
+@keyframes header-div {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* @media (max-width: 576px) {
+    .exam-nav-menu .exam-nav-item {
+        left: 0%;
+    }
+} */

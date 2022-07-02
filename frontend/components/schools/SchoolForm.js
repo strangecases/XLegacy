@@ -114,7 +114,7 @@ const SchoolForm = ({
             {fields.map((item, index) => {
                 return (
                     <Card key={item.id}>
-                        <Row gutter={16}>
+                        <Row justify="center" gutter={16}>
                             <Col span={20}>
                                 <Form.Item
                                     help={
@@ -169,7 +169,7 @@ const SchoolForm = ({
                                     />
                                 </Popconfirm>
                             </Col>
-                            <Col offset={3} span={17}>
+                            <Col offset={0} xs={21} sm={17} md={16} span={17}>
                                 <ClassGroup
                                     errors={
                                         errors.classes &&
@@ -184,7 +184,7 @@ const SchoolForm = ({
                 );
             })}
             <Card>
-                <Row justify="center" gutter={32}>
+                <Row justify="center" gutter={[32, 16]}>
                     <Col>
                         <Tooltip
                             color="#2db7f5"

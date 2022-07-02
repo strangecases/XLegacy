@@ -43,6 +43,7 @@ const QuestionList = () => {
 
     const onSectionClick = async (sectionId, sectionNo) => {
         if (sectionId !== selectedSectionId) {
+            dispatch(allActions.customActions.loading(true));
             dispatch(
                 allActions.questionActions.onSectionClick({
                     testId,
@@ -55,6 +56,7 @@ const QuestionList = () => {
 
     const onSectionExamClick = async (sectionId, sectionNo) => {
         if (sectionId !== selectedSectionId) {
+            dispatch(allActions.customActions.loading(true));
             dispatch(
                 allActions.examActions.onSectionChange(
                     id,

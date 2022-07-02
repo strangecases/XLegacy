@@ -19,42 +19,47 @@ const QuestionTests = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (id !== undefined) {
+        if (testId !== undefined) {
             dispatch(allActions.testActions.fetchTest(id, testId));
         }
     }, [router.query, id, testId]);
 
     useEffect(() => {
-        const getSection = async () => {
-            if (testId !== undefined && tests[testId]) {
-                if (!selectedSectionId) {
-                    console.log(tests[testId].sectionData[0].sectionId);
-                    dispatch(
-                        allActions.customActions.selectedSectionId(
-                            tests[testId].sectionData[0].sectionId
-                        )
-                    );
-                    // dispatch(
-                    //     allActions.customActions.selectedSectionNo(
-                    //         tests[id].sectionData[0].sectionNo
-                    //     )
-                    // );
-                    console.log("hi", selectedSectionId);
-                } else if (selectedSectionId) {
-                    dispatch({ type: EMPTY_QUESTIONS });
-                    // dispatch(allActions.customActions.selectedQuestion(1));
-                    dispatch(
-                        allActions.questionActions.fetchQuestions(
-                            testId,
-                            selectedSectionId
-                        )
-                    );
-                    console.log("hello", selectedSectionId);
-                }
+        if (testId !== undefined && tests[testId]) {
+            if (!selectedSectionId) {
+                console.log(tests[testId].sectionData[0].sectionId);
+                dispatch(
+                    allActions.customActions.selectedSectionId(
+                        tests[testId].sectionData[0].sectionId
+                    )
+                );
+                // dispatch(
+                //     allActions.customActions.selectedSectionNo(
+                //         tests[id].sectionData[0].sectionNo
+                //     )
+                // );
+                console.log("hi", selectedSectionId);
             }
-        };
-        getSection();
+        }
     }, [testId, selectedSectionId, tests]);
+
+    useEffect(() => {
+        if (testId && selectedSectionId) {
+            dispatch({ type: EMPTY_QUESTIONS });
+            // dispatch(allActions.customActions.selectedQuestion(1));
+            dispatch(
+                allActions.questionActions.fetchQuestions(
+                    testId,
+                    selectedSectionId
+                )
+            );
+            console.log("hello", selectedSectionId);
+        }
+
+        return () => {
+            dispatch(allActions.questionActions.emptyQuestions());
+        };
+    }, [testId, selectedSectionId]);
 
     return (
         <Layout className={questionStyle["questions-layout"]}>

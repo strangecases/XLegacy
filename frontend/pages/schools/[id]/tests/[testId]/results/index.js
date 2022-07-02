@@ -2,6 +2,7 @@ import { Card, Col, Divider, Row, Table, Input, Select } from "antd";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useEffect, useRef, useCallback } from "react";
+import { useMediaQuery } from "react-responsive";
 import { useSelector, useDispatch } from "react-redux";
 import ColumnGroup from "antd/lib/table/ColumnGroup";
 import CustomLayout from "../../../../../../components/nav/CustomLayout";
@@ -15,13 +16,16 @@ const { Column } = Table;
 const { Option } = Select;
 
 const Results = () => {
+    const isTablet = useMediaQuery({ maxWidth: 820 });
+    const isMobile = useMediaQuery({ maxWidth: 576 });
+
     const ress = useRef(0);
 
     const router = useRouter();
     const { id, testId } = router.query;
 
     const { tests } = useSelector((state) => state);
-    const { donutExams, outOf, examsList } = useSelector((state) => state.exam);
+    const { outOf, examsList } = useSelector((state) => state.exam);
     const { schools } = useSelector((state) => state);
 
     const dispatch = useDispatch();
@@ -43,6 +47,10 @@ const Results = () => {
             dispatch(allActions.schoolActions.fetchSchool(id));
         };
         if (id && testId) examFn();
+
+        return () => {
+            dispatch(allActions.examActions.donutExams([], 0));
+        };
     }, [id, testId]);
 
     useEffect(() => {
@@ -76,7 +84,7 @@ const Results = () => {
             <Row gutter={[8, 16]} justify="center">
                 {examsList && (
                     <>
-                        <Col span={11}>
+                        <Col xs={22} sm={22} md={11} lg={11} span={11}>
                             <Card
                                 hoverable
                                 title={
@@ -165,13 +173,13 @@ const Results = () => {
                             </Card>
                         </Col>
 
-                        <Col span={11}>
+                        <Col xs={22} sm={22} md={11} lg={11} span={11}>
                             <Card
                                 className={
                                     resultStyle["results-index-overflow"]
                                 }
                             >
-                                <DonutChart donutExams={donutExams} />
+                                <DonutChart />
                             </Card>
                         </Col>
                         <Col span={22}>
@@ -201,7 +209,7 @@ const Results = () => {
                                             );
                                         }}
                                         key="studentName"
-                                        fixed="left"
+                                        fixed={!isMobile && "left"}
                                         width={170}
                                         align="center"
                                     />
@@ -209,7 +217,7 @@ const Results = () => {
                                         title="Class"
                                         dataIndex="classNo"
                                         key="classNo"
-                                        fixed="left"
+                                        fixed={!isTablet && "left"}
                                         width={100}
                                         align="center"
                                     />
@@ -217,7 +225,7 @@ const Results = () => {
                                         title="Group/Section"
                                         dataIndex="classGroup"
                                         key="classGroup"
-                                        fixed="left"
+                                        fixed={!isTablet && "left"}
                                         width={130}
                                         align="center"
                                     />
@@ -262,7 +270,7 @@ const Results = () => {
                                             )}
                                     </ColumnGroup>
                                     <Column
-                                        fixed="right"
+                                        fixed={!isMobile ? "right" : ""}
                                         title={<MemoizedTitle />}
                                         dataIndex="marks"
                                         key="marks"

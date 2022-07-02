@@ -65,7 +65,7 @@ const SchoolEditForm = () => {
     return (
         <AdminIsSchoolAdmin>
             <Row justify="center">
-                <Col span={13}>
+                <Col xs={24} sm={16} lg={13} span={13}>
                     <Form onFinish={handleSubmit(onSubmit)} autoComplete="off">
                         <SchoolForm
                             control={control}

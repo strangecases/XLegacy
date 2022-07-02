@@ -27,8 +27,10 @@ const ExamNav = ({ children, type = "exam" }) => {
             <Menu
                 mode="horizontal"
                 // onClick={(e) => setCurrent(e.key)}
-                selectedKeys="#"
+                selectedKeys="3"
                 className={antNavStyle["exam-nav-menu"]}
+                selectable={false}
+                disabled
             >
                 <Item
                     key="/"

@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Layout, Menu } from "antd";
 import {
     UserOutlined,
     FormOutlined,
     SolutionOutlined,
 } from "@ant-design/icons";
+import { useMediaQuery } from "react-responsive";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
@@ -13,57 +14,73 @@ import antNavStyle from "../../styles/modules/componentStyles/AntNav.module.css"
 const { Sider } = Layout;
 
 const SideBar = ({ type }) => {
-    const [collapsed, setCollapsed] = useState(false);
-    const [showMobileSideBar, setShowMobileSideBar] = useState(false);
+    const [collapsed, setCollapsed] = useState(true);
+    // const [showMobileSideBar, setShowMobileSideBar] = useState(false);
+    const isTabletOrMobile = useMediaQuery({ maxWidth: 767 });
 
     const { schools } = useSelector((state) => state);
 
     const router = useRouter();
     const { id } = router.query;
 
-    useEffect(() => {
-        if (window.innerWidth > 767) setShowMobileSideBar(true);
-        else if (window.innerWidth < 767) setShowMobileSideBar(false);
-    }, []);
+    // useEffect(() => {
+    //     if (window.innerWidth > 767) setShowMobileSideBar(true);
+    //     else if (window.innerWidth < 767) setShowMobileSideBar(false);
+    // }, []);
 
     useEffect(() => {
-        const handleResize = () => {
-            if (window.innerWidth > 767) {
-                setShowMobileSideBar(true);
-                setCollapsed(false);
-            } else if (window.innerWidth < 767) {
-                setCollapsed(true);
-                setShowMobileSideBar(false);
-            }
-        };
+        if (!isTabletOrMobile) {
+            setCollapsed(false);
+        }
+    }, [isTabletOrMobile]);
 
-        window.addEventListener("resize", handleResize);
+    // useEffect(() => {
+    //     const handleResize = () => {
+    //         if (window.innerWidth > 767) {
+    //             setShowMobileSideBar(true);
+    //             setCollapsed(false);
+    //         } else if (window.innerWidth < 767) {
+    //             setCollapsed(true);
+    //             setShowMobileSideBar(false);
+    //         }
+    //     };
 
-        return () => {
-            window.removeEventListener("resize", handleResize);
-        };
-    }, []);
+    //     window.addEventListener("resize", handleResize);
+
+    //     return () => {
+    //         window.removeEventListener("resize", handleResize);
+    //     };
+    // }, []);
 
     const onCollapse = (isCollapsed) => {
         setCollapsed(isCollapsed);
     };
 
+    console.log("iscollapse", isTabletOrMobile);
+
     return (
         <Sider
             // theme="light"
-            collapsible={showMobileSideBar}
-            collapsed={collapsed}
+            collapsible={!isTabletOrMobile}
+            collapsed={!isTabletOrMobile ? collapsed : isTabletOrMobile}
             onCollapse={onCollapse}
             className={antNavStyle["sidebar-sider"]}
             width={200}
         >
-            <img
+            {/* <img
                 alt="hi"
                 className="logo"
                 src="https://www.skysens.io/images/white-logo.png"
                 width={50}
                 height={50}
-            />
+            /> */}
+            {!isTabletOrMobile ? (
+                <div className={antNavStyle["header-div"]}>
+                    {!collapsed ? "Scholar X" : "SX"}
+                </div>
+            ) : (
+                <div className={antNavStyle["header-div"]}>SX</div>
+            )}
             {type === "inside" && schools[id] ? (
                 <Menu
                     theme="dark"

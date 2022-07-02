@@ -13,3 +13,15 @@
 .exam-detail-label {
     display: inline;
 }
+
+.exam-detail-radio-group {
+    width: 100%;
+}
+
+.exam-detail-form-padding {
+    padding-bottom: 10px;
+}
+
+.exam-detail-outlined-display {
+    display: none;
+}

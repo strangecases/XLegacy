@@ -57,7 +57,7 @@ const Info = () => {
     return (
         <Layout className={examInfoStyle["exam-info-layout"]}>
             <Row justify="center" className={examInfoStyle["exam-info-row"]}>
-                <Col xs={16} sm={12} lg={10} span={10}>
+                <Col xs={20} sm={14} md={12} lg={10} span={10}>
                     <Card>
                         <Form
                             onFinish={handleSubmit(onSubmit)}

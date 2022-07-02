@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
-import { Button, Card, Row, Col, Select, Pagination, Badge } from "antd";
+import { Button, Card, Row, Col, Select, Pagination, Badge, Space } from "antd";
 import { useRouter } from "next/router";
 import CustomLayout from "../../../../components/nav/CustomLayout";
 import allActions from "../../../../store/actions";
@@ -218,37 +218,31 @@ const TestId = () => {
                                 schools[id] &&
                                 schools[id].schoolName.toUpperCase()
                             }
-                            className={
-                                schoolTestsStyle["school-tests-overflow"]
-                            }
+                            className={`${schoolTestsStyle["school-tests-overflow"]} ant-card-mobile`}
                             extra={
-                                <Row gutter={8}>
-                                    <Col>
-                                        <Link
-                                            href={`/schools/${id}/edit`}
-                                            passHref
-                                        >
-                                            <Button
-                                                className={
-                                                    schoolTestsStyle[
-                                                        "school-tests-button"
-                                                    ]
-                                                }
-                                            >
-                                                Edit School Details
-                                            </Button>
-                                        </Link>
-                                    </Col>
-                                    <Col span={6}>
+                                // <Row justify="space-between" gutter={8}>
+                                //     <Col xs={24} md={12}>
+                                <Space wrap>
+                                    <Link href={`/schools/${id}/edit`} passHref>
                                         <Button
-                                            type="primary"
-                                            onClick={showModal}
+                                            className={
+                                                schoolTestsStyle[
+                                                    "school-tests-button"
+                                                ]
+                                            }
                                         >
-                                            Add Test
+                                            Edit School Details
                                         </Button>
-                                        <CreateTestForm />
-                                    </Col>
-                                </Row>
+                                    </Link>
+                                    {/* </Col> */}
+                                    {/* <Col xs={24} md={12} span={6}> */}
+                                    <Button type="primary" onClick={showModal}>
+                                        Add Test
+                                    </Button>
+                                    <CreateTestForm />
+                                </Space>
+                                //     </Col>
+                                // </Row>
                             }
                         >
                             <Row gutter={[8, 8]}>

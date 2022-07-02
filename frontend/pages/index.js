@@ -143,7 +143,7 @@ const NavBar = () => {
                                     src="28916370-removebg-preview.png"
                                     alt="Girl in a jacket"
                                     width="480"
-                                    height="500"
+                                    height="440"
                                     className={navStyles.imggscewBook}
                                 />
 
@@ -151,7 +151,7 @@ const NavBar = () => {
                                     src="png-transparent-colored-pencil-pastel-pencil-free-s-angle-pencil-orange-thumbnail-removebg-preview.png"
                                     alt="Girl in a jacket"
                                     width="150"
-                                    height="300"
+                                    height="250"
                                     className={navStyles.imggscewOne}
                                 />
                             </div>
@@ -187,7 +187,7 @@ const NavBar = () => {
                                         <img
                                             alt="example"
                                             src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
-                                            height={200}
+                                            height={175}
                                         />
                                     }
                                     className={` ${
@@ -215,7 +215,7 @@ const NavBar = () => {
                                         <img
                                             alt="example"
                                             src="https://images.unsplash.com/photo-1517976487492-5750f3195933?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"
-                                            height={200}
+                                            height={175}
                                         />
                                     }
                                     className={` ${
@@ -243,7 +243,7 @@ const NavBar = () => {
                                         <img
                                             alt="example"
                                             src="https://images.unsplash.com/photo-1509773896068-7fd415d91e2e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80"
-                                            height={200}
+                                            height={175}
                                         />
                                     }
                                     className={` ${

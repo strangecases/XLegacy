@@ -49,6 +49,20 @@ const examSuccess = (msg) => {
     };
 };
 
+const saveSection = (val) => {
+    return {
+        type: types.SAVE_SECTION,
+        payload: val,
+    };
+};
+
+const loading = (val) => {
+    return {
+        type: types.LOADING,
+        payload: val,
+    };
+};
+
 const customActions = {
     selectedSectionId,
     selectedQuestion,
@@ -57,6 +71,8 @@ const customActions = {
     selectedClass,
     examSaved,
     examSuccess,
+    saveSection,
+    loading,
 };
 
 export default customActions;

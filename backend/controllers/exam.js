@@ -31,6 +31,7 @@ export const index = async (req, res) => {
 export const createExam = async (req, res) => {
     const school = await School.findById(req.params.id);
     if (school.schoolCode !== req.body.schoolCode) {
+        console.log("School code is not correct");
         throw new ExpressError("School code is not correct", 400);
     }
     const test = await Test.findById(req.params.testId);

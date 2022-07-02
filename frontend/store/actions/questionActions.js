@@ -6,6 +6,7 @@ import axiosFetch from "../../axiosFetch";
 
 const fetchQuestions = (testId, sectionId) => async (dispatch) => {
     try {
+        dispatch(customActions.loading(true));
         const response = await axiosFetch.get(
             `/api/tests/${testId}/sections/${sectionId}`
         );
@@ -14,7 +15,9 @@ const fetchQuestions = (testId, sectionId) => async (dispatch) => {
             type: types.FETCH_QUESTIONS,
             payload: response.data.questions,
         });
+        dispatch(customActions.loading(false));
     } catch (err) {
+        dispatch(customActions.loading(false));
         console.log(err);
     }
 };
@@ -82,6 +85,7 @@ const onSectionClick =
                     dispatch(customActions.selectedSectionNo(sectionNo));
                     dispatch(emptyQuestions());
                     dispatch(customActions.selectedQuestion(1));
+                    dispatch(customActions.saveSection(true));
                 } else if (save) {
                     toast.success("Saved", {
                         hideProgressBar: true,
@@ -100,6 +104,7 @@ const onSectionClick =
                 Router.push(`/schools/${id}/tests/${testId}`);
             }
         } catch (err) {
+            dispatch(customActions.loading(false));
             console.log(err);
         }
     };
