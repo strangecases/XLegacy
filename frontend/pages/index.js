@@ -120,6 +120,13 @@ const NavBar = () => {
                                 <ul className={navStyles["navbar-ul"]}>
                                     <li>
                                         <div>
+                                            <Link href="/admin">
+                                                <a>Dashboard</a>
+                                            </Link>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div>
                                             <a
                                                 onClick={onLogOutClick}
                                                 onKeyDown={onLogOutClick}

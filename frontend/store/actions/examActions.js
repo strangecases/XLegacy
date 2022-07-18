@@ -84,10 +84,11 @@ const examsList =
                 dispatch(donutExams(da, total));
             } else {
                 let total = 0;
-
-                Object.values(exams.data[0].answers).forEach((ans) => {
-                    total += ans.sectionOutOf;
-                });
+                if (exams.data[0].answers) {
+                    Object.values(exams.data[0].answers).forEach((ans) => {
+                        total += ans.sectionOutOf;
+                    });
+                }
 
                 const da = [];
 
