@@ -12,7 +12,7 @@ import {
 } from "antd";
 import { CheckOutlined } from "@ant-design/icons";
 import Link from "next/link";
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import axiosFetch from "../../../../../axiosFetch";
@@ -27,7 +27,7 @@ const ViewSections = () => {
     const [pageNo, setPageNo] = useState(1);
     const [adminIsAuthor, setAdminIsAuthor] = useState(false);
 
-    const grew = useRef(0);
+    // const grew = useRef(0);
     const router = useRouter();
     const { id, testId } = router.query;
 
@@ -114,9 +114,9 @@ const ViewSections = () => {
         // };
     }, [testId, selectedSectionId, dispatch]);
 
-    useEffect(() => {
-        grew.current += 1;
-    });
+    // useEffect(() => {
+    //     grew.current += 1;
+    // });
 
     const onSelectChange = async (selectedId, option) => {
         // dispatch(allActions.questionActions.emptyQuestions());
@@ -202,9 +202,9 @@ const ViewSections = () => {
                                         {tests && tests[testId]?.author?.name}{" "}
                                         on {tests && tests[testId]?.createdAt}
                                     </Timeline.Item>
-                                    <Timeline.Item>
+                                    {/* <Timeline.Item>
                                         {grew.current}
-                                    </Timeline.Item>
+                                    </Timeline.Item> */}
                                 </Timeline>
                                 <Divider
                                     orientation="left"

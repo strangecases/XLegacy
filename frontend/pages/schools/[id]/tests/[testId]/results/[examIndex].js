@@ -1,7 +1,7 @@
 import { Tabs, Card, Row, Col, Pagination, Spin, Empty } from "antd";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import AdminCustomLayout from "../../../../../../components/nav/adminCustom/AdminCustomLayout";
 import allActions from "../../../../../../store/actions";
@@ -13,7 +13,7 @@ const ExamIndex = () => {
     // const [questionss, setQuestionss] = useState([]);
     const [pageNo, setPageNo] = useState(1);
 
-    const grew = useRef(0);
+    // const grew = useRef(0);
     const router = useRouter();
     const { id, testId, examIndex } = router.query;
 
@@ -76,9 +76,9 @@ const ExamIndex = () => {
         // };
     }, [testId, selectedSectionId, dispatch]);
 
-    useEffect(() => {
-        grew.current += 1;
-    });
+    // useEffect(() => {
+    //     grew.current += 1;
+    // });
 
     const onTabChange = async (active) => {
         dispatch(allActions.questionActions.fetchQuestions(testId, active));
@@ -94,8 +94,6 @@ const ExamIndex = () => {
         // console.log(questionsss);
     };
 
-    // console.log(questionsss);
-
     return (
         <AdminRoute>
             <Row gutter={[8, 32]} justify="center">
@@ -106,7 +104,7 @@ const ExamIndex = () => {
                         className={resultStyle["results-card"]}
                         hoverable
                         bordered={false}
-                        extra={grew.current}
+                        // extra={grew.current}
                     >
                         <div>
                             {`${examResult?.studentName
