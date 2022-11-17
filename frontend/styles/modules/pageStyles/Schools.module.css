@@ -1,5 +1,7 @@
 .schools-index-card-height {
-    min-height: 270px;
+    min-height: 265px;
+    max-height: 265px;
+    overflow: hidden;
 }
 
 .school-index-tag {
@@ -9,4 +11,31 @@
 .school-index-add-button {
     text-align: center;
     margin-top: 10px;
+}
+
+.school-index-button-align {
+    vertical-align: 0.1em;
+}
+
+.edit-school-position-right {
+    right: 50px;
+}
+
+.edit-school-back-top {
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    color: #fff;
+    text-align: center;
+    line-height: 25px;
+    font-size: 18px;
+    /* background-color: rgba(249, 18, 18, 0.45); */
+    background-color: rgba(255, 183, 0, 0.6);
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+
+.edit-school-back-top:hover {
+    /* background-color: rgb(249, 78, 78); */
+    background-color: #fca225;
 }

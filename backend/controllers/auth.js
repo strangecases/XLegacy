@@ -38,7 +38,7 @@ export const register = async (req, res) => {
         );
     }
 
-    console.log(adminCode, process.env.ADMIN_SECRET);
+    // console.log(adminCode, process.env.ADMIN_SECRET);
 
     if (adminCode !== process.env.ADMIN_SECRET) {
         throw new ExpressError("admin code is wrong", 400);
@@ -74,7 +74,7 @@ export const editAdmin = async (req, res) => {
         req.body.password?.length >= 6 &&
         req.body.newPassword === req.body.confirmPassword
     ) {
-        console.log("enered");
+        // console.log("enered");
         const match = await comparePassword(req.body.password, admin.password);
 
         if (!match)
@@ -234,8 +234,8 @@ export const forgotPassword = async (req, res) => {
         },
     };
 
-    const emailSent = await SES.sendEmail(params).promise();
-    console.log(emailSent);
+    await SES.sendEmail(params).promise();
+    // console.log(emailSent);
     return res.json({ ok: true });
 };
 
@@ -244,7 +244,7 @@ export const resetPassword = async (req, res) => {
 
     // hasing password
     const hashedPassword = await hashPassword(newPassword);
-    console.log(hashedPassword);
+    // console.log(hashedPassword);
 
     // checking secret code and updating hashed password
     const admin = await Admin.findOneAndUpdate(

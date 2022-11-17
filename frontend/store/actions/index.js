@@ -6,6 +6,9 @@ import examActions from "./examActions";
 import answerActions from "./answerActions";
 import schoolActions from "./schoolActions";
 import modalActions from "./modalActions";
+import principleActions from "./principleActions";
+import questionsDrawerActions from "./questionsDrawerActions";
+import loadingActions from "./loadingActions";
 
 const allActions = {
     adminActions,
@@ -16,6 +19,9 @@ const allActions = {
     answerActions,
     schoolActions,
     modalActions,
+    principleActions,
+    questionsDrawerActions,
+    loadingActions,
 };
 
 export default allActions;

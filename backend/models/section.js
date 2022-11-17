@@ -15,6 +15,14 @@ const sectionSchema = new Schema({
         type: String,
         required: true,
     },
+    isFull: {
+        type: Boolean,
+        default: false,
+    },
+    isEmpty: {
+        type: Boolean,
+        default: true,
+    },
     questions: [
         {
             questionNo: {

@@ -1,15 +1,18 @@
 import { Segmented } from "antd";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import allActions from "../../store/actions";
 import questionStyle from "../../styles/modules/componentStyles/Questions.module.css";
 import axiosFetch from "../../axiosFetch";
+import { stringOverflow } from "../../utils";
 
 const SegmentedSections = () => {
     const [smallScreenData, setSmallScreenData] = useState({});
 
     const { tests, questions } = useSelector((state) => state);
+
     const { selectedSectionId, selectedSectionNo } = useSelector(
         (state) => state.custom
     );
@@ -21,11 +24,12 @@ const SegmentedSections = () => {
     const path = router.pathname;
 
     useEffect(() => {
-        const x = tests[testId]?.sectionData?.reduce((acc, sect) => {
+        /* sectionData-- */
+        const x = tests[testId]?.sections?.reduce((acc, sect) => {
             return {
                 ...acc,
                 [sect.subject]: {
-                    sectionId: sect.sectionId,
+                    sectionId: sect._id,
                     sectionNo: sect.sectionNo,
                 },
             };
@@ -34,32 +38,42 @@ const SegmentedSections = () => {
     }, [tests, testId]);
 
     const onSectionChange = async (value) => {
-        const data = smallScreenData[value];
-        if (data.sectionId !== selectedSectionId) {
-            dispatch(allActions.customActions.loading(true));
-            const list = Object.values(questions);
-            await axiosFetch.patch(
-                `/api/tests/${testId}/sections/${selectedSectionId}`,
-                { questions: list }
-            );
-            console.log("hiii");
-            dispatch(
-                allActions.customActions.selectedSectionId(data.sectionId)
-            );
-            dispatch(
-                allActions.customActions.selectedSectionNo(data.sectionNo)
-            );
-            dispatch(allActions.questionActions.emptyQuestions());
-            dispatch(allActions.customActions.selectedQuestion(1));
+        try {
+            const data = smallScreenData[value];
+            if (data.sectionId !== selectedSectionId) {
+                dispatch(allActions.loadingActions.questionsLoading(true));
+                const list = Object.values(questions);
+                await axiosFetch.patch(
+                    `/api/tests/${testId}/sections/${selectedSectionId}`,
+                    { questions: list }
+                );
+                // console.log("hiii");
+                dispatch(
+                    allActions.customActions.selectedSectionId(data.sectionId)
+                );
+                dispatch(
+                    allActions.customActions.selectedSectionNo(data.sectionNo)
+                );
+                dispatch(allActions.questionActions.emptyQuestions());
+                dispatch(allActions.customActions.selectedQuestion(1));
+                dispatch(allActions.customActions.saveSection(true));
+            }
+        } catch (err) {
+            dispatch(allActions.loadingActions.questionsLoading(false));
+
+            // console.log(err);
+            toast.error(err.response.data, {
+                autoClose: 2200,
+                hideProgressBar: true,
+            });
         }
     };
 
     const onSectionExamChange = async (value) => {
         const data = smallScreenData[value];
-        console.log(data);
 
         if (data.sectionId !== selectedSectionId) {
-            dispatch(allActions.customActions.loading(true));
+            dispatch(allActions.loadingActions.questionsLoading(true));
             dispatch(
                 allActions.examActions.onSectionChange(
                     id,
@@ -71,10 +85,23 @@ const SegmentedSections = () => {
         }
     };
 
+    // console.log(
+    //     Object.keys(smallScreenData).map((sectionString) => ({
+    //         label: stringOverflow(sectionString, 7),
+    //         value: sectionString,
+    //     }))
+    // );
+
     return (
         <div className={questionStyle["segmented-section"]}>
             <Segmented
-                options={smallScreenData && Object.keys(smallScreenData)}
+                options={
+                    smallScreenData &&
+                    Object.keys(smallScreenData).map((sectionString) => ({
+                        label: stringOverflow(sectionString, 7),
+                        value: sectionString,
+                    }))
+                }
                 value={
                     smallScreenData &&
                     Object.keys(smallScreenData)[selectedSectionNo - 1]

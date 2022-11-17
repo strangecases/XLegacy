@@ -1,10 +1,11 @@
 import { useEffect } from "react";
-import { Modal, message } from "antd";
+import { Modal, message, Spin } from "antd";
 
 import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 
-import ExamNav from "../../../../../components/nav/ExamNav";
+// import ExamNav from "../../../../../components/nav/ExamNav";
+import ExamNavNew from "../../../../../components/nav/ExamNavNew";
 import QuestionTests from "../../../../../components/Questions/QuestionTests";
 import allActions from "../../../../../store/actions";
 import examInfoStyle from "../../../../../styles/modules/pageStyles/ExamInfo.module.css";
@@ -12,6 +13,7 @@ import Spinner from "../../../../../components/Spinner";
 
 const ExamsId = () => {
     const { examId } = useSelector((state) => state.exam);
+    const { examSavedLoading } = useSelector((state) => state.load);
     const { examSaved } = useSelector((state) => state.custom);
 
     const router = useRouter();
@@ -62,7 +64,7 @@ const ExamsId = () => {
 
         const historyChange = (url) => {
             if (router.asPath !== window.location.pathname) {
-                console.log(router.asPath, window.location.pathname);
+                // console.log(router.asPath, window.location.pathname);
                 window.history.pushState({}, "", router.asPath);
             }
 
@@ -73,7 +75,7 @@ const ExamsId = () => {
 
         const handleWindowClose = (e) => {
             e.preventDefault();
-            console.log(router.asPath === window.location.pathname);
+            // console.log(router.asPath === window.location.pathname);
             if (router.asPath === window.location.pathname) {
                 e.returnValue = "fdfd";
             }
@@ -90,29 +92,35 @@ const ExamsId = () => {
             // window.removeEventListener("beforeunload", handleWindowClose);
             router.events.off("routeChangeStart", historyChange);
         }
-        console.log(
-            "exam saved",
-            examSaved,
-            router.asPath,
-            window.location.pathname
-        );
+        // console.log(
+        //     "exam saved",
+        //     examSaved,
+        //     router.asPath,
+        //     window.location.pathname
+        // );
 
         return () => {
             window.removeEventListener("beforeunload", handleWindowClose);
             router.events.off("routeChangeStart", historyChange);
         };
-    }, [examSaved, testId, id, router]);
+    }, [examSaved, testId, id, router, dispatch]);
 
     useEffect(() => {
         if (!examId) {
             localStorage.removeItem("end_date");
             router.push(`/schools/${id}/exams/${testId}/info`);
         }
-    }, [examId, id, testId]);
+    }, [examId, id, testId, router]);
 
-    return examId && examId ? <QuestionTests /> : <Spinner />;
+    return examId && examId ? (
+        <Spin spinning={examSavedLoading} delay={0}>
+            <QuestionTests />
+        </Spin>
+    ) : (
+        <Spinner />
+    );
 };
 
-ExamsId.getLayout = (page) => <ExamNav>{page}</ExamNav>;
+ExamsId.getLayout = (page) => <ExamNavNew>{page}</ExamNavNew>;
 
 export default ExamsId;

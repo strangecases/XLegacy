@@ -11,17 +11,14 @@ import {
     Popconfirm,
     Space,
 } from "antd";
-import {
-    PlusCircleFilled,
-    MinusCircleOutlined,
-    SyncOutlined,
-} from "@ant-design/icons";
+import { PlusCircleFilled, MinusCircleOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import FormItem from "../formitems/FormItem";
 import ClassGroup from "./ClassGroup";
 import DeleteSchoolForm from "../modal/modalSchool/DeleteSchoolForm";
 import allActions from "../../store/actions";
+import allComponentsStyle from "../../styles/modules/componentStyles/AllComponents.module.css";
 
 const SchoolForm = ({
     control,
@@ -42,6 +39,8 @@ const SchoolForm = ({
         });
     }, [appe]);
 
+    const { schoolSubmitLoading } = useSelector((state) => state.load);
+
     const dispatch = useDispatch();
 
     const appending = () => {
@@ -55,6 +54,7 @@ const SchoolForm = ({
 
     return (
         <div id="scroll">
+            {/* {console.log(errors)} */}
             <Card>
                 <Row>
                     <Col span={24}>
@@ -161,14 +161,16 @@ const SchoolForm = ({
                                     }
                                     okText="Yes"
                                     cancelText="No"
+                                    // autoAdjustOverflow={false}
                                     onConfirm={() => remove(index)}
                                 >
                                     <MinusCircleOutlined
                                         // onClick={() => remove(index)}
-                                        className="hover-icon-delete test-submit-delete"
+                                        className={`hover-icon-delete test-submit-delete ${allComponentsStyle["all-vertical-align-minus-two"]}`}
                                     />
                                 </Popconfirm>
                             </Col>
+
                             <Col offset={0} xs={21} sm={17} md={16} span={17}>
                                 <ClassGroup
                                     errors={
@@ -183,6 +185,13 @@ const SchoolForm = ({
                     </Card>
                 );
             })}
+            {errors?.classes?.message && (
+                <Card
+                    className={`inner-card-padding-none ${allComponentsStyle["card-error-message"]}`}
+                >
+                    {errors?.classes?.message}
+                </Card>
+            )}
             <Card>
                 <Row justify="center" gutter={[32, 16]}>
                     <Col>
@@ -190,9 +199,10 @@ const SchoolForm = ({
                             color="#2db7f5"
                             title="Add Classes"
                             placement="left"
+                            overlayClassName="tooltip-mobile-display-none"
                         >
                             <PlusCircleFilled
-                                className="hover-icon-submit test-submit-delete"
+                                className={`hover-icon-submit-small test-submit-delete  ${allComponentsStyle["all-vertical-align-minus-two"]}`}
                                 onClick={appending}
                             />
                         </Tooltip>
@@ -203,12 +213,9 @@ const SchoolForm = ({
                                 disabled={!isDirty || isSubmitting}
                                 type="primary"
                                 htmlType="submit"
+                                loading={schoolSubmitLoading}
                             >
-                                {isSubmitting ? (
-                                    <SyncOutlined spin />
-                                ) : (
-                                    "Submit"
-                                )}
+                                Submit
                             </Button>
                             {path === "edit" && (
                                 <>
@@ -218,11 +225,7 @@ const SchoolForm = ({
                                         type="primary"
                                         onClick={onDelete}
                                     >
-                                        {isSubmitting ? (
-                                            <SyncOutlined spin />
-                                        ) : (
-                                            "Delete"
-                                        )}
+                                        Delete
                                     </Button>
                                     <DeleteSchoolForm />
                                 </>
@@ -230,7 +233,7 @@ const SchoolForm = ({
                         </Space>
                     </Col>
 
-                    {console.log(isSubmitting, isDirty)}
+                    {/* {console.log(isSubmitting, isDirty)} */}
                 </Row>
             </Card>
         </div>

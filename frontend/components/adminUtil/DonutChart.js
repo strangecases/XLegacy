@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import { Col, Empty, Row } from "antd";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import allComponentsStyle from "../styles/modules/componentStyles/AllComponents.module.css";
+import allComponentsStyle from "../../styles/modules/componentStyles/AllComponents.module.css";
 
 const DonutChart = () => {
     const { donutExams } = useSelector((state) => state.exam);
@@ -40,7 +40,7 @@ const DonutChart = () => {
             const outerArc = d3
                 .arc()
                 .innerRadius(radius * 0.82)
-                .outerRadius(radius * 1.2);
+                .outerRadius(radius * 1.02);
 
             const pieGenerator = d3
                 .pie()
@@ -144,10 +144,11 @@ const DonutChart = () => {
                     const pos = outerArc.centroid(
                         d.data.data[1].count !== 0 ? d : ""
                     );
+                    // console.log([pos[0], pos[1] + 5]);
                     // const midangle =
                     //     d.startAngle + (d.endAngle - d.startAngle) / 2;
                     // pos[0] = radius * 0.99 * (midangle < Math.PI ? 1 : -1);
-                    return `translate(${pos})`;
+                    return `translate(${[pos[0], pos[1] + 5]})`;
                 })
                 .style("text-anchor", (d) => {
                     const midangle =
@@ -196,19 +197,21 @@ const DonutChart = () => {
         }
     }, [donutExams]);
 
-    console.log(donutExams.length);
+    // console.log(donutExams.length);
 
     return (
         <Row justify="center" className={allComponentsStyle["donut-chart-row"]}>
             {/* {renderr} */}
 
-            <Col
-                span={24}
-                id="pie-container"
-                className={allComponentsStyle["donut-chart-svg-col"]}
-            >
-                <svg />
-            </Col>
+            {donutExams.length > 0 && (
+                <Col
+                    span={24}
+                    id="pie-container"
+                    className={allComponentsStyle["donut-chart-svg-col"]}
+                >
+                    <svg />
+                </Col>
+            )}
 
             {donutExams.length === 0 && (
                 <Col

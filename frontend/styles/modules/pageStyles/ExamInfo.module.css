@@ -1,5 +1,6 @@
-.exam-info-layout {
+.exam-layout {
     height: 100vh;
+    overflow-x: hidden;
 }
 
 .exam-info-row {

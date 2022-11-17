@@ -10,7 +10,7 @@ const ExamCountDown = ({ time = 40 }) => {
 
     const router = useRouter();
     const { id, testId } = router.query;
-    const { answers } = useSelector((state) => state);
+    // const { answers } = useSelector((state) => state);
     const { examId } = useSelector((state) => state.exam);
 
     const dispatch = useDispatch();
@@ -22,7 +22,7 @@ const ExamCountDown = ({ time = 40 }) => {
 
         const onChange = (val) => {
             if (4.95 * 60 * 1000 < val && val < 5 * 60 * 1000) {
-                console.log("ffddfdee");
+                // console.log("ffddfdee");
                 setCountDownColor("red");
             }
             if (2.85 * 1000 < val && val < 3 * 1000) {
@@ -51,8 +51,8 @@ const ExamCountDown = ({ time = 40 }) => {
         delay: time * 60 * 1000,
     });
 
-    console.log(data);
-    console.log(Object.keys(answers).length, answers);
+    // console.log(data);
+    // console.log(Object.keys(answers).length, answers);
 
     useEffect(() => {
         const wantedDelay = time * 60 * 1000;

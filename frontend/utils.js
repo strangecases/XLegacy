@@ -1,4 +1,4 @@
-const classAbrv = (classNo) => {
+export const classAbrv = (classNo) => {
     if (classNo === 1 || classNo === "1") {
         return "st class";
     }
@@ -11,4 +11,12 @@ const classAbrv = (classNo) => {
     return "th class";
 };
 
-export default classAbrv;
+export const stringOverflow = (string, noOfChars) => {
+    if (noOfChars >= 9 && string.length > noOfChars) {
+        return `${string.slice(0, noOfChars)}...`;
+    }
+    if (noOfChars >= 6 && noOfChars < 9 && string.length > noOfChars) {
+        return `${string.slice(0, noOfChars)}..`;
+    }
+    return string;
+};

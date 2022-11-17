@@ -1,12 +1,12 @@
-import { Button, Card, Row, Col, Tag } from "antd";
-import { RightSquareFilled } from "@ant-design/icons";
+import { Button, Card, Row, Col, Tag, Space } from "antd";
+import { PlusCircleFilled, RightSquareFilled } from "@ant-design/icons";
 import Link from "next/link";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import CustomLayout from "../../components/nav/CustomLayout";
 import allActions from "../../store/actions";
 import AdminRoute from "../../components/routes/AdminRoute";
 import schoolStyle from "../../styles/modules/pageStyles/Schools.module.css";
+import AdminCustomLayout from "../../components/nav/adminCustom/AdminCustomLayout";
 
 const Schools = () => {
     const { schools } = useSelector((state) => state);
@@ -50,8 +50,42 @@ const Schools = () => {
                             >
                                 <Tag color="#85ccb4">classes</Tag>
                             </Col>
-                            {school &&
-                                school.classes.map((cls) => (
+                            <Col>
+                                <Space
+                                    size={[7, 16]}
+                                    wrap
+                                    style={{ justifyContent: "center" }}
+                                >
+                                    {school &&
+                                        school.classes
+                                            .slice(0, 12)
+                                            .map((cls) => (
+                                                // <Col key={cls.classNo}>
+                                                <Link
+                                                    href={`/schools/${school._id}/tests`}
+                                                    passHref
+                                                    key={cls.classNo}
+                                                >
+                                                    <Button
+                                                        onClick={() =>
+                                                            dispatch(
+                                                                allActions.customActions.selectedClass(
+                                                                    cls.classNo
+                                                                )
+                                                            )
+                                                        }
+                                                    >
+                                                        {cls.classNo > 9
+                                                            ? cls.classNo
+                                                            : `0${cls.classNo}`}
+                                                    </Button>
+                                                </Link>
+                                                // </Col>
+                                            ))}
+                                </Space>
+                            </Col>
+                            {/* {school &&
+                                school.classes.slice(0, 12).map((cls) => (
                                     <Col key={cls.classNo}>
                                         <Link
                                             href={`/schools/${school._id}/tests`}
@@ -72,7 +106,7 @@ const Schools = () => {
                                             </Button>
                                         </Link>
                                     </Col>
-                                ))}
+                                ))} */}
                         </Row>
                     </Card>
                 </Col>
@@ -87,13 +121,24 @@ const Schools = () => {
             </Row>
             <h1 className={schoolStyle["school-index-add-button"]}>
                 <Link href="/schools/new" passHref>
-                    <Button danger>Add School</Button>
+                    <Button
+                        icon={
+                            <PlusCircleFilled
+                                className={
+                                    schoolStyle["school-index-button-align"]
+                                }
+                            />
+                        }
+                        danger
+                    >
+                        Add School
+                    </Button>
                 </Link>
             </h1>
         </AdminRoute>
     );
 };
 
-Schools.getLayout = (page) => <CustomLayout>{page}</CustomLayout>;
+Schools.getLayout = (page) => <AdminCustomLayout>{page}</AdminCustomLayout>;
 
 export default Schools;

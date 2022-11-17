@@ -1,15 +1,14 @@
-import { LoadingOutlined } from "@ant-design/icons";
-import { Col, Row, Card, Form, Input, Button } from "antd";
+import { Col, Card, Form, Input, Button } from "antd";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { addOtherTestSchema } from "../../yupUtil";
 import allActions from "../../store/actions";
 import allComponentsStyle from "../../styles/modules/componentStyles/AllComponents.module.css";
 
 const AddOtherTests = () => {
-    // const { selectedClass } = useSelector((state) => state.custom);
+    const { otherTestsLoading } = useSelector((state) => state.load);
 
     const dispatch = useDispatch();
 
@@ -18,7 +17,7 @@ const AddOtherTests = () => {
 
     const {
         handleSubmit,
-        formState: { errors, isSubmitting },
+        formState: { errors },
         control,
     } = useForm({
         mode: "onBlur",
@@ -27,13 +26,17 @@ const AddOtherTests = () => {
 
     const onSubmit = (data) => {
         dispatch(
-            allActions.schoolActions.editSchool(id, {
-                classNo: "otherTests",
-                testId: data.link.slice(61, 85),
-                type: "edit",
+            allActions.schoolActions.editSchool({
+                id,
+                formValues: {
+                    classNo: "otherTests",
+                    testId: data.link.split("exams/")[1].slice(0, 24),
+                    type: "edit",
+                },
+                link: data.link,
+                editType: "otherTests",
             })
         );
-        router.push(`/schools/${id}/tests/${data.link.slice(61, 85)}`);
     };
 
     return (
@@ -41,7 +44,43 @@ const AddOtherTests = () => {
             <Card
                 className={`inner-card-padding-small-marginbottom ${allComponentsStyle["add-other-tests-overflow"]}`}
             >
-                <Row justify="center" gutter={0}>
+                <Form
+                    onFinish={handleSubmit(onSubmit)}
+                    autoComplete="off"
+                    className={allComponentsStyle["add-other-tests-flex"]}
+                >
+                    <Form.Item
+                        className={`${allComponentsStyle["add-other-tests-formItem"]}`}
+                        help={errors.link ? errors.link?.message : ""}
+                        validateStatus={
+                            errors.link && errors.link.message
+                                ? "error"
+                                : "success"
+                        }
+                    >
+                        <Controller
+                            control={control}
+                            name="link"
+                            render={({ field }) => (
+                                <Input
+                                    placeholder="Provide test link here"
+                                    {...field}
+                                />
+                            )}
+                        />
+                    </Form.Item>
+
+                    <Button
+                        htmlType="submit"
+                        danger
+                        className={allComponentsStyle["add-other-tests-button"]}
+                        loading={otherTestsLoading}
+                    >
+                        Add Other Schools Test
+                    </Button>
+                </Form>
+
+                {/* <Row justify="center" gutter={0}>
                     <Col span={21}>
                         <Form
                             layout="inline"
@@ -98,7 +137,7 @@ const AddOtherTests = () => {
                             </Row>
                         </Form>
                     </Col>
-                </Row>
+                </Row> */}
             </Card>
         </Col>
     );

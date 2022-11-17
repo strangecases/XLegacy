@@ -51,12 +51,13 @@
 
 .admin-row {
     background-color: white;
+    min-height: 570px;
     height: 100%;
 }
 
 .admin-card {
     overflow: auto;
-    height: 87vh;
+    max-height: 570px;
 }
 
 .admin-spin-position {
@@ -66,4 +67,8 @@
 
 .admin-spin-position .admin-spin-icon {
     font-size: 72px;
+}
+
+.vertical-space {
+    vertical-align: 0.1em;
 }

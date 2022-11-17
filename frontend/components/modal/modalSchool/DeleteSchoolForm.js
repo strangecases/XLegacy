@@ -14,7 +14,7 @@ const DeleteSchoolForm = () => {
     };
 
     const onHandleCancel = () => {
-        console.log("Clicked cancel button");
+        // console.log("Clicked cancel button");
         dispatch(allActions.modalActions.visibleDeleteSchoolNo());
     };
 

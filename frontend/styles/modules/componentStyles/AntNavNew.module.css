@@ -1,0 +1,130 @@
+.nav-new .top-nav-menu,
+.nav-new .top-nav-menu-submenu {
+    height: 46px;
+    border: 0;
+    justify-content: flex-end;
+    flex: auto;
+}
+
+.nav-new .top-nav-menu-submenu-sm {
+    display: none;
+}
+
+.header-bold,
+.header-bold-submenu {
+    font-weight: 700;
+    color: rgb(241, 121, 9);
+    margin: auto 0 auto 25px;
+    flex: auto;
+}
+
+.nav-new {
+    position: sticky;
+    z-index: 1000;
+    width: 100%;
+    top: 0;
+    padding: 0 10px;
+    height: 46px;
+    line-height: 46px;
+    background-color: #fff;
+    overflow: hidden;
+}
+
+.nav-new-div {
+    display: flex;
+}
+
+:global(.ant-menu-submenu-title) .menu-outlined {
+    background: #edf2f2;
+    border-radius: 50%;
+    color: orange;
+    padding: 6px;
+}
+
+:global(.ant-menu-submenu-title) .menu-outlined:hover {
+    background: #cccece;
+    color: white;
+    border-radius: 50%;
+    padding: 6px;
+}
+
+:global(.ant-menu-submenu .ant-menu-submenu-title) .submenu-nav-avatar,
+:global(.ant-menu-submenu-title) .submenu-nav-avatar-sm {
+    background-color: orange;
+    vertical-align: middle;
+    font-size: 16px;
+    font-weight: 600;
+    top: -1px;
+}
+
+:global(.ant-menu-submenu .ant-menu-submenu-title) .submenu-nav-avatar:hover {
+    line-height: 22px;
+    border: 1px solid green;
+    font-size: 15px;
+}
+
+:global(.ant-menu-submenu-title) .submenu-nav-avatar-sm:hover {
+    line-height: 31px;
+    border: 1px solid green;
+    font-size: 15px;
+}
+
+.top-nav-submenu :global(.ant-menu-submenu-title .ant-menu-title-content) {
+    margin-left: 5px;
+}
+
+@media screen and (max-width: 596px) {
+    .nav-new .top-nav-menu {
+        flex: 0 0 16.66%;
+        max-width: 16.66%;
+    }
+
+    .header-bold {
+        flex: 0 0 83.33%;
+        max-width: 83.33%;
+        margin: 0;
+        padding: 0 0 0 10px;
+    }
+
+    .nav-new .top-nav-menu-submenu {
+        display: none;
+    }
+
+    .nav-new .top-nav-menu-submenu-sm {
+        display: flex;
+        height: 46px;
+        border: 0;
+        justify-content: flex-end;
+        flex: 0 0 24.66%;
+        max-width: 24.66%;
+    }
+
+    .nav-new .top-nav-menu-submenu-sm :global(.ant-menu-submenu) {
+        top: 0px;
+    }
+
+    .header-bold-submenu {
+        flex: 0 0 75.33%;
+        max-width: 75.33%;
+        margin: 0;
+        padding: 0 0 0 10px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .nav-new .top-nav-menu-submenu-sm {
+        justify-content: center;
+    }
+}
+
+@media screen and (max-width: 200px) {
+    .nav-new .top-nav-menu,
+    .nav-new .top-nav-menu-submenu-sm {
+        display: none;
+    }
+
+    .header-bold {
+        display: flex;
+        justify-content: center;
+    }
+}

@@ -5,7 +5,7 @@ const initialState = {};
 const answerReducer = (state = initialState, action) => {
     switch (action.type) {
         case types.FETCH_ANSWERS:
-            console.log(action.payload);
+            // console.log(action.payload);
             return { ...state, ...action.payload };
         // case types.FETCH_TEST:
         //     return { ...state, [action.payload._id]: action.payload };

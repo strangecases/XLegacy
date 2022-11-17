@@ -3,7 +3,7 @@ import User from "./user.js";
 
 const { Schema } = mongoose;
 
-const teacherSchema = new Schema({
+const studentSchema = new Schema({
     classid: {
         type: Schema.Types.ObjectId,
         ref: "Classes",
@@ -22,6 +22,6 @@ const teacherSchema = new Schema({
     },
 });
 
-const StudentUser = User.discriminator("Student", teacherSchema);
+const StudentUser = User.discriminator("Student", studentSchema);
 
 export default StudentUser;

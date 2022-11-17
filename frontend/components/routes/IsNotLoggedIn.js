@@ -20,9 +20,9 @@ const IsNotLoggedIn = ({ children }) => {
                     setOk(false);
                     router.push("/admin");
                 }
-                console.log("IsNotLoggedIn");
+                // console.log("IsNotLoggedIn");
             } catch (err) {
-                console.log(err.response);
+                // console.log(err.response);
                 setOk(true);
                 dispatch({ type: LOGOUT });
             }

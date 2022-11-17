@@ -6,7 +6,10 @@ import {
     editSection,
     deleteSection,
 } from "../controllers/section.js";
-import { arrayLimitForSection } from "../middlewares/index.js";
+import {
+    arrayLimitForSection,
+    arrayLimitForQuestion,
+} from "../middlewares/index.js";
 import catchAsync from "../utils/catchAsync.js";
 
 const router = express.Router();
@@ -19,7 +22,7 @@ router
 router
     .route("/:testId/sections/:sectionId")
     .get(catchAsync(showSection))
-    .patch(catchAsync(editSection))
+    .patch(catchAsync(arrayLimitForQuestion), catchAsync(editSection))
     .delete(catchAsync(deleteSection));
 
 export default router;

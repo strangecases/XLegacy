@@ -1,5 +1,4 @@
-import { useDispatch } from "react-redux";
-import { SyncOutlined } from "@ant-design/icons";
+import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -11,6 +10,8 @@ import { loginSchema } from "../yupUtil";
 import IsNotLoggedIn from "../components/routes/IsNotLoggedIn";
 
 const Login = () => {
+    const { loginLoading } = useSelector((state) => state.load);
+
     const dispatch = useDispatch();
 
     const {
@@ -28,10 +29,10 @@ const Login = () => {
 
     return (
         <IsNotLoggedIn>
-            {console.log(
+            {/* {console.log(
                 process.env.NEXT_PUBLIC_NODE_ENV,
                 process.env.NEXT_PUBLIC_BACK_URL
-            )}
+            )} */}
             <h2 className={authStyles.headingAuth}>Login</h2>
 
             <Row justify="center">
@@ -61,12 +62,9 @@ const Login = () => {
                                 htmlType="submit"
                                 className={authStyles["width-100"]}
                                 disabled={!isDirty || isSubmitting}
+                                loading={loginLoading}
                             >
-                                {isSubmitting ? (
-                                    <SyncOutlined spin />
-                                ) : (
-                                    "Submit"
-                                )}
+                                Submit
                             </Button>
                         </Form>
 

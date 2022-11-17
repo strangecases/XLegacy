@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Card } from "antd";
-import authStyles from "../styles/modules/pageStyles/Auth.module.css";
+import authStyles from "../../styles/modules/pageStyles/Auth.module.css";
 
 const AdminCard = () => {
     return (

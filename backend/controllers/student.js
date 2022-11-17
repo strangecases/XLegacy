@@ -73,7 +73,7 @@ export const studentLogout = async (req, res) => {
 };
 
 export const iscurrentStudent = async (req, res) => {
-    const student = await StudentUser.findById(req.user._id).exex();
+    const student = await StudentUser.findById(req.user._id).exec();
 
     if (!student) {
         throw new ExpressError("Only Teachers can access this route", 400);

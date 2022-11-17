@@ -11,10 +11,11 @@ import {
     Popconfirm,
     message,
     Skeleton,
+    Empty,
 } from "antd";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { useForm, Controller } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { EDIT_ANSWER } from "../../store/types";
@@ -27,7 +28,10 @@ const ExamDetail = () => {
 
     const { questions } = useSelector((state) => state);
     const { answers } = useSelector((state) => state);
-    const { selectedQuestion, loading } = useSelector((state) => state.custom);
+    const { questionsLoading } = useSelector((state) => state.load);
+    const { selectedQuestion, isQuestionsEmpty } = useSelector(
+        (state) => state.custom
+    );
 
     const router = useRouter();
     const { id, testId } = router.query;
@@ -39,14 +43,19 @@ const ExamDetail = () => {
         defaultValues: {},
     });
 
-    const onSubmit = (data) => {
-        console.log(data);
-        // setValue("answer", data?.answer);
-        dispatch({ type: EDIT_ANSWER, payload: data });
-    };
+    const onSubmit = useCallback(
+        (data) => {
+            // console.log(data);
+            // setValue("answer", data?.answer);
+            dispatch({ type: EDIT_ANSWER, payload: data });
+        },
+        [dispatch]
+    );
 
     const onSectionSubmit = async () => {
+        // console.log("hi");
         dispatch(allActions.customActions.examSaved(true));
+        dispatch(allActions.loadingActions.examSavedLoading(true));
         setTimeout(() => {
             dispatch(allActions.examActions.onSectionSubmit(id, testId));
             if (localStorage.getItem("end_date") != null)
@@ -80,15 +89,17 @@ const ExamDetail = () => {
         } else {
             setValue("answer", "");
         }
-    }, [selectedQuestion, answers]);
+    }, [selectedQuestion, answers, setValue]);
 
     useEffect(() => {
         let elements = [];
 
-        if (!loading) {
+        if (!questionsLoading) {
             elements = document.getElementsByClassName("hiii2");
             for (let i = 0; i < elements.length; i += 1) {
-                elements[i].addEventListener("change", handleSubmit(onSubmit));
+                elements[i].addEventListener("change", handleSubmit(onSubmit), {
+                    capture: true,
+                });
             }
         }
 
@@ -96,11 +107,12 @@ const ExamDetail = () => {
             for (let i = 0; i < elements.length; i += 1) {
                 elements[i].removeEventListener(
                     "change",
-                    handleSubmit(onSubmit)
+                    handleSubmit(onSubmit),
+                    { capture: true }
                 );
             }
         };
-    }, [loading]);
+    }, [questionsLoading, handleSubmit, onSubmit]);
 
     return (
         <>
@@ -113,11 +125,11 @@ const ExamDetail = () => {
                     <Skeleton
                         className={examDetailStyle["exam-detail-form-padding"]}
                         active
-                        loading={loading}
+                        loading={questionsLoading}
                         paragraph={{ rows: 0 }}
                         title={{ width: "100%" }}
                     />
-                    {!loading && (
+                    {!questionsLoading && (
                         <Row gutter={16}>
                             <Col xs={6} sm={4} md={5} lg={3} span={3}>
                                 <Controller
@@ -161,181 +173,186 @@ const ExamDetail = () => {
                     <Skeleton
                         className={examDetailStyle["exam-detail-form-padding"]}
                         active
-                        loading={loading}
+                        loading={questionsLoading}
                         paragraph={{ rows: 11 }}
                     />
-                    {!loading && (
+                    {!questionsLoading && (
                         <Card
                             type="inner"
                             bordered={false}
                             className="inner-card-padding"
                         >
-                            <Controller
-                                defaultValue="c"
-                                control={control}
-                                name="answer"
-                                render={({ field }) => (
-                                    <Radio.Group
-                                        {...field}
-                                        className={
-                                            examDetailStyle[
-                                                "exam-detail-radio-group"
-                                            ]
-                                        }
-                                    >
-                                        <Row>
-                                            <Col span={20}>
-                                                <Space
-                                                    direction="vertical"
-                                                    className={
-                                                        examDetailStyle[
-                                                            "exam-detail-space"
-                                                        ]
-                                                    }
-                                                    size={0}
-                                                >
-                                                    <Row>
-                                                        <Col
-                                                            xs={24}
-                                                            sm={18}
-                                                            md={17}
-                                                            lg={16}
-                                                            span={16}
-                                                        >
-                                                            <label
-                                                                htmlFor="select-a"
-                                                                className={
-                                                                    examDetailStyle[
-                                                                        "exam-detail-label"
-                                                                    ]
-                                                                }
+                            {!isQuestionsEmpty &&
+                            questions[selectedQuestion].question ? (
+                                <Controller
+                                    defaultValue="c"
+                                    control={control}
+                                    name="answer"
+                                    render={({ field }) => (
+                                        <Radio.Group
+                                            {...field}
+                                            className={
+                                                examDetailStyle[
+                                                    "exam-detail-radio-group"
+                                                ]
+                                            }
+                                        >
+                                            <Row>
+                                                <Col span={20}>
+                                                    <Space
+                                                        direction="vertical"
+                                                        className={
+                                                            examDetailStyle[
+                                                                "exam-detail-space"
+                                                            ]
+                                                        }
+                                                        size={0}
+                                                    >
+                                                        <Row>
+                                                            <Col
+                                                                xs={24}
+                                                                sm={18}
+                                                                md={17}
+                                                                lg={16}
+                                                                span={16}
                                                             >
-                                                                <Card
-                                                                    hoverable
-                                                                    className="option-card inner-card-padding-zero"
+                                                                <label
+                                                                    htmlFor="select-a"
+                                                                    className={
+                                                                        examDetailStyle[
+                                                                            "exam-detail-label"
+                                                                        ]
+                                                                    }
                                                                 >
-                                                                    <Radio
-                                                                        className="hiii2"
-                                                                        value="a"
-                                                                        id="select-a"
+                                                                    <Card
+                                                                        hoverable
+                                                                        className="option-card inner-card-padding-zero"
                                                                     >
-                                                                        {question.options &&
-                                                                            question
-                                                                                .options
-                                                                                .a}
-                                                                    </Radio>
-                                                                </Card>
-                                                            </label>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row>
-                                                        <Col
-                                                            xs={24}
-                                                            sm={18}
-                                                            md={17}
-                                                            lg={16}
-                                                            span={16}
-                                                        >
-                                                            <label
-                                                                htmlFor="select-b"
-                                                                className={
-                                                                    examDetailStyle[
-                                                                        "exam-detail-label"
-                                                                    ]
-                                                                }
+                                                                        <Radio
+                                                                            className="hiii2"
+                                                                            value="a"
+                                                                            id="select-a"
+                                                                        >
+                                                                            {question.options &&
+                                                                                question
+                                                                                    .options
+                                                                                    .a}
+                                                                        </Radio>
+                                                                    </Card>
+                                                                </label>
+                                                            </Col>
+                                                        </Row>
+                                                        <Row>
+                                                            <Col
+                                                                xs={24}
+                                                                sm={18}
+                                                                md={17}
+                                                                lg={16}
+                                                                span={16}
                                                             >
-                                                                <Card
-                                                                    hoverable
-                                                                    className="option-card"
+                                                                <label
+                                                                    htmlFor="select-b"
+                                                                    className={
+                                                                        examDetailStyle[
+                                                                            "exam-detail-label"
+                                                                        ]
+                                                                    }
                                                                 >
-                                                                    <Radio
-                                                                        className="hiii2"
-                                                                        value="b"
-                                                                        id="select-b"
+                                                                    <Card
+                                                                        hoverable
+                                                                        className="option-card"
                                                                     >
-                                                                        {question.options &&
-                                                                            question
-                                                                                .options
-                                                                                .b}
-                                                                    </Radio>
-                                                                </Card>
-                                                            </label>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row>
-                                                        <Col
-                                                            xs={24}
-                                                            sm={18}
-                                                            md={17}
-                                                            lg={16}
-                                                            span={16}
-                                                        >
-                                                            <label
-                                                                htmlFor="select-c"
-                                                                className={
-                                                                    examDetailStyle[
-                                                                        "exam-detail-label"
-                                                                    ]
-                                                                }
+                                                                        <Radio
+                                                                            className="hiii2"
+                                                                            value="b"
+                                                                            id="select-b"
+                                                                        >
+                                                                            {question.options &&
+                                                                                question
+                                                                                    .options
+                                                                                    .b}
+                                                                        </Radio>
+                                                                    </Card>
+                                                                </label>
+                                                            </Col>
+                                                        </Row>
+                                                        <Row>
+                                                            <Col
+                                                                xs={24}
+                                                                sm={18}
+                                                                md={17}
+                                                                lg={16}
+                                                                span={16}
                                                             >
-                                                                <Card
-                                                                    hoverable
-                                                                    className="option-card"
+                                                                <label
+                                                                    htmlFor="select-c"
+                                                                    className={
+                                                                        examDetailStyle[
+                                                                            "exam-detail-label"
+                                                                        ]
+                                                                    }
                                                                 >
-                                                                    <Radio
-                                                                        className="hiii2"
-                                                                        value="c"
-                                                                        id="select-c"
+                                                                    <Card
+                                                                        hoverable
+                                                                        className="option-card"
                                                                     >
-                                                                        {question.options &&
-                                                                            question
-                                                                                .options
-                                                                                .c}
-                                                                    </Radio>
-                                                                </Card>
-                                                            </label>
-                                                        </Col>
-                                                    </Row>
-                                                    <Row>
-                                                        <Col
-                                                            xs={24}
-                                                            sm={18}
-                                                            md={17}
-                                                            lg={16}
-                                                            span={16}
-                                                        >
-                                                            <label
-                                                                htmlFor="select-d"
-                                                                className={
-                                                                    examDetailStyle[
-                                                                        "exam-detail-label"
-                                                                    ]
-                                                                }
+                                                                        <Radio
+                                                                            className="hiii2"
+                                                                            value="c"
+                                                                            id="select-c"
+                                                                        >
+                                                                            {question.options &&
+                                                                                question
+                                                                                    .options
+                                                                                    .c}
+                                                                        </Radio>
+                                                                    </Card>
+                                                                </label>
+                                                            </Col>
+                                                        </Row>
+                                                        <Row>
+                                                            <Col
+                                                                xs={24}
+                                                                sm={18}
+                                                                md={17}
+                                                                lg={16}
+                                                                span={16}
                                                             >
-                                                                <Card
-                                                                    hoverable
-                                                                    className="option-card"
+                                                                <label
+                                                                    htmlFor="select-d"
+                                                                    className={
+                                                                        examDetailStyle[
+                                                                            "exam-detail-label"
+                                                                        ]
+                                                                    }
                                                                 >
-                                                                    <Radio
-                                                                        className="hiii2"
-                                                                        value="d"
-                                                                        id="select-d"
+                                                                    <Card
+                                                                        hoverable
+                                                                        className="option-card"
                                                                     >
-                                                                        {question.options &&
-                                                                            question
-                                                                                .options
-                                                                                .d}
-                                                                    </Radio>
-                                                                </Card>
-                                                            </label>
-                                                        </Col>
-                                                    </Row>
-                                                </Space>
-                                            </Col>
-                                        </Row>
-                                    </Radio.Group>
-                                )}
-                            />
+                                                                        <Radio
+                                                                            className="hiii2"
+                                                                            value="d"
+                                                                            id="select-d"
+                                                                        >
+                                                                            {question.options &&
+                                                                                question
+                                                                                    .options
+                                                                                    .d}
+                                                                        </Radio>
+                                                                    </Card>
+                                                                </label>
+                                                            </Col>
+                                                        </Row>
+                                                    </Space>
+                                                </Col>
+                                            </Row>
+                                        </Radio.Group>
+                                    )}
+                                />
+                            ) : (
+                                <Empty />
+                            )}
                             <Divider />
                             <Row justify="space-between">
                                 <Col span={8}>

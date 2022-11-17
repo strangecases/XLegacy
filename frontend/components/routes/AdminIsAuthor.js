@@ -20,7 +20,7 @@ const AdminIsAuthor = ({ children }) => {
                     setOk(true);
                 }
             } catch (err) {
-                console.log(err);
+                // console.log(err);
                 setOk(false);
                 message.error("you can not visit that page.", 2);
                 router.push("/admin");

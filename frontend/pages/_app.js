@@ -2,30 +2,37 @@ import { ToastContainer } from "react-toastify";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
+import { wrapper, persistor } from "../store/store";
 import "../styles/globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "antd/dist/antd.css";
 import "react-toastify/dist/ReactToastify.css";
-import { wrapper, store, persistor } from "../store/store";
-import TopNav from "../components/nav/TopNav";
+// import TopNav from "../components/nav/TopNav";
+import TopNavNew from "../components/nav/TopNavNew";
 
 require("../styles/variables.less");
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, ...rest }) {
+    const { store, props } = wrapper.useWrappedStore(rest);
+    const { pageProps } = props;
+
     const getLayout =
-        Component.getLayout || ((page) => <TopNav>{page}</TopNav>);
-    return getLayout(
+        Component.getLayout || ((page) => <TopNavNew>{page}</TopNavNew>);
+
+    return (
         <Provider store={store}>
-            <PersistGate persistor={persistor}>
-                <ToastContainer
-                    theme="dark"
-                    position="bottom-left"
-                    newestOnTop
-                />
-                <Component {...pageProps} />
-            </PersistGate>
+            {getLayout(
+                <PersistGate persistor={persistor}>
+                    <ToastContainer
+                        theme="dark"
+                        position="bottom-left"
+                        newestOnTop
+                    />
+                    <Component {...pageProps} />
+                </PersistGate>
+            )}
         </Provider>
     );
 }
 
-export default wrapper.withRedux(MyApp);
+export default MyApp;

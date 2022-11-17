@@ -1,0 +1,40 @@
+.school-tests-overflow {
+    overflow: hidden;
+}
+
+.school-tests-card {
+    margin-bottom: 0;
+    border-radius: 4px;
+}
+
+.school-tests-nothing {
+    text-align: center;
+    margin-block: 20vh;
+}
+
+.school-tests-select {
+    width: 100%;
+    text-align: center;
+}
+
+.school-tests-button:hover {
+    background-color: #22aff5;
+    border-color: #22aff5;
+    color: white;
+}
+
+.exams-index-row {
+    margin-top: 30px;
+}
+
+.exams-index-card {
+    margin-bottom: 0;
+    border-radius: 8px;
+}
+
+@media screen and (max-width: 520px) {
+    .school-tests-nothing {
+        margin-block: 15vh;
+        font-size: 16px;
+    }
+}

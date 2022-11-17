@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { Controller } from "react-hook-form";
 import { useRouter } from "next/router";
 import FormItem from "../../formitems/FormItem";
-import classAbrv from "../../../utils";
+import { classAbrv } from "../../../utils";
 
 const { Option } = Select;
 
@@ -54,6 +54,7 @@ const TestFormGroup = ({ control, errors, path = "test" }) => {
                                 ? "You can not change the class, create new test instead."
                                 : ""
                         }
+                        overlayClassName="tooltip-mobile-display-none"
                     >
                         <Form.Item
                             help={errors.classNo ? errors.classNo?.message : ""}

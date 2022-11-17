@@ -9,7 +9,7 @@ import allActions from "../../../../../store/actions";
 import { examSchema } from "../../../../../yupUtil";
 import FormInput from "../../../../../components/formitems/FormInput";
 import SelectOption from "../../../../../components/formitems/SelectOption";
-import ExamNav from "../../../../../components/nav/ExamNav";
+import ExamNavNew from "../../../../../components/nav/ExamNavNew";
 import examInfoStyle from "../../../../../styles/modules/pageStyles/ExamInfo.module.css";
 
 // const { Option } = Select;
@@ -19,6 +19,7 @@ const Info = () => {
     const { id, testId } = router.query;
 
     const { tests, schools } = useSelector((state) => state);
+    const { examInfoLoading } = useSelector((state) => state.load);
 
     const dispatch = useDispatch();
 
@@ -41,23 +42,33 @@ const Info = () => {
         // dispatch(allActions.questionActions.emptyQuestions());
         // dispatch(allActions.customActions.selectedSectionId(undefined));
         // dispatch(allActions.customActions.selectedSectionNo(1));
-        dispatch(allActions.testActions.fetchTest(id, testId));
-        dispatch(allActions.schoolActions.fetchSchool(id));
-    }, [id, testId]);
+        if (id && testId) {
+            dispatch(allActions.testActions.fetchTest(id, testId));
+            dispatch(allActions.schoolActions.fetchSchool(id));
+        }
+    }, [id, testId, dispatch]);
+
+    useEffect(() => {
+        if (tests[testId]) {
+            setValue("classNo", tests[testId].classNo);
+        }
+    }, [testId, tests, setValue]);
 
     useEffect(() => {
         dispatch(allActions.customActions.examSaved(false));
+        dispatch(allActions.loadingActions.examSavedLoading(false));
         dispatch(allActions.answerActions.emptyAnswers());
+        dispatch(allActions.examActions.deleteExam());
         dispatch(allActions.questionActions.emptyQuestions());
         dispatch(allActions.customActions.selectedSectionId(undefined));
         dispatch(allActions.customActions.selectedSectionNo(1));
         dispatch(allActions.customActions.selectedQuestion(1));
-    }, []);
+    }, [dispatch]);
 
     return (
-        <Layout className={examInfoStyle["exam-info-layout"]}>
+        <Layout className={examInfoStyle["exam-layout"]}>
             <Row justify="center" className={examInfoStyle["exam-info-row"]}>
-                <Col xs={20} sm={14} md={12} lg={10} span={10}>
+                <Col xs={21} sm={14} md={12} lg={10} span={10}>
                     <Card>
                         <Form
                             onFinish={handleSubmit(onSubmit)}
@@ -97,7 +108,7 @@ const Info = () => {
                                 control={control}
                                 errors={errors}
                                 name="parentsPhNo"
-                                placeholder="Enter school code"
+                                placeholder="Parent phone no"
                                 type="text"
                                 label="Parent PhoneNo"
                                 labelColmn={7}
@@ -122,10 +133,10 @@ const Info = () => {
                                                     />
                                                 );
                                             }}
-                                            value={setValue(
-                                                "classNo",
-                                                tests[testId]?.classNo
-                                            )}
+                                            // value={setValue(
+                                            //     "classNo",
+                                            //     tests[testId]?.classNo
+                                            // )}
                                             name="classNo"
                                             control={control}
                                         />
@@ -199,6 +210,7 @@ const Info = () => {
                                 htmlType="submit"
                                 className="col-12"
                                 disabled={!isDirty || isSubmitting}
+                                loading={examInfoLoading}
                             >
                                 Next
                             </Button>
@@ -210,6 +222,6 @@ const Info = () => {
     );
 };
 
-Info.getLayout = (page) => <ExamNav type="intro">{page}</ExamNav>;
+Info.getLayout = (page) => <ExamNavNew type="intro">{page}</ExamNavNew>;
 
 export default Info;

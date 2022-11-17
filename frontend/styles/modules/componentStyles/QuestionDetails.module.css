@@ -36,6 +36,10 @@
     vertical-align: -0.2em;
 }
 
+.question-detail-tooltip-zero {
+    vertical-align: 0;
+}
+
 .question-detail-inner-card {
     padding: 0;
     margin-block: 2px;
@@ -72,4 +76,118 @@
 
 .question-detail-save-card-row {
     overflow: hidden;
+}
+
+.question-detail-margin-left {
+    margin-left: 10px;
+}
+
+.question-detail-view {
+    font-weight: 600;
+}
+
+/* delete */
+
+.question-detail-save-card-div {
+    /* width: 95%;
+    margin: auto;
+    display: flex;
+    justify-content: space-between; */
+    display: grid;
+    gap: 8px;
+    grid-auto-columns: 1fr;
+    grid-template-areas: "one two .. .. .. .. .. .. .. three four";
+}
+
+.question-detail-div-one {
+    grid-area: one;
+}
+.question-detail-div-two {
+    grid-area: two;
+}
+.question-detail-div-three {
+    grid-area: three;
+}
+.question-detail-div-four {
+    grid-area: four;
+}
+
+.question-detail-div-one-badge,
+.question-detail-div-one-button {
+    width: 100%;
+}
+
+@media only screen and (max-width: 910px) {
+    .question-detail-save-card-div {
+        gap: 16px;
+        grid-template-areas:
+            "one two"
+            "three four";
+    }
+
+    .question-detail-save-card-div-no-publish {
+        grid-template-areas:
+            "one one"
+            "three four";
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .question-detail-save-card-div {
+        grid-template-areas: "one two .. .. .. .. .. .. .. three four";
+    }
+}
+
+@media only screen and (max-width: 620px) {
+    .question-detail-save-card-div {
+        grid-template-areas: "one two .. .. .. three four";
+    }
+}
+
+@media only screen and (max-width: 540px) {
+    .question-detail-save-card-div {
+        gap: 16px;
+        grid-template-areas:
+            "one two"
+            "three four";
+    }
+
+    .question-detail-save-card-div-no-publish {
+        grid-template-areas:
+            "one one"
+            "three four";
+    }
+}
+
+@media only screen and (max-width: 319px) {
+    .question-detail-save-card-div {
+        grid-template-areas:
+            "one"
+            "two"
+            "three"
+            "four";
+    }
+
+    .question-detail-save-card-div-no-publish {
+        grid-template-areas:
+            "one"
+            "three"
+            "four";
+    }
+}
+
+@media only screen and (max-width: 420px) {
+    .question-detail-margin-left {
+        margin-left: 2px;
+    }
+}
+
+@media only screen and (max-width: 340px) {
+    .question-detail-divider-row {
+        margin: 0;
+    }
+
+    .question-detail-view {
+        font-weight: 400;
+    }
 }

@@ -28,29 +28,37 @@ const DeleteTestForm = ({ type = "" }) => {
 
     const onOtherTestSubmit = () => {
         dispatch(
-            allActions.schoolActions.editSchool(id, {
-                classNo: "otherTests",
-                testId,
-                type: "delete",
+            allActions.schoolActions.editSchool({
+                id,
+                formValues: {
+                    classNo: "otherTests",
+                    testId,
+                    type: "delete",
+                },
+                editType: "otherTests",
             })
         );
         dispatch(allActions.modalActions.visibleDeleteTestNo());
-        dispatch(allActions.customActions.selectedClass(""));
-        router.push(`/schools/${id}/tests`);
+        // dispatch(allActions.customActions.selectedClass(""));
     };
 
     const onHandleCancel = () => {
-        console.log("Clicked cancel button");
+        // console.log("Clicked cancel button");
         dispatch(allActions.modalActions.visibleDeleteTestNo());
     };
 
     return (
         <>
-            <Tooltip title="Delete Test" placement="right" color="red">
+            <Tooltip
+                title="Delete Test"
+                placement="right"
+                color="red"
+                overlayClassName="tooltip-mobile-display-none"
+            >
                 <CloseCircleFilled
                     onClick={showPopConfirm}
                     // style={{ fontSize: 20, color: "#939090" }}
-                    className="hover-icon-delete test-submit-delete"
+                    className="test-delete test-submit-big"
                 />
             </Tooltip>
             <ModalCreateTest

@@ -22,7 +22,7 @@ export const testSchema = yup.object().shape({
 export const sectionSchema = yup.object().shape({
     subject: yup
         .string()
-        .max(50, "subject name can be max 50 words")
+        .max(32, "subject name can be max 32 words")
         .required("subject name is required"),
     sectionNo: yup
         .number()
@@ -53,15 +53,15 @@ export const loginSchema = yup
 export const registerSchema = yup
     .object()
     .shape({
-        name: yup.string().required("name is required"),
+        name: yup.string().max(32).required("name is required"),
         email: yup
             .string()
             .email("email format is wrong")
             .required("email is required"),
         password: yup
             .string()
-            .min(6, "password should be minimum 6 characters long")
-            .max(16)
+            .min(6, "password should be minimum 6 characters")
+            .max(32)
             .required("password is required"),
         adminCode: yup.string().required("Admin code is required"),
     })
@@ -71,24 +71,24 @@ export const questionSchema = yup.object().shape({
     question: yup
         .string()
         .min(10, "question should be minimum 10 characters")
-        .max(300, "question should be maximum 300 characters")
+        .max(100, "question should be maximum 100 characters")
         .required("question is required"),
     options: yup.object().shape({
         a: yup
             .string()
-            .max(50, "option should be maximum 50 characters long")
+            .max(32, "option maximum 32 characters")
             .required("option is required"),
         b: yup
             .string()
-            .max(50, "option should be maximum 50 characters long")
+            .max(32, "option maximum 32 characters")
             .required("option is required"),
         c: yup
             .string()
-            .max(50, "option should be maximum 50 characters long")
+            .max(32, "option maximum 32 characters")
             .required("option is required"),
         d: yup
             .string()
-            .max(50, "option should be maximum 50 characters long")
+            .max(32, "option maximum 32 characters")
             .required("option is required"),
     }),
 
@@ -98,9 +98,18 @@ export const questionSchema = yup.object().shape({
 export const examSchema = yup
     .object()
     .shape({
-        studentName: yup.string().required("name is required"),
-        schoolCode: yup.string().required("school code is required"),
-        testCode: yup.string().required("test code is required"),
+        studentName: yup
+            .string()
+            .max(32, "name atmost 32 characters")
+            .required("name is required"),
+        schoolCode: yup
+            .string()
+            // .max(10, "code atmost 10 characters")
+            .required("school code is required"),
+        testCode: yup
+            .string()
+            // .max(10, "code atmost 10 characters")
+            .required("test code is required"),
         parentsPhNo: yup
             .string()
             .matches(/^$|^\d{10}$/, "not a valid phone no"),

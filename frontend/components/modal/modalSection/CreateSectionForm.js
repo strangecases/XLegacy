@@ -23,7 +23,7 @@ const CreateSectionForm = ({ length }) => {
     const {
         handleSubmit,
         control,
-        formState: { errors, isDirty, isSubmitting },
+        formState: { errors, isDirty },
         setValue,
         reset,
     } = useForm({
@@ -37,7 +37,7 @@ const CreateSectionForm = ({ length }) => {
     };
 
     const onHandleCancel = () => {
-        console.log("Clicked cancel button");
+        // console.log("Clicked cancel button");
         dispatch(allActions.modalActions.visibleSectionNo());
         reset({ subject: "", sectionDescription: "" });
     };
@@ -47,7 +47,8 @@ const CreateSectionForm = ({ length }) => {
             <Tooltip
                 title={length >= 4 ? "Limit of 4 sections reached" : ""}
                 placement="bottomLeft"
-                color="#05b523"
+                color="#74c775"
+                overlayClassName="tooltip-mobile-display-none"
             >
                 <Button
                     type="primary"
@@ -60,7 +61,6 @@ const CreateSectionForm = ({ length }) => {
             <ModalCreate
                 onOk={handleSubmit(onSubmit)}
                 handleCancel={onHandleCancel}
-                isSubmitting={isSubmitting}
                 isDirty={isDirty}
                 title="Create Section"
                 path="section"
@@ -96,11 +96,13 @@ const CreateSectionForm = ({ length }) => {
                         </Link>
                     </p>
                 </div> */}
+
+                {/* sectionData-- */}
                 {testId && (
                     <SectionFormGroup
                         control={control}
                         errors={errors}
-                        secNum={tests[testId].sectionData.length + 1}
+                        secNum={tests[testId].sections.length + 1}
                         setValue={setValue}
                     />
                 )}
