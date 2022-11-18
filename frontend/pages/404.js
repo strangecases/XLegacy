@@ -13,7 +13,7 @@ const Fourofour = () => {
         router.push("/");
     };
     return (
-        <Layout style={{ minHeight: "100vh" }}>
+        <Layout style={{ height: "100vh" }}>
             <Result
                 status="404"
                 title="404"
