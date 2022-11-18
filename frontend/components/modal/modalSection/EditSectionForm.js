@@ -28,7 +28,7 @@ const EditSectionForm = ({ section }) => {
     const {
         handleSubmit,
         control,
-        formState: { errors, isDirty, isSubmitting },
+        formState: { errors, isDirty },
         setValue,
     } = useForm({
         mode: "onBlur",
@@ -42,24 +42,25 @@ const EditSectionForm = ({ section }) => {
             setValue("sectionNo", section.sectionNo);
             setValue("sectionDescription", section.sectionDescription);
         }
-    }, [section]);
+    }, [section, setValue]);
 
     const onSubmit = async (data) => {
         dispatch(allActions.testActions.editSectionOnTest(id, testId, data));
     };
 
     const onHandleCancel = () => {
-        console.log("Clicked cancel button");
+        // console.log("Clicked cancel button");
         dispatch(allActions.modalActions.visibleSectionNo());
     };
 
     return (
         <>
-            <Button onClick={showSectionModal}>Edit Section</Button>
+            <Button style={{ width: "100%" }} onClick={showSectionModal}>
+                Edit Section
+            </Button>
             <ModalCreate
                 onOk={handleSubmit(onSubmit)}
                 handleCancel={onHandleCancel}
-                isSubmitting={isSubmitting}
                 isDirty={isDirty}
                 title="Create Section"
                 path="section"

@@ -24,7 +24,7 @@ const ForgotPassword = () => {
     });
 
     const onSubmit = async ({ email }) => {
-        console.log(email);
+        // console.log(email);
         try {
             await axiosFetch.post("/api/forgot-password", {
                 email,

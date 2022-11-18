@@ -4,19 +4,24 @@ const initialState = {
     selectedSectionId: null,
     selectedQuestion: 1,
     selectedSectionNo: 1,
+    selectedSectionName: "",
     totalClassTests: 50,
     totalTests: 50,
     selectedClass: "",
     examSaved: false,
     examSuccess: "",
     saveSection: false,
-    loading: false,
+    siderCollapse: false,
+    isQuestionsEmpty: false,
+    isFull: false,
 };
 
 const customizeReducer = (state = initialState, action) => {
     switch (action.type) {
         case types.SELECTED_SECTION_ID:
             return { ...state, selectedSectionId: action.payload };
+        case types.SELECTED_SECTION_NAME:
+            return { ...state, selectedSectionName: action.payload };
         case types.SELECTED_QUESTION:
             return { ...state, selectedQuestion: action.payload };
         case types.SELECTED_SECTION_NO:
@@ -33,8 +38,12 @@ const customizeReducer = (state = initialState, action) => {
             return { ...state, examSuccess: action.payload };
         case types.SAVE_SECTION:
             return { ...state, saveSection: action.payload };
-        case types.LOADING:
-            return { ...state, loading: action.payload };
+        case types.SIDER_COLLAPSE:
+            return { ...state, siderCollapse: action.payload };
+        case types.IS_QUESTIONS_EMPTY:
+            return { ...state, isQuestionsEmpty: action.payload };
+        case types.IS_QUESTIONS_FULL:
+            return { ...state, isQuestionsFull: action.payload };
         default:
             return state;
     }

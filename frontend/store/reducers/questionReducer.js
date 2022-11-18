@@ -3,7 +3,6 @@ import * as types from "../types";
 
 const initialState = {
     1: { questionNo: 1 },
-    2: { questionNo: 2 },
 };
 
 const questionReducer = (state = initialState, action) => {

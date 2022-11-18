@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Row, Col, Card, Button, Badge } from "antd";
 import allActions from "../../store/actions";
 import questionStyle from "../../styles/modules/componentStyles/Questions.module.css";
+import { stringOverflow } from "../../utils";
 
 const QuestionList = () => {
     const router = useRouter();
@@ -29,8 +30,10 @@ const QuestionList = () => {
     //     console.log(questionsList);
     // }, [questions]);
 
+    /* sectionData-- */
+
     if (testId !== null && tests[testId]) {
-        sections = tests[testId].sectionData;
+        sections = tests[testId].sections;
     }
 
     if (questions) {
@@ -38,12 +41,14 @@ const QuestionList = () => {
     }
 
     const onQuestionClick = (quesionNo) => {
+        dispatch(allActions.questionsDrawerActions.questionsDrawer(false));
         dispatch(allActions.customActions.selectedQuestion(quesionNo));
     };
 
     const onSectionClick = async (sectionId, sectionNo) => {
+        dispatch(allActions.questionsDrawerActions.questionsDrawer(false));
         if (sectionId !== selectedSectionId) {
-            dispatch(allActions.customActions.loading(true));
+            dispatch(allActions.loadingActions.questionsLoading(true));
             dispatch(
                 allActions.questionActions.onSectionClick({
                     testId,
@@ -55,8 +60,9 @@ const QuestionList = () => {
     };
 
     const onSectionExamClick = async (sectionId, sectionNo) => {
+        dispatch(allActions.questionsDrawerActions.questionsDrawer(false));
         if (sectionId !== selectedSectionId) {
-            dispatch(allActions.customActions.loading(true));
+            dispatch(allActions.loadingActions.questionsLoading(true));
             dispatch(
                 allActions.examActions.onSectionChange(
                     id,
@@ -76,7 +82,9 @@ const QuestionList = () => {
                     // offset={1}
                     xl={4}
                     lg={6}
-                    sm={8}
+                    md={6}
+                    sm={4}
+                    xs={6}
                     span={4}
                     onClick={() => onQuestionClick(question.questionNo)}
                 >
@@ -105,32 +113,74 @@ const QuestionList = () => {
         });
     };
 
+    // const onMapQuestions = () => {
+    //     return (
+    //         <Space size={[8, 16]} wrap style={{ justifyContent: "center" }}>
+    //             {questionsList.map((question) => {
+    //                 return (
+    //                     // <Col
+    //                     //     key={question.questionNo}
+    //                     //     // offset={1}
+    //                     //     xl={4}
+    //                     //     lg={4}
+    //                     //     md={6}
+    //                     //     sm={8}
+    //                     //     span={4}
+    //                     //     onClick={() => onQuestionClick(question.questionNo)}
+    //                     // >
+    //                     <Badge
+    //                         key={question.questionNo}
+    //                         status="success"
+    //                         dot={
+    //                             path && path.includes("tests")
+    //                                 ? question.answer
+    //                                 : answers[question.questionNo]
+    //                         }
+    //                         onClick={() => onQuestionClick(question.questionNo)}
+    //                     >
+    //                         <Button
+    //                             type={
+    //                                 selectedQuestion === question.questionNo
+    //                                     ? "primary"
+    //                                     : ""
+    //                             }
+    //                         >
+    //                             {question.questionNo <= 9
+    //                                 ? `0${question.questionNo}`
+    //                                 : question.questionNo}
+    //                         </Button>
+    //                     </Badge>
+    //                     // </Col>
+    //                 );
+    //             })}
+    //         </Space>
+    //     );
+    // };
+
     const onMapSections = () => {
         return sections.map((section) => {
             return (
-                <Col key={section.sectionId} offset={0} md={12}>
+                <Col key={section._id} offset={0} md={12} xs={12}>
                     <Button
                         type={
-                            selectedSectionId === section.sectionId
-                                ? "primary"
-                                : ""
+                            selectedSectionId === section._id ? "primary" : ""
                         }
                         className={questionStyle["question-list-button"]}
                         onClick={
                             path && path.includes("tests")
                                 ? () =>
                                       onSectionClick(
-                                          section.sectionId,
+                                          section._id,
                                           section.sectionNo
                                       )
                                 : () =>
                                       onSectionExamClick(
-                                          section.sectionId,
+                                          section._id,
                                           section.sectionNo
                                       )
                         }
                     >
-                        {section.subject}
+                        {stringOverflow(section.subject, 9)}
                     </Button>
                 </Col>
             );

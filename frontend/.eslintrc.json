@@ -22,7 +22,7 @@
         "jsx-a11y/anchor-is-valid": "off",
         "default-param-last": "off",
         "no-underscore-dangle": "off",
-        "react-hooks/exhaustive-deps": "off",
+        // "react-hooks/exhaustive-deps": "off",
         "no-param-reassign": "off",
         "@next/next/no-img-element": "off"
     },

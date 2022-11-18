@@ -1,16 +1,16 @@
 import { Card, Col, Divider, Row, Table, Input, Select } from "antd";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useCallback } from "react";
 import { useMediaQuery } from "react-responsive";
 import { useSelector, useDispatch } from "react-redux";
 import ColumnGroup from "antd/lib/table/ColumnGroup";
-import CustomLayout from "../../../../../../components/nav/CustomLayout";
-import DonutChart from "../../../../../../components/DonutChart";
+import DonutChart from "../../../../../../components/adminUtil/DonutChart";
 import allActions from "../../../../../../store/actions";
 import AdminRoute from "../../../../../../components/routes/AdminRoute";
-import classAbrv from "../../../../../../utils";
+import { classAbrv } from "../../../../../../utils";
 import resultStyle from "../../../../../../styles/modules/pageStyles/Results.module.css";
+import AdminCustomLayout from "../../../../../../components/nav/adminCustom/AdminCustomLayout";
 
 const { Column } = Table;
 const { Option } = Select;
@@ -19,7 +19,7 @@ const Results = () => {
     const isTablet = useMediaQuery({ maxWidth: 820 });
     const isMobile = useMediaQuery({ maxWidth: 576 });
 
-    const ress = useRef(0);
+    // const ress = useRef(0);
 
     const router = useRouter();
     const { id, testId } = router.query;
@@ -51,11 +51,11 @@ const Results = () => {
         return () => {
             dispatch(allActions.examActions.donutExams([], 0));
         };
-    }, [id, testId]);
+    }, [id, testId, dispatch]);
 
-    useEffect(() => {
-        ress.current += 1;
-    });
+    // useEffect(() => {
+    //     ress.current += 1;
+    // });
 
     const onGroupSelect = async (v) => {
         if (v === "v") {
@@ -152,7 +152,7 @@ const Results = () => {
                                                                 .classNo
                                                         );
                                                     })
-                                                    .groups.map((grp) => {
+                                                    ?.groups.map((grp) => {
                                                         return (
                                                             <Option
                                                                 className={
@@ -204,7 +204,15 @@ const Results = () => {
                                                 <Link
                                                     href={`/schools/${id}/tests/${testId}/results/${record._id}`}
                                                 >
-                                                    <a>{text}</a>
+                                                    {/* {text} */}
+                                                    {text?.length > 12 ? (
+                                                        <a title={text}>
+                                                            {text.slice(0, 12)}
+                                                            ...
+                                                        </a>
+                                                    ) : (
+                                                        <a>{text}</a>
+                                                    )}
                                                 </Link>
                                             );
                                         }}
@@ -226,17 +234,20 @@ const Results = () => {
                                         dataIndex="classGroup"
                                         key="classGroup"
                                         fixed={!isTablet && "left"}
-                                        width={130}
+                                        width={110}
                                         align="center"
                                     />
                                     <ColumnGroup
                                         align="center"
                                         title="Test sections ( score / #questions )"
+                                        width={150}
                                         key="testSection"
                                     >
                                         {tests[testId] &&
-                                            tests[testId].sectionData &&
-                                            tests[testId].sectionData.map(
+                                            /* sectionData */
+                                            /* sectionData */
+                                            tests[testId].sections &&
+                                            tests[testId].sections.map(
                                                 (section, sectionIndex) => {
                                                     return (
                                                         <Column
@@ -280,7 +291,7 @@ const Results = () => {
                                     />
                                 </Table>
                             </Card>
-                            <Card>{ress.current}</Card>
+                            {/* <Card>{ress.current}</Card> */}
                         </Col>
                     </>
                 )}
@@ -289,6 +300,8 @@ const Results = () => {
     );
 };
 
-Results.getLayout = (page) => <CustomLayout type="inside">{page}</CustomLayout>;
+Results.getLayout = (page) => (
+    <AdminCustomLayout type="inside">{page}</AdminCustomLayout>
+);
 
 export default Results;

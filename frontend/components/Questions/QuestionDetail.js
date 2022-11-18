@@ -10,6 +10,7 @@ import {
     Col,
     Tooltip,
     Skeleton,
+    Badge,
 } from "antd";
 import {
     CloseCircleFilled,
@@ -20,54 +21,108 @@ import {
 import { Controller, useForm } from "react-hook-form";
 import { useSelector, useDispatch } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
+import { toast } from "react-toastify";
 import FormItem from "../formitems/FormItem";
 import { questionSchema } from "../../yupUtil";
 import allActions from "../../store/actions";
 import DeleteSectionForm from "../modal/modalSection/DeleteSectionForm";
 import EditSectionForm from "../modal/modalSection/EditSectionForm";
-import FormOption from "../formitems/FormOption";
+// import FormOption from "../formitems/FormOption";
 import SegmentedSections from "./SegmentedSections";
 import questionDetailStyle from "../../styles/modules/componentStyles/QuestionDetails.module.css";
+import FormOptionUnderline from "../formitems/FormOptionUnderline";
 
 const QuestionDetail = () => {
     const [sectionLoading, setSectionLoading] = useState(true);
 
-    const { selectedQuestion, selectedSectionId, saveSection, loading } =
-        useSelector((state) => state.custom);
+    // const grew = useRef(0);
+
+    const {
+        selectedQuestion,
+        // selectedSectionId,
+        selectedSectionNo,
+        isQuestionsFull,
+        saveSection,
+    } = useSelector((state) => state.custom);
     const { tests } = useSelector((state) => state);
     const { questions } = useSelector((state) => state);
+    const { questionSaveLoading, questionsLoading } = useSelector(
+        (state) => state.load
+    );
 
     const router = useRouter();
     const { id, testId } = router.query;
 
     const dispatch = useDispatch();
 
-    let section;
-    if (testId && tests[testId]) {
-        section = tests[testId].sectionData.find((x) => {
-            return x.sectionId === selectedSectionId;
-        });
-    }
+    // let section;
+    // if (testId && tests[testId]) {
+    //     section = tests[testId].sectionData.find((x) => {
+    //         return x.sectionId === selectedSectionId;
+    //     });
+    // }
 
     const {
         handleSubmit,
         formState: { errors },
         control,
+
         setValue,
         setError,
     } = useForm({
         mode: "onBlur",
-        defaultValues: {},
+        defaultValues: {
+            // question:
+            //     questions[selectedQuestion] &&
+            //     questions[selectedQuestion]?.question,
+            // options: {
+            //     a:
+            //         questions[selectedQuestion] &&
+            //         questions[selectedQuestion]?.options?.a,
+            //     b:
+            //         questions[selectedQuestion] &&
+            //         questions[selectedQuestion]?.options?.b,
+            //     c:
+            //         questions[selectedQuestion] &&
+            //         questions[selectedQuestion]?.options?.c,
+            //     d:
+            //         questions[selectedQuestion] &&
+            //         questions[selectedQuestion]?.options?.d,
+            // },
+        },
         resolver: yupResolver(questionSchema),
     });
 
-    const onSubmit = (data) => {
-        console.log(data);
-        dispatch(allActions.questionActions.editQuestion(data));
-        dispatch(allActions.customActions.saveSection(false));
+    const onSubmit = useCallback(
+        (data) => {
+            // console.log(data);
+            dispatch(
+                allActions.questionActions.editQuestion({ formValues: data })
+            );
+            dispatch(allActions.customActions.saveSection(false));
+            if (data.questionNo === 1 && data.question && data.answer) {
+                dispatch(allActions.customActions.isQuestionsEmpty(false));
+            }
+        },
+        [dispatch]
+    );
+
+    const onError = (error) => {
+        // console.log(error);
+        if (error.answer && !error.question && !error.options) {
+            toast.error("You should select one option before saving", {
+                autoClose: 2200,
+                hideProgressBar: true,
+            });
+        }
     };
+
+    // useEffect(() => {
+    //     grew.current += 1;
+    // });
 
     useEffect(() => {
         if (
@@ -80,51 +135,67 @@ const QuestionDetail = () => {
             setError("answer", "");
             setError("options", "");
 
-            setValue("options", {
-                a: questions[selectedQuestion].options
-                    ? questions[selectedQuestion].options.a
-                    : "",
-                b: questions[selectedQuestion].options
-                    ? questions[selectedQuestion].options.b
-                    : "",
-                c: questions[selectedQuestion].options
-                    ? questions[selectedQuestion].options.c
-                    : "",
-                d: questions[selectedQuestion].options
-                    ? questions[selectedQuestion].options.d
-                    : "",
-            });
+            setValue(
+                "options",
+                {
+                    a: questions[selectedQuestion].options
+                        ? questions[selectedQuestion].options.a
+                        : "",
+                    b: questions[selectedQuestion].options
+                        ? questions[selectedQuestion].options.b
+                        : "",
+                    c: questions[selectedQuestion].options
+                        ? questions[selectedQuestion].options.c
+                        : "",
+                    d: questions[selectedQuestion].options
+                        ? questions[selectedQuestion].options.d
+                        : "",
+                },
+                { shouldDirty: false }
+            );
 
-            setValue("answer", questions[selectedQuestion].answer);
-            setValue("question", questions[selectedQuestion].question);
-        } else {
-            setValue("options", {
-                a: "",
-                b: "",
-                c: "",
-                d: "",
+            setValue("answer", questions[selectedQuestion].answer, {
+                shouldDirty: false,
             });
-            setValue("answer", "");
-            setValue("question", "");
+            setValue("question", questions[selectedQuestion].question, {
+                shouldDirty: false,
+            });
+            setValue("questionNo", selectedQuestion);
+        } else {
+            setValue(
+                "options",
+                {
+                    a: "",
+                    b: "",
+                    c: "",
+                    d: "",
+                },
+                { shouldDirty: false }
+            );
+            setValue("answer", "", { shouldDirty: false });
+            setValue("question", "", { shouldDirty: false });
+            setValue("questionNo", selectedQuestion);
         }
-    }, [selectedQuestion, questions]);
+    }, [selectedQuestion, questions, setValue, setError]);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            setSectionLoading(loading);
+            setSectionLoading(questionsLoading);
         }, 200);
 
         return () => {
             clearTimeout(timeout);
         };
-    }, [loading]);
+    }, [questionsLoading]);
 
     useEffect(() => {
         let elements = [];
         if (!sectionLoading) {
             elements = document.getElementsByClassName("hiii");
             for (let i = 0; i < elements.length; i += 1) {
-                elements[i].addEventListener("change", handleSubmit(onSubmit));
+                elements[i].addEventListener("change", handleSubmit(onSubmit), {
+                    capture: true,
+                });
             }
         }
 
@@ -132,52 +203,135 @@ const QuestionDetail = () => {
             for (let i = 0; i < elements.length; i += 1) {
                 elements[i].removeEventListener(
                     "change",
-                    handleSubmit(onSubmit)
+                    handleSubmit(onSubmit),
+                    { capture: true }
                 );
             }
         };
-    }, [sectionLoading]);
+    }, [sectionLoading, handleSubmit, onSubmit]);
 
-    const onAddQuestion = () => {
-        const questionLength = Object.values(questions).length;
-        console.log(questions[selectedQuestion]);
-        if (questionLength >= 25) {
-            console.log("cant add more than 25 questions");
-        } else {
-            dispatch(
-                allActions.questionActions.editQuestion({
-                    questionNo: questionLength + 1,
-                })
-            );
-            dispatch(
-                allActions.customActions.selectedQuestion(questionLength + 1)
-            );
+    const onAddQuestion = (data) => {
+        const questionsArray = Object.values(questions);
+        const questionsLength = questionsArray.length;
+        // console.log(questions[selectedQuestion]);
+        // console.log(questionsLength);
+
+        if (
+            questionsLength >= 25 &&
+            questionsArray[questionsLength - 1].question
+        ) {
+            // console.log("cant add more than 25 questions");
+            dispatch(allActions.customActions.isQuestionsFull(true));
+            toast.error("cant add more than 25 questions", {
+                autoClose: 2200,
+                hideProgressBar: true,
+            });
+        }
+
+        if (
+            questionsArray[questionsLength - 1].question &&
+            questionsArray[questionsLength - 1].answer &&
+            questionsArray[questionsLength - 1].options &&
+            questionsLength <= 25
+        ) {
+            // console.log("1");
+            if (questionsLength <= 24) {
+                dispatch(
+                    allActions.questionActions.editQuestion({
+                        formValues: {
+                            questionNo: questionsLength + 1,
+                        },
+                        noToast: true,
+                    })
+                );
+                dispatch(
+                    allActions.customActions.selectedQuestion(
+                        questionsLength + 1
+                    )
+                );
+            }
             dispatch(allActions.customActions.saveSection(false));
+        } else if (
+            !questionsArray[questionsLength - 1].question &&
+            !questionsArray[questionsLength - 1].answer &&
+            !questionsArray[questionsLength - 1].options &&
+            !errors?.question &&
+            !errors?.options &&
+            !errors?.answer &&
+            questionsLength <= 25
+        ) {
+            // console.log("2");
+            dispatch(
+                allActions.questionActions.editQuestion({ formValues: data })
+            );
+
+            if (questionsLength <= 24) {
+                dispatch(
+                    allActions.questionActions.editQuestion({
+                        formValues: {
+                            questionNo: questionsLength + 1,
+                        },
+                        noToast: true,
+                    })
+                );
+
+                dispatch(
+                    allActions.customActions.selectedQuestion(
+                        questionsLength + 1
+                    )
+                );
+            }
+            dispatch(allActions.customActions.saveSection(false));
+            if (data.questionNo === 1 && data.question && data.answer) {
+                dispatch(allActions.customActions.isQuestionsEmpty(false));
+            }
+        } else {
+            // console.log("3");
+            dispatch(
+                allActions.customActions.selectedQuestion(questionsLength)
+            );
         }
     };
 
     const onDeleteQuestion = async () => {
         dispatch(allActions.questionActions.deleteQuestion(selectedQuestion));
         let questionList = Object.values(questions).slice(selectedQuestion);
-        if (Object.values(questions).length >= 1) {
-            console.log("1", questionList);
+        // console.log(Object.values(questions));
+
+        const questionsLength = Object.values(questions).length;
+        // console.log(questionsLength);
+
+        if (Object.values(questions).length === 1) {
+            dispatch(
+                allActions.questionActions.upOnDeletion([{ questionNo: 1 }])
+            );
+            dispatch(allActions.customActions.isQuestionsEmpty(true));
+            dispatch(allActions.customActions.saveSection(false));
+        } else if (Object.values(questions).length > 1) {
+            if (questionsLength === 25) {
+                dispatch(allActions.customActions.isQuestionsFull(false));
+            }
+            // console.log("1", questionList);
             questionList = questionList.map((x) => {
                 const d = { ...x };
+
                 if (d.questionNo === 1) {
                     d.questionNo = 1;
                 } else {
                     d.questionNo -= 1;
                 }
+                console.log(d);
                 return d;
             });
-            console.log("2", questionList);
+            // console.log("2", questionList);
             dispatch(allActions.questionActions.upOnDeletion(questionList));
             dispatch(
                 allActions.questionActions.deleteQuestion(
                     Object.values(questions).length
                 )
             );
-            console.log(questions);
+
+            // console.log(questions);
             dispatch(
                 allActions.customActions.selectedQuestion(
                     selectedQuestion === 1
@@ -186,11 +340,33 @@ const QuestionDetail = () => {
                 )
             );
             dispatch(allActions.customActions.saveSection(false));
-            console.log(selectedQuestion);
+            // console.log(selectedQuestion);
         }
     };
 
-    const onSave = async (publish) => {
+    const onSave = async (data, publish) => {
+        if (
+            questions[selectedQuestion] &&
+            !questions[selectedQuestion]?.question &&
+            !questions[selectedQuestion]?.answer &&
+            !questions[selectedQuestion]?.options &&
+            !errors?.question &&
+            !errors?.options &&
+            !errors?.answer &&
+            data
+        ) {
+            dispatch(
+                allActions.questionActions.editQuestion({
+                    formValues: data,
+                    noToast: true,
+                })
+            );
+            if (data.questionNo === 1 && data.question && data.answer) {
+                // console.log(data);
+                dispatch(allActions.customActions.isQuestionsEmpty(false));
+            }
+            // console.log("x");
+        }
         if (!publish) {
             dispatch(
                 allActions.questionActions.onSectionClick({
@@ -211,6 +387,17 @@ const QuestionDetail = () => {
         }
     };
 
+    const onSaveError = async (error, publish) => {
+        if (error.answer && !error.question && !error.options) {
+            toast.error("You should select one option before saving", {
+                autoClose: 2200,
+                hideProgressBar: true,
+            });
+        } else {
+            await onSave(null, publish);
+        }
+    };
+
     const showPopConfirm = () => {
         dispatch(allActions.modalActions.visibleDeleteSectionYes());
     };
@@ -218,9 +405,9 @@ const QuestionDetail = () => {
     return (
         <>
             <SegmentedSections />
-
+            {/* {console.log(errors)} */}
             <Form
-                onFinish={handleSubmit(onSubmit)}
+                onFinish={handleSubmit(onSubmit, onError)}
                 className={questionDetailStyle["question-detail-form"]}
             >
                 <Card
@@ -249,10 +436,11 @@ const QuestionDetail = () => {
                         >
                             <Col xs={6} sm={4} lg={3} span={3}>
                                 <Controller
-                                    value={setValue(
-                                        "questionNo",
-                                        selectedQuestion
-                                    )}
+                                    // value={setValue(
+                                    //     "questionNo",
+                                    //     selectedQuestion,
+                                    //     { shouldDirty: false }
+                                    // )}
                                     control={control}
                                     name="questionNo"
                                     render={({ field }) => (
@@ -298,13 +486,20 @@ const QuestionDetail = () => {
                                             title="Save Question"
                                             placement="bottom"
                                             color="#71a832"
+                                            overlayClassName="tooltip-mobile-display-none"
                                         >
                                             <CheckCircleFilled
-                                                onClick={handleSubmit(onSubmit)}
-                                                className={`hover-icon-submit test-submit-delete ${questionDetailStyle["question-detail-tooltip"]}`}
+                                                onClick={handleSubmit(
+                                                    onSubmit,
+                                                    onError
+                                                )}
+                                                className={`test-submit-delete test-submit ${questionDetailStyle["question-detail-tooltip"]} 
+                                               
+                                                `}
                                             />
                                         </Tooltip>
                                     </Col>
+
                                     <Col
                                         xs={8}
                                         sm={8}
@@ -317,10 +512,11 @@ const QuestionDetail = () => {
                                             title="Delete Question"
                                             placement="bottom"
                                             color="#f20707"
+                                            overlayClassName="tooltip-mobile-display-none"
                                         >
                                             <CloseCircleFilled
                                                 onClick={onDeleteQuestion}
-                                                className={`hover-icon-delete test-submit-delete ${questionDetailStyle["question-detail-tooltip"]}`}
+                                                className={`test-submit-delete test-delete ${questionDetailStyle["question-detail-tooltip"]}`}
                                             />
                                         </Tooltip>
                                     </Col>
@@ -337,7 +533,7 @@ const QuestionDetail = () => {
                     <Skeleton
                         active
                         loading={sectionLoading}
-                        paragraph={{ rows: 9 }}
+                        paragraph={{ rows: 11 }}
                     />
                     {!sectionLoading && (
                         <>
@@ -391,12 +587,12 @@ const QuestionDetail = () => {
                                                                 />
                                                             </Col>
                                                             <Col
-                                                                xs={15}
+                                                                xs={16}
                                                                 md={18}
                                                                 lg={19}
                                                                 offset={1}
                                                             >
-                                                                <FormOption
+                                                                <FormOptionUnderline
                                                                     control={
                                                                         control
                                                                     }
@@ -445,7 +641,7 @@ const QuestionDetail = () => {
                                                                 lg={19}
                                                                 offset={1}
                                                             >
-                                                                <FormOption
+                                                                <FormOptionUnderline
                                                                     control={
                                                                         control
                                                                     }
@@ -493,7 +689,7 @@ const QuestionDetail = () => {
                                                                 lg={19}
                                                                 offset={1}
                                                             >
-                                                                <FormOption
+                                                                <FormOptionUnderline
                                                                     control={
                                                                         control
                                                                     }
@@ -541,7 +737,7 @@ const QuestionDetail = () => {
                                                                 lg={19}
                                                                 offset={1}
                                                             >
-                                                                <FormOption
+                                                                <FormOptionUnderline
                                                                     control={
                                                                         control
                                                                     }
@@ -571,19 +767,43 @@ const QuestionDetail = () => {
                                     ]
                                 }
                             >
-                                <Col span={8}>
+                                <Col sm={16} xs={18}>
                                     <Button
                                         danger
-                                        onClick={handleSubmit(onAddQuestion)}
+                                        onClick={handleSubmit(
+                                            onAddQuestion,
+                                            onError
+                                        )}
+                                        disabled={isQuestionsFull}
                                     >
                                         Add Question
                                     </Button>
+                                    <Link
+                                        href={`/schools/${id}/tests/${testId}/view-sections`}
+                                    >
+                                        <Button
+                                            className={
+                                                questionDetailStyle[
+                                                    "question-detail-view"
+                                                ]
+                                            }
+                                            type="link"
+                                            disabled={!saveSection}
+                                        >
+                                            {" "}
+                                            view
+                                        </Button>
+                                    </Link>
                                 </Col>
-                                <Col span={8} offset={8}>
+                                <Col sm={8} xs={6}>
                                     <Row gutter={32} justify="center">
                                         <Col span={5}>
                                             <LeftOutlined
                                                 className={`hover-icon-next test-submit-delete ${
+                                                    questionDetailStyle[
+                                                        "question-detail-tooltip"
+                                                    ]
+                                                } ${
                                                     selectedQuestion === 1 &&
                                                     questionDetailStyle[
                                                         "question-detail-outlined-display"
@@ -602,6 +822,10 @@ const QuestionDetail = () => {
                                         <Col span={5}>
                                             <RightOutlined
                                                 className={`hover-icon-next test-submit-delete ${
+                                                    questionDetailStyle[
+                                                        "question-detail-tooltip"
+                                                    ]
+                                                } ${
                                                     selectedQuestion ===
                                                         Object.values(questions)
                                                             .length &&
@@ -633,7 +857,7 @@ const QuestionDetail = () => {
                 bordered={false}
                 className={questionDetailStyle["question-detail-save-card"]}
             >
-                <Row
+                {/* <Row
                     gutter={[8, 16]}
                     className={
                         questionDetailStyle["question-detail-save-card-row"]
@@ -649,13 +873,31 @@ const QuestionDetail = () => {
                         <Space size={[16, 12]} wrap>
                             <Button
                                 type="primary"
-                                onClick={() => onSave(false)}
+                                // onClick={() => onSave(false)}
+                                onClick={handleSubmit(
+                                    (data) => {
+                                        onSave(data, false);
+                                    },
+                                    (error) => {
+                                        onSaveError(error, false);
+                                    }
+                                )}
                                 disabled={saveSection}
                             >
                                 save
                             </Button>
                             {tests && !tests[testId]?.isPublished && (
-                                <Button onClick={() => onSave(true)}>
+                                <Button
+                                    // onClick={() => onSave(true)}
+                                    onClick={handleSubmit(
+                                        (data) => {
+                                            onSave(data, true);
+                                        },
+                                        (error) => {
+                                            onSaveError(error, true);
+                                        }
+                                    )}
+                                >
                                     publish
                                 </Button>
                             )}
@@ -677,7 +919,113 @@ const QuestionDetail = () => {
                             <DeleteSectionForm />
                         </Space>
                     </Col>
-                </Row>
+                </Row> */}
+                <div
+                    gutter={[8, 16]}
+                    className={`${
+                        questionDetailStyle["question-detail-save-card-div"]
+                    } ${
+                        tests &&
+                        tests[testId]?.isPublished &&
+                        questionDetailStyle[
+                            "question-detail-save-card-div-no-publish"
+                        ]
+                    }`}
+                >
+                    <div
+                        className={
+                            questionDetailStyle["question-detail-div-one"]
+                        }
+                    >
+                        <Badge
+                            dot
+                            status={saveSection ? "success" : "error"}
+                            className={
+                                questionDetailStyle[
+                                    "question-detail-div-one-badge"
+                                ]
+                            }
+                        >
+                            <Button
+                                type="primary"
+                                // onClick={() => onSave(false)}
+
+                                className={
+                                    questionDetailStyle[
+                                        "question-detail-div-one-button"
+                                    ]
+                                }
+                                onClick={handleSubmit(
+                                    (data) => {
+                                        onSave(data, false);
+                                    },
+                                    (error) => {
+                                        onSaveError(error, false);
+                                    }
+                                )}
+                                disabled={saveSection}
+                                danger
+                                loading={questionSaveLoading}
+                            >
+                                save
+                            </Button>
+                        </Badge>
+                    </div>
+                    {tests && !tests[testId]?.isPublished && (
+                        <div
+                            className={
+                                questionDetailStyle["question-detail-div-two"]
+                            }
+                        >
+                            <Button
+                                // onClick={() => onSave(true)}
+                                style={{ width: "100%" }}
+                                onClick={handleSubmit(
+                                    (data) => {
+                                        onSave(data, true);
+                                    },
+                                    (error) => {
+                                        onSaveError(error, true);
+                                    }
+                                )}
+                            >
+                                publish
+                            </Button>
+                        </div>
+                    )}
+
+                    <div
+                        className={
+                            questionDetailStyle["question-detail-div-three"]
+                        }
+                    >
+                        {/* sectionData-- */}
+                        {testId && (
+                            <EditSectionForm
+                                section={
+                                    tests[testId]?.sections[
+                                        selectedSectionNo - 1
+                                    ]
+                                }
+                            />
+                        )}
+                    </div>
+                    <div
+                        className={
+                            questionDetailStyle["question-detail-div-four"]
+                        }
+                    >
+                        <Button
+                            // style={{ marginLeft: 8 }}
+                            style={{ width: "100%" }}
+                            onClick={showPopConfirm}
+                            danger
+                        >
+                            Delete Section
+                        </Button>
+                        <DeleteSectionForm />
+                    </div>
+                </div>
             </Card>
         </>
     );

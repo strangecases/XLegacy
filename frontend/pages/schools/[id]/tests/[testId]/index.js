@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Marquee from "react-fast-marquee";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -20,8 +21,8 @@ import {
     Alert,
     Divider,
     Input,
+    Badge,
 } from "antd";
-import CustomLayout from "../../../../../components/nav/CustomLayout";
 import allActions from "../../../../../store/actions";
 import CreateSectionForm from "../../../../../components/modal/modalSection/CreateSectionForm";
 import AdminRoute from "../../../../../components/routes/AdminRoute";
@@ -30,6 +31,7 @@ import DeleteTestForm from "../../../../../components/modal/modalTest/DeleteTest
 import DeleteSectionForm from "../../../../../components/modal/modalSection/DeleteSectionForm";
 import testsIndexStyle from "../../../../../styles/modules/pageStyles/TestsIndex.module.css";
 import axiosFetch from "../../../../../axiosFetch";
+import AdminCustomLayout from "../../../../../components/nav/adminCustom/AdminCustomLayout";
 
 const { Panel } = Collapse;
 
@@ -40,7 +42,7 @@ const TestId = () => {
     const [adminIsAuthor, setAdminIsAuthor] = useState(false);
     const [copied, setCopied] = useState(false);
 
-    console.log(copied);
+    // console.log(copied);
 
     const { tests } = useSelector((state) => state);
     const { schools } = useSelector((state) => state);
@@ -59,7 +61,7 @@ const TestId = () => {
                     }
                 }
             } catch (err) {
-                console.log(err);
+                // console.log(err);s
                 setAdminIsAuthor(false);
             }
         };
@@ -71,7 +73,7 @@ const TestId = () => {
             dispatch(allActions.testActions.fetchTest(id, testId));
             dispatch(allActions.schoolActions.fetchSchool(id));
         }
-    }, [id, testId, router.query]);
+    }, [id, testId, router.query, dispatch]);
 
     const dispatchSelectedSection = (sectionId, sectionNo) => {
         dispatch(allActions.customActions.selectedSectionId(sectionId));
@@ -83,6 +85,10 @@ const TestId = () => {
         dispatch(allActions.customActions.selectedSectionNo(secNum));
         dispatch(allActions.customActions.selectedSectionId(secId));
         dispatch(allActions.modalActions.visibleDeleteSectionYes());
+    };
+
+    const otherTestsClassMsg = () => {
+        dispatch(allActions.schoolActions.otherTestsClassMsg(id));
     };
 
     const renderButton = () => {
@@ -108,15 +114,46 @@ const TestId = () => {
 
     const renderSection = () => {
         return (
+            /* sectionData */
             tests[testId] &&
-            tests[testId].sectionData.map((section) => {
+            tests[testId].sections.map((section) => {
                 return (
                     <Collapse
-                        key={section.sectionId}
-                        className={testsIndexStyle["tests-index-overflow"]}
+                        key={section._id}
+                        className={`${
+                            testsIndexStyle["tests-index-overflow"]
+                        } ${
+                            section.isEmpty &&
+                            testsIndexStyle["tests-index-is-empty"]
+                        }`}
+                        // style={section.isEmpty ? { background: "#ffa3a3" } : {}}
                     >
-                        <Panel header={section.subject} key={section.sectionId}>
-                            <Row>
+                        <Panel
+                            header={
+                                <div
+                                    className={
+                                        testsIndexStyle[
+                                            "tests-index-header-text"
+                                        ]
+                                    }
+                                >
+                                    <span>{section.subject}</span>
+                                    {section.isFull && (
+                                        <Badge
+                                            status="success"
+                                            text="Full"
+                                            className={
+                                                testsIndexStyle[
+                                                    "tests-index-badge"
+                                                ]
+                                            }
+                                        />
+                                    )}
+                                </div>
+                            }
+                            // key={section._id}
+                        >
+                            <Row align="middle">
                                 <Col xs={16} md={18} lg={20} span={20}>
                                     <p>{section.sectionDescription}</p>
                                 </Col>
@@ -141,11 +178,12 @@ const TestId = () => {
                                                     title="Edit Section"
                                                     placement="topRight"
                                                     color="#4287f5"
+                                                    overlayClassName="tooltip-mobile-display-none"
                                                 >
                                                     <RightCircleFilled
                                                         onClick={() =>
                                                             dispatchSelectedSection(
-                                                                section.sectionId,
+                                                                section._id,
                                                                 section.sectionNo
                                                             )
                                                         }
@@ -158,15 +196,16 @@ const TestId = () => {
                                                 title="Delete Section"
                                                 placement="topLeft"
                                                 color="red"
+                                                overlayClassName="tooltip-mobile-display-none"
                                             >
                                                 <CloseCircleFilled
                                                     onClick={() =>
                                                         showPopConfirm(
                                                             section.sectionNo,
-                                                            section.sectionId
+                                                            section._id
                                                         )
                                                     }
-                                                    className="hover-icon-delete test-submit-delete"
+                                                    className="test-delete test-submit-delete"
                                                 />
                                             </Tooltip>
                                             <DeleteSectionForm />
@@ -174,6 +213,30 @@ const TestId = () => {
                                     </Col>
                                 )}
                             </Row>
+                            {section.isEmpty && (
+                                <div
+                                    className={
+                                        testsIndexStyle[
+                                            "tests-index-error-message"
+                                        ]
+                                    }
+                                >
+                                    This Section is empty, either write some
+                                    questions or delete this section
+                                </div>
+                            )}
+                            {section.isFull && (
+                                <div
+                                    className={
+                                        testsIndexStyle[
+                                            "tests-index-full-message"
+                                        ]
+                                    }
+                                >
+                                    This Section has reached the limit of number
+                                    of questions (25) allowed.
+                                </div>
+                            )}
                         </Panel>
                     </Collapse>
                 );
@@ -184,7 +247,24 @@ const TestId = () => {
     const renderTest = () => {
         return (
             <Card
-                title={tests[testId].testTitle}
+                /* sectionData */
+                title={
+                    tests[testId].sections.length > 0 ? (
+                        <Link
+                            href={`/schools/${id}/tests/${testId}/view-sections`}
+                        >
+                            <a
+                                className={
+                                    testsIndexStyle["tests-index-link-color"]
+                                }
+                            >
+                                {tests[testId].testTitle}
+                            </a>
+                        </Link>
+                    ) : (
+                        tests[testId].testTitle
+                    )
+                }
                 key={tests[testId]._id}
                 extra={renderButton()}
                 className={`${testsIndexStyle["tests-index-card"]} ${testsIndexStyle["tests-index-overflow"]}`}
@@ -200,105 +280,135 @@ const TestId = () => {
         );
     };
 
-    return tests[testId] === undefined ? (
-        <div>{}</div>
-    ) : (
+    return tests[testId] === undefined ? null : (
         <AdminRoute>
             <div>
                 <Row gutter={[8, 14]} justify="center">
                     <Col span={24}>
-                        <Alert
-                            message={`This test was written by ${
-                                tests[testId].author.name || "sumanth"
-                            } for ${
-                                tests[testId].school.schoolName ||
-                                "sri chaitanya"
-                            } school`}
-                            type="info"
-                            showIcon
-                            closable
-                        />
+                        {schools[id] && schools[id]?.otherTestsClassMsg ? (
+                            <Alert
+                                message={
+                                    <Marquee
+                                        pauseOnHover
+                                        gradient={false}
+                                        loop={2}
+                                        speed={50}
+                                        delay={2}
+                                    >
+                                        {schools[id].otherTestsClassMsg}
+                                    </Marquee>
+                                }
+                                type="success"
+                                action={
+                                    <Space>
+                                        <Link href={`/schools/${id}/edit`}>
+                                            <Button
+                                                passHref
+                                                size="small"
+                                                type="ghost"
+                                            >
+                                                Edit
+                                            </Button>
+                                        </Link>
+                                    </Space>
+                                }
+                                closable
+                                onClose={otherTestsClassMsg}
+                                className={testsIndexStyle["tests-index-alert"]}
+                            />
+                        ) : (
+                            <Alert
+                                message={`This test was written by ${
+                                    tests[testId].author.name || "sumanth"
+                                } for ${
+                                    tests[testId].school.schoolName ||
+                                    "sri chaitanya"
+                                } school`}
+                                type="info"
+                                showIcon
+                                closable
+                                className={testsIndexStyle["tests-index-alert"]}
+                            />
+                        )}
                     </Col>
                     <Col span={24}>
                         <Card
                             className={`inner-card-padding-small ${testsIndexStyle["tests-index-overflow"]}`}
                         >
-                            <Row gutter={[8, 16]}>
-                                <Col
-                                    xs={24}
-                                    sm={12}
-                                    md={12}
-                                    lg={16}
-                                    xl={18}
-                                    span={18}
-                                    className={
-                                        testsIndexStyle[
-                                            "tests-index-schoolname"
-                                        ]
-                                    }
+                            <div className={testsIndexStyle["display-flex"]}>
+                                <div
+                                    className={`
+                                    ${testsIndexStyle["school-name-div"]} ${testsIndexStyle["tests-index-schoolname"]}
+                                `}
                                 >
                                     {schools[id] &&
                                         schools[id].schoolName.toUpperCase()}
-                                </Col>
-                                <Col offset={0}>
-                                    {/* <Row
-                                        justify={
-                                            adminIsAuthor
-                                                ? "space-between"
-                                                : "end"
+                                </div>
+                                {adminIsAuthor ? (
+                                    <div
+                                        className={
+                                            testsIndexStyle["button-space"]
                                         }
-                                        gutter={0}
                                     >
-                                        <Col
-                                            xs={adminIsAuthor ? 12 : 5}
-                                            sm={adminIsAuthor ? 12 : 5}
-                                            span={12}
-                                        > */}
-                                    <Space size={14}>
+                                        <div>
+                                            <Link
+                                                href={`/schools/${id}/tests/${testId}/results`}
+                                                passHref
+                                            >
+                                                <Button
+                                                    className={
+                                                        testsIndexStyle[
+                                                            "tests-index-button"
+                                                        ]
+                                                    }
+                                                >
+                                                    Results
+                                                </Button>
+                                            </Link>
+                                        </div>
+                                        <div
+                                            className={`
+                                                ${testsIndexStyle["button-margin-left"]}`}
+                                        >
+                                            <CreateSectionForm
+                                                /* sectionData */
+                                                length={
+                                                    tests[testId].sections
+                                                        .length
+                                                }
+                                            />
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div
+                                        className={
+                                            testsIndexStyle[
+                                                "button-only-result-flex"
+                                            ]
+                                        }
+                                    >
                                         <Link
                                             href={`/schools/${id}/tests/${testId}/results`}
                                             passHref
                                         >
                                             <Button
-                                                className={
-                                                    testsIndexStyle[
-                                                        "tests-index-button"
-                                                    ]
-                                                }
+                                                className={`
+                                                 ${testsIndexStyle["tests-index-button"]} ${testsIndexStyle["button-only-result-width"]}`}
                                             >
                                                 Results
                                             </Button>
                                         </Link>
-                                        {/* </Col> */}
-                                        {adminIsAuthor && (
-                                            // <Col
-                                            //     xs={12}
-                                            //     sm={12}
-                                            //     span={12}
-                                            //     className={
-                                            //         testsIndexStyle[
-                                            //             "tests-index-align"
-                                            //         ]
-                                            //     }
-                                            // >
-                                            <CreateSectionForm
-                                                length={
-                                                    tests[testId].sectionData
-                                                        .length
-                                                }
-                                            />
-                                            // </Col>
-                                        )}
-                                    </Space>
-                                    {/* </Row> */}
-                                </Col>
-                            </Row>
+                                    </div>
+                                )}
+                            </div>
                         </Card>
                     </Col>
-                    <Col span={20}>{renderTest()}</Col>
+                    <Col xs={21} sm={20} span={20}>
+                        {renderTest()}
+                    </Col>
 
                     {tests && tests[testId].isPublished && (
-                        <Col span={20}>
+                        <Col xs={21} sm={20} span={20}>
                             <Card
                                 className={`inner-card-padding-small ${testsIndexStyle["tests-index-published"]}`}
                             >
@@ -336,6 +446,7 @@ const TestId = () => {
                                             title="copy url"
                                             color="#4287f5"
                                             placement="topLeft"
+                                            overlayClassName="tooltip-mobile-display-none"
                                         >
                                             <CopyToClipboard
                                                 text={
@@ -381,6 +492,8 @@ const TestId = () => {
     );
 };
 
-TestId.getLayout = (page) => <CustomLayout type="inside">{page}</CustomLayout>;
+TestId.getLayout = (page) => (
+    <AdminCustomLayout type="inside">{page}</AdminCustomLayout>
+);
 
 export default TestId;

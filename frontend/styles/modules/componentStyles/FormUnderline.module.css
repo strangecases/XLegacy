@@ -1,0 +1,16 @@
+.input-underline {
+    border: none;
+    box-shadow: none;
+    /* border-bottom: 2px solid orange; */
+}
+
+.input-underline:focus {
+    border: none;
+    box-shadow: none;
+    border-bottom: 2px solid #52c41a;
+    transition: border-bottom 0.1s ease-out;
+}
+
+:global(.ant-input-status-error:not(.ant-input-disabled):not(.ant-input-borderless)).input-underline:focus {
+    box-shadow: none;
+}

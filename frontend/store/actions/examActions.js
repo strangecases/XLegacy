@@ -5,9 +5,11 @@ import customActions from "./customActions";
 import questionActions from "./questionActions";
 import answerActions from "./answerActions";
 import axiosFetch from "../../axiosFetch";
+import loadingActions from "./loadingActions";
 
 const createExam = (id, testId, formValues) => async (dispatch) => {
     try {
+        dispatch(loadingActions.examInfoLoading(true));
         const response = await axiosFetch.post(
             `/api/schools/${id}/tests/${testId}/exams`,
             formValues
@@ -17,8 +19,10 @@ const createExam = (id, testId, formValues) => async (dispatch) => {
             payload: response.data,
         });
         Router.push(`/schools/${id}/exams/${testId}`);
+        dispatch(loadingActions.examInfoLoading(false));
     } catch (err) {
-        console.log(err.response);
+        // console.log(err.response);
+        dispatch(loadingActions.examInfoLoading(false));
         toast.error(err.response.data, {
             autoClose: 2200,
             hideProgressBar: true,
@@ -73,10 +77,10 @@ const examsList =
                     params: { classNo, group: v },
                 }
             );
-            console.log(exams);
+            // console.log(exams);
             // setExs(exams.data);
             if (exams.data.length === 0) {
-                console.log(exams.data);
+                // console.log(exams.data);
                 const total = 0;
                 const da = [];
 
@@ -108,7 +112,7 @@ const examsList =
                 da.push(
                     dat.reduce(
                         (acc, cur) => {
-                            console.log(acc, cur);
+                            // console.log(acc, cur);
                             if (cur >= total * 0.5 && cur < total * 0.75) {
                                 acc.count += 1;
                             }
@@ -120,7 +124,7 @@ const examsList =
                 da.push(
                     dat.reduce(
                         (acc, cur) => {
-                            console.log(acc, cur);
+                            // console.log(acc, cur);
                             if (cur >= total * 0.35 && cur < total * 0.5) {
                                 acc.count += 1;
                             }
@@ -132,7 +136,7 @@ const examsList =
                 da.push(
                     dat.reduce(
                         (acc, cur) => {
-                            console.log(acc, cur);
+                            // console.log(acc, cur);
                             if (cur >= total * 0 && cur < total * 0.35) {
                                 acc.count += 1;
                             }
@@ -141,7 +145,7 @@ const examsList =
                         { label: "0-35%", count: 0 }
                     )
                 );
-                console.log(da);
+                // console.log(da);
                 // setDaa(da);
 
                 dispatch({ type: types.EXAMS_LIST, payload: exams.data });
@@ -160,6 +164,7 @@ const onSectionSubmit = (id, testId) => async (dispatch, getState) => {
         const { examId } = getState().exam;
         const ansObj = { selectedSectionId, selectedSectionNo, answers };
 
+        dispatch(loadingActions.examSavedLoading(true));
         if (Object.keys(answers).length !== 0) {
             await axiosFetch.patch(
                 `/api/schools/${id}/tests/${testId}/exams/${examId}`,
@@ -171,16 +176,19 @@ const onSectionSubmit = (id, testId) => async (dispatch, getState) => {
             dispatch(customActions.selectedQuestion(1));
             dispatch(customActions.selectedSectionNo(1));
             dispatch(customActions.examSuccess("success"));
+
             // dispatch(emptyExam());
 
             Router.push("/exam-success");
         } else {
-            console.log("gggg");
-            dispatch(deleteExam());
+            // console.log("gggg");
+            // dispatch(deleteExam());
+            dispatch(questionActions.emptyQuestions());
             dispatch(customActions.examSuccess(""));
             Router.push("/exam-success");
         }
     } catch (err) {
+        dispatch(loadingActions.examSavedLoading(false));
         console.log(err.response.data);
     }
 };
@@ -205,6 +213,7 @@ const onSectionChange =
             dispatch(answerActions.fetchAnwers(exam.data.answers[sectionNo]));
             dispatch(customActions.selectedQuestion(1));
         } catch (err) {
+            dispatch(loadingActions.questionsLoading(false));
             console.log(err.response.data);
         }
     };

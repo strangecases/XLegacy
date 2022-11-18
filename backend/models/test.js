@@ -31,17 +31,19 @@ const testSchema = new Schema(
             ref: "Admin",
         },
 
-        sectionData: {
-            type: [
-                {
-                    subject: String,
-                    sectionNo: Number,
-                    sectionDescription: String,
-                    sectionId: String,
-                    _id: false,
-                },
-            ],
-        },
+        // sectionData: {
+        //     type: [
+        //         {
+        //             subject: String,
+        //             sectionNo: Number,
+        //             sectionDescription: String,
+        //             sectionId: String,
+        //             isEmpty: { type: Boolean, default: true },
+        //             isFull: { type: Boolean, default: false },
+        //             _id: false,
+        //         },
+        //     ],
+        // },
         sections: [
             {
                 type: Schema.Types.ObjectId,

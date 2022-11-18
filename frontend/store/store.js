@@ -1,8 +1,18 @@
-import { createStore, applyMiddleware } from "redux";
-import thunk from "redux-thunk";
-import { createWrapper } from "next-redux-wrapper";
-import { composeWithDevTools } from "redux-devtools-extension";
-import { persistReducer, persistStore } from "redux-persist";
+// import { applyMiddleware } from "redux";
+import { configureStore } from "@reduxjs/toolkit";
+// import thunk from "redux-thunk";
+import { createWrapper, HYDRATE } from "next-redux-wrapper";
+// import { composeWithDevTools } from "redux-devtools-extension";
+import {
+    persistReducer,
+    persistStore,
+    FLUSH,
+    REHYDRATE,
+    PAUSE,
+    PERSIST,
+    PURGE,
+    REGISTER,
+} from "redux-persist";
 import storage from "redux-persist/lib/storage";
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 import rootReducer from "./reducers";
@@ -12,16 +22,50 @@ const initialState = {};
 const persistConfig = {
     key: "persistStore",
     storage,
-    whitelist: ["auth", "custom", "questions", "answers", "exam", "schools"],
+    whitelist: [
+        "auth",
+        "custom",
+        "questions",
+        "answers",
+        "exam",
+        "schools",
+        "role",
+    ],
 };
 
-const middleware = [thunk];
+// const middleware = [thunk];
 
 // creating store
-export const store = createStore(
-    persistReducer(persistConfig, rootReducer),
-    initialState,
-    composeWithDevTools(applyMiddleware(...middleware))
+const reducer = (state, action) => {
+    if (action.type === HYDRATE) {
+        const nextState = {
+            ...state,
+            ...action.payload,
+        };
+        return nextState;
+    }
+    return rootReducer(state, action);
+};
+
+const store = configureStore(
+    {
+        reducer: persistReducer(persistConfig, reducer),
+        preloadedState: initialState,
+        middleware: (getDefaultMiddleware) =>
+            getDefaultMiddleware({
+                serializableCheck: {
+                    ignoredActions: [
+                        FLUSH,
+                        REHYDRATE,
+                        PAUSE,
+                        PERSIST,
+                        PURGE,
+                        REGISTER,
+                    ],
+                },
+            }),
+    }
+    // composeWithDevTools(applyMiddleware(...middleware))
 );
 
 export const persistor = persistStore(store);

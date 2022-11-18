@@ -1,14 +1,17 @@
-import { Col, Form, Row } from "antd";
+import { BackTop, Col, Form, Row } from "antd";
+import { ArrowUpOutlined } from "@ant-design/icons";
 import { useForm, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
-import CustomLayout from "../../../components/nav/CustomLayout";
-import { schoolSchema } from "../../../yupUtil";
+// import { schoolSchema } from "../../../yupUtil";
+import schoolSchema from "../../../schoolYup";
 import SchoolForm from "../../../components/schools/SchoolForm";
 import allActions from "../../../store/actions";
 import AdminIsSchoolAdmin from "../../../components/routes/AdminIsSchoolAdmin";
+import schoolStyle from "../../../styles/modules/pageStyles/Schools.module.css";
+import AdminCustomLayout from "../../../components/nav/adminCustom/AdminCustomLayout";
 
 const SchoolEditForm = () => {
     const { schools } = useSelector((state) => state);
@@ -33,11 +36,17 @@ const SchoolEditForm = () => {
         name: "classes",
     });
 
+    // const grew = useRef(0);
+
+    // useEffect(() => {
+    //     grew.current += 1;
+    // });
+
     useEffect(() => {
         if (id) {
             dispatch(allActions.schoolActions.fetchSchool(id));
         }
-    }, [id]);
+    }, [id, dispatch]);
 
     useEffect(() => {
         if (schools[id]) {
@@ -55,11 +64,10 @@ const SchoolEditForm = () => {
                 });
             });
         }
-    }, [schools, id]);
+    }, [schools, id, remove, setValue]);
 
     const onSubmit = async (data) => {
-        dispatch(allActions.schoolActions.editSchool(id, data));
-        router.push(`/schools/`);
+        dispatch(allActions.schoolActions.editSchool({ id, formValues: data }));
     };
 
     return (
@@ -80,12 +88,22 @@ const SchoolEditForm = () => {
                     </Form>
                 </Col>
             </Row>
+            <BackTop
+                className={schoolStyle["edit-school-position-right"]}
+                visibilityHeight={800}
+                duration={300}
+            >
+                <ArrowUpOutlined
+                    className={schoolStyle["edit-school-back-top"]}
+                />
+            </BackTop>
+            {/* {grew.current} */}
         </AdminIsSchoolAdmin>
     );
 };
 
 SchoolEditForm.getLayout = (page) => (
-    <CustomLayout type="inside">{page}</CustomLayout>
+    <AdminCustomLayout type="inside">{page}</AdminCustomLayout>
 );
 
 export default SchoolEditForm;

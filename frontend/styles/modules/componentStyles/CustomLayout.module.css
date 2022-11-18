@@ -1,0 +1,73 @@
+.custom-layout-content {
+    margin: 10px 16px 0;
+    overflow: initial;
+}
+
+.custom-layout-footer {
+    text-align: center;
+}
+
+.sidebar-drawer :global(.ant-drawer-content) {
+    background-color: #1c1c1e;
+}
+
+.sidebar-drawer :global(.ant-drawer-body) {
+    padding: 0;
+    overflow: hidden;
+}
+
+:global(.ant-layout) .sidebar-sider {
+    overflow: visible;
+    height: 100vh;
+    position: sticky;
+    left: 0;
+    top: 0;
+    bottom: 0;
+}
+
+:global(.ant-drawer-body) .sidebar-sider-drawer {
+    overflow: visible;
+    height: 100vh;
+    position: sticky;
+    left: 0;
+    top: 0;
+    bottom: 0;
+}
+
+:global(.ant-layout) .sidebar-menu {
+    padding: 12px 0 30px 0;
+}
+
+.header-div {
+    margin-top: 15px;
+    color: rgb(232, 126, 13);
+    text-align: center;
+    font-size: 20px;
+    font-weight: 900;
+    transform: scale(0.5);
+    opacity: 0;
+    animation: header-div 1.5s cubic-bezier(0.42, 0, 0.54, 1.27) forwards;
+}
+
+.header-div-drawer {
+    margin-top: 10px;
+    margin-bottom: 8px;
+    color: rgb(232, 126, 13);
+    text-align: center;
+    font-size: 18px;
+    font-weight: 900;
+    transform: scale(0.5);
+    opacity: 0;
+    animation: header-div 1.5s cubic-bezier(0.42, 0, 0.54, 1.27) forwards;
+}
+
+@keyframes header-div {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}

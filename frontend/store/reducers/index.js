@@ -7,6 +7,9 @@ import answerReducer from "./answerReducer";
 import examReducer from "./examReducer";
 import schoolReducer from "./schoolReducer";
 import modalReducer from "./modalReducer";
+import roleReducer from "./roleReducer";
+import questionsDeawerReducer from "./questionsDrawerReducer";
+import loadingReducer from "./loadingReducer";
 
 const rootReducer = combineReducers({
     auth: authReducer,
@@ -17,6 +20,9 @@ const rootReducer = combineReducers({
     exam: examReducer,
     schools: schoolReducer,
     modals: modalReducer,
+    role: roleReducer,
+    questionsDrawer: questionsDeawerReducer,
+    load: loadingReducer,
 });
 
 export default rootReducer;

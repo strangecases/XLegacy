@@ -30,7 +30,7 @@ const EditTestForm = () => {
 
     const {
         handleSubmit,
-        formState: { errors, isDirty, isSubmitting },
+        formState: { errors, isDirty },
         control,
     } = useForm({
         mode: "onBlur",
@@ -43,23 +43,27 @@ const EditTestForm = () => {
     };
 
     const onHandleCancel = () => {
-        console.log("Clicked cancel button");
+        // console.log("Clicked cancel button");
         dispatch(allActions.modalActions.visibleTestNo());
     };
 
     return (
         <>
-            <Tooltip placement="left" title="Edit Test" color="#108ee7">
+            <Tooltip
+                placement="left"
+                title="Edit Test"
+                color="#108ee7"
+                overlayClassName="tooltip-mobile-display-none"
+            >
                 <PlusCircleFilled
                     onClick={showTestModal}
                     // style={{ fontSize: 20, color: "#20f540" }}
-                    className="hover-icon-edit-test test-submit-delete"
+                    className="hover-icon-edit-test test-submit-big"
                 />
             </Tooltip>
             <ModalCreate
                 onOk={handleSubmit(onEditSubmit)}
                 isDirty={isDirty}
-                isSubmitting={isSubmitting}
                 title="Edit Test"
                 handleCancel={onHandleCancel}
             >

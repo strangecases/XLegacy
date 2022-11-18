@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { SyncOutlined } from "@ant-design/icons";
+import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -9,8 +9,13 @@ import authStyles from "../styles/modules/pageStyles/Auth.module.css";
 import { registerSchema } from "../yupUtil";
 import IsNotLoggedIn from "../components/routes/IsNotLoggedIn";
 import axiosFetch from "../axiosFetch";
+import allActions from "../store/actions";
 
 const Register = () => {
+    const { registerLoading } = useSelector((state) => state.load);
+
+    const dispatch = useDispatch();
+
     const {
         handleSubmit,
         control,
@@ -24,15 +29,17 @@ const Register = () => {
         const { name, email, password, adminCode } = data;
 
         try {
+            dispatch(allActions.loadingActions.registerLoading(true));
             await axiosFetch.post("/api/register", {
                 name,
                 email,
                 password,
                 adminCode,
             });
-
+            dispatch(allActions.loadingActions.registerLoading(false));
             toast.success("Registration Successful, Please login");
         } catch (err) {
+            dispatch(allActions.loadingActions.registerLoading(false));
             toast.error(err.response.data);
         }
     };
@@ -82,12 +89,9 @@ const Register = () => {
                                 htmlType="submit"
                                 className={authStyles["width-100"]}
                                 disabled={!isDirty || isSubmitting}
+                                loading={registerLoading}
                             >
-                                {isSubmitting ? (
-                                    <SyncOutlined spin />
-                                ) : (
-                                    "Submit"
-                                )}
+                                Submit
                             </Button>
                         </Form>
                         <p

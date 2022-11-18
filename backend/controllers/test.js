@@ -3,7 +3,7 @@ import School from "../models/school.js";
 import ExpressError from "../utils/ExpressError.js";
 
 export const index = async (req, res) => {
-    console.log(req.query);
+    // console.log(req.query);
     const { page, pageSize } = req.query;
 
     const tests = await Test.find(
@@ -18,7 +18,7 @@ export const index = async (req, res) => {
         school: req.params.id,
     });
 
-    if (!tests) throw new ExpressError("schools not found", 400);
+    if (!tests) throw new ExpressError("tests not found", 400);
     return res.json({ tests, numOfTests });
 };
 
@@ -60,6 +60,10 @@ export const createTest = async (req, res) => {
 export const getOneTest = async (req, res) => {
     const test = await Test.findById(req.params.testId)
         .populate({
+            path: "sections",
+            select: "-questions",
+        })
+        .populate({
             path: "author",
             select: "name",
         })
@@ -73,7 +77,7 @@ export const getOneTest = async (req, res) => {
 };
 
 export const editTest = async (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
     const test = await Test.findByIdAndUpdate(
         req.params.testId,
         { ...req.body },
@@ -97,7 +101,17 @@ export const deleteTest = async (req, res) => {
             [selectOther]: test._id,
         },
     });
+    if (!test.school.equals(id)) {
+        await School.findByIdAndUpdate(test.school, {
+            $pull: {
+                [select]: test._id,
+            },
+        });
+    }
 
-    console.log(test);
+    // console.log(test);
+    // console.log(test.school !== id);
+    // console.log(test.school, id);
+    // console.log(test.school.equals(id));
     res.json({ ok: true });
 };

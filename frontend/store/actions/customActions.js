@@ -21,9 +21,23 @@ const selectedSectionNo = (sectionNo) => {
     };
 };
 
+const selectedSectionName = (sectionName) => {
+    return {
+        type: types.SELECTED_SECTION_NAME,
+        payload: sectionName,
+    };
+};
+
 const totalTests = (total) => {
     return {
         type: types.TOTAL_TESTS,
+        payload: total,
+    };
+};
+
+const totalClassTests = (total) => {
+    return {
+        type: types.TOTAL_CLASS_TESTS,
         payload: total,
     };
 };
@@ -56,10 +70,24 @@ const saveSection = (val) => {
     };
 };
 
-const loading = (val) => {
+const siderCollapse = (isCollapse) => {
     return {
-        type: types.LOADING,
-        payload: val,
+        type: types.SIDER_COLLAPSE,
+        payload: isCollapse,
+    };
+};
+
+const isQuestionsEmpty = (isEmpty) => {
+    return {
+        type: types.IS_QUESTIONS_EMPTY,
+        payload: isEmpty,
+    };
+};
+
+const isQuestionsFull = (isFull) => {
+    return {
+        type: types.IS_QUESTIONS_FULL,
+        payload: isFull,
     };
 };
 
@@ -67,12 +95,16 @@ const customActions = {
     selectedSectionId,
     selectedQuestion,
     selectedSectionNo,
+    selectedSectionName,
     totalTests,
+    totalClassTests,
     selectedClass,
     examSaved,
     examSuccess,
     saveSection,
-    loading,
+    siderCollapse,
+    isQuestionsEmpty,
+    isQuestionsFull,
 };
 
 export default customActions;

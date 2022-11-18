@@ -10,6 +10,7 @@ const { Search } = Input;
 
 const NavBar = () => {
     const { admin } = useSelector((state) => state.auth);
+    const { searchLoading } = useSelector((state) => state.load);
 
     const dispatch = useDispatch();
 
@@ -85,8 +86,10 @@ const NavBar = () => {
                     <nav
                         ref={navbarRef}
                         className={`${navStyles.navbar} ${
-                            !isVisible && navStyles.backgroundNav
-                        } ${!isVisible && navStyles.backgroundNavDiv}`}
+                            !isVisible ? navStyles.backgroundNav : undefined
+                        } ${
+                            !isVisible ? navStyles.backgroundNavDiv : undefined
+                        }`}
                     >
                         <div className={navStyles["brand-title"]}>
                             Scholar X
@@ -175,6 +178,7 @@ const NavBar = () => {
                                     placeholder="Enter School Code"
                                     size="large"
                                     onSearch={onSearch}
+                                    loading={searchLoading}
                                 />
                             </div>
                         </div>
@@ -186,6 +190,7 @@ const NavBar = () => {
                             gutter={[20, 16]}
                             ref={rowRef}
                             align="middle"
+                            justify="center"
                             className={navStyles.firstRow}
                         >
                             <Col xs={24} sm={12} md={8} lg={8} span={8}>
@@ -198,8 +203,9 @@ const NavBar = () => {
                                         />
                                     }
                                     className={` ${
-                                        isRowVisible &&
-                                        navStyles.firstCardStyleOne
+                                        isRowVisible
+                                            ? navStyles.firstCardStyleOne
+                                            : undefined
                                     } ${navStyles.firstCardStyle}`}
                                 >
                                     <span
@@ -234,7 +240,7 @@ const NavBar = () => {
                                         className={
                                             isRowVisible
                                                 ? navStyles.cardBody
-                                                : ""
+                                                : undefined
                                         }
                                     >
                                         Schools or organizations can manage all
@@ -254,20 +260,21 @@ const NavBar = () => {
                                         />
                                     }
                                     className={` ${
-                                        isRowVisible &&
-                                        navStyles.firstCardStyleThree
+                                        isRowVisible
+                                            ? navStyles.firstCardStyleThree
+                                            : undefined
                                     } ${navStyles.firstCardStyle}`}
                                 >
                                     <span
                                         className={
                                             isRowVisible
                                                 ? navStyles.cardBody
-                                                : ""
+                                                : undefined
                                         }
                                     >
                                         ScholarX makes it easy to incorporate
                                         tests from others i.e you can attach
-                                        others tests to your organization
+                                        other school tests to your organization
                                         without writing the test yourself.
                                     </span>
                                 </Card>
@@ -279,17 +286,23 @@ const NavBar = () => {
                     <div className={navStyles.container} ref={boardRef}>
                         <div
                             className={
-                                isBoardVisible ? `${navStyles.mainPage}` : ""
+                                isBoardVisible
+                                    ? `${navStyles.mainPage}`
+                                    : undefined
                             }
                         >
                             <div
                                 className={`${
-                                    isBoardVisible && navStyles.homeText
+                                    isBoardVisible
+                                        ? navStyles.homeText
+                                        : undefined
                                 } ${navStyles.homeTextDisplay}`}
                             >
                                 <span
                                     className={
-                                        isBoardVisible && navStyles.homeHeading
+                                        isBoardVisible
+                                            ? navStyles.homeHeading
+                                            : undefined
                                     }
                                 >
                                     ScholarX makes it easy to manage your school
@@ -297,24 +310,31 @@ const NavBar = () => {
                                 </span>
                                 <p
                                     className={
-                                        isBoardVisible && navStyles.paraText
+                                        isBoardVisible
+                                            ? navStyles.paraText
+                                            : undefined
                                     }
                                 >
                                     Please Login and checkout our proposition{" "}
                                 </p>
                                 <Row gutter={[8, 16]}>
                                     <Col>
-                                        <Button>Login</Button>
+                                        <Link href="/login" passHref>
+                                            <Button>Login</Button>
+                                        </Link>
                                     </Col>
                                     <Col>
-                                        <Button>SignUp</Button>
+                                        <Link href="/register" passHref>
+                                            <Button>SignUp</Button>
+                                        </Link>
                                     </Col>
                                 </Row>
                             </div>
                             <div
                                 className={` ${
-                                    isBoardVisible &&
-                                    navStyles.parentRelativeTwo
+                                    isBoardVisible
+                                        ? navStyles.parentRelativeTwo
+                                        : undefined
                                 } `}
                             >
                                 <img
@@ -323,7 +343,9 @@ const NavBar = () => {
                                     width="150"
                                     height="300"
                                     className={`${
-                                        isBoardVisible && navStyles.imggBoard
+                                        isBoardVisible
+                                            ? navStyles.imggBoard
+                                            : undefined
                                     } ${navStyles.homeTextDisplay}`}
                                 />
 
@@ -333,9 +355,13 @@ const NavBar = () => {
                                     width="150"
                                     height="300"
                                     className={`${
-                                        isBoardVisible && navStyles.imggChalk
+                                        isBoardVisible
+                                            ? navStyles.imggChalk
+                                            : undefined
                                     } ${
-                                        isBoardVisible && navStyles.imggChalkOne
+                                        isBoardVisible
+                                            ? navStyles.imggChalkOne
+                                            : undefined
                                     } ${navStyles.homeTextDisplay}`}
                                 />
 
@@ -345,9 +371,13 @@ const NavBar = () => {
                                     width="150"
                                     height="300"
                                     className={`${
-                                        isBoardVisible && navStyles.imggChalk
+                                        isBoardVisible
+                                            ? navStyles.imggChalk
+                                            : undefined
                                     } ${
-                                        isBoardVisible && navStyles.imggChalkTwo
+                                        isBoardVisible
+                                            ? navStyles.imggChalkTwo
+                                            : undefined
                                     } ${navStyles.homeTextDisplay}`}
                                 />
 
@@ -357,10 +387,13 @@ const NavBar = () => {
                                     width="150"
                                     height="300"
                                     className={`${
-                                        isBoardVisible && navStyles.imggChalk
+                                        isBoardVisible
+                                            ? navStyles.imggChalk
+                                            : undefined
                                     } ${
-                                        isBoardVisible &&
-                                        navStyles.imggChalkThree
+                                        isBoardVisible
+                                            ? navStyles.imggChalkThree
+                                            : undefined
                                     } ${navStyles.homeTextDisplay}`}
                                 />
 
@@ -370,7 +403,9 @@ const NavBar = () => {
                                     width="150"
                                     height="300"
                                     className={`${
-                                        isBoardVisible && navStyles.imggDuster
+                                        isBoardVisible
+                                            ? navStyles.imggDuster
+                                            : undefined
                                     } ${navStyles.homeTextDisplay}`}
                                 />
                             </div>
@@ -381,7 +416,9 @@ const NavBar = () => {
                     <div
                         ref={secondCardRef}
                         className={
-                            isSecondCardVisible && navStyles.containerCard
+                            isSecondCardVisible
+                                ? navStyles.containerCard
+                                : undefined
                         }
                     >
                         <Row
@@ -393,8 +430,9 @@ const NavBar = () => {
                             <Col xs={24} sm={24} md={7} span={8}>
                                 <Card
                                     className={`${navStyles.secondCardStyle} ${
-                                        isSecondCardVisible &&
-                                        navStyles.secondCardStyleOne
+                                        isSecondCardVisible
+                                            ? navStyles.secondCardStyleOne
+                                            : undefined
                                     }`}
                                 >
                                     <p className={navStyles.cardParagraph}>
@@ -409,8 +447,9 @@ const NavBar = () => {
                                     className={`${
                                         navStyles.secondCardStyleMiddle
                                     } ${
-                                        isSecondCardVisible &&
-                                        navStyles.secondCardStyleTwo
+                                        isSecondCardVisible
+                                            ? navStyles.secondCardStyleTwo
+                                            : undefined
                                     }`}
                                 >
                                     <p className={navStyles.cardParagraph}>
@@ -425,8 +464,9 @@ const NavBar = () => {
                             <Col xs={24} sm={24} md={7} span={8}>
                                 <Card
                                     className={`${navStyles.secondCardStyle} ${
-                                        isSecondCardVisible &&
-                                        navStyles.secondCardStyleThree
+                                        isSecondCardVisible
+                                            ? navStyles.secondCardStyleThree
+                                            : undefined
                                     }`}
                                 >
                                     <p className={navStyles.cardParagraph}>
@@ -444,7 +484,11 @@ const NavBar = () => {
             <div className={`${navStyles.orderCounter}`}>
                 <div className={` ${navStyles.containerCard}`} ref={ballRef}>
                     <h2>How to use Scholar X ?</h2>
-                    <h3 className={isballVisible && navStyles.orderSection}>
+                    <h3
+                        className={
+                            isballVisible ? navStyles.orderSection : undefined
+                        }
+                    >
                         Initial Setup
                     </h3>
                     <p>
@@ -456,7 +500,11 @@ const NavBar = () => {
                         </Link>
                         .
                     </p>
-                    <h3 className={isballVisible && navStyles.orderSection}>
+                    <h3
+                        className={
+                            isballVisible ? navStyles.orderSection : undefined
+                        }
+                    >
                         Adding a new school / organization.
                     </h3>
                     <p>
@@ -468,7 +516,11 @@ const NavBar = () => {
                         details about your school such as school code, address,
                         classes, groups/sections.
                     </p>
-                    <h3 className={isballVisible && navStyles.orderSection}>
+                    <h3
+                        className={
+                            isballVisible ? navStyles.orderSection : undefined
+                        }
+                    >
                         Adding Tests.
                     </h3>
                     <p className={navStyles.pSibling}>
@@ -480,7 +532,11 @@ const NavBar = () => {
                         You can create tests based on the classes you mentioned
                         during your school setup.
                     </p>
-                    <h3 className={isballVisible && navStyles.orderSection}>
+                    <h3
+                        className={
+                            isballVisible ? navStyles.orderSection : undefined
+                        }
+                    >
                         Adding sections to your tests.
                     </h3>
                     <p>
@@ -489,7 +545,11 @@ const NavBar = () => {
                         means our entire test has a capcity of upto 100
                         questions.
                     </p>
-                    <h3 className={isballVisible && navStyles.orderSection}>
+                    <h3
+                        className={
+                            isballVisible ? navStyles.orderSection : undefined
+                        }
+                    >
                         Results
                     </h3>
                     <p className={navStyles.pSibling}>
@@ -504,7 +564,11 @@ const NavBar = () => {
                         visit each examinees page to check how they performed in
                         a particular test.
                     </p>
-                    <h3 className={isballVisible && navStyles.orderSection}>
+                    <h3
+                        className={
+                            isballVisible ? navStyles.orderSection : undefined
+                        }
+                    >
                         Adding tests from other schools / organizations.
                     </h3>
                     <p>

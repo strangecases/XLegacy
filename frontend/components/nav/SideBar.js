@@ -1,150 +1,50 @@
 import { useEffect, useState } from "react";
-import { Layout, Menu } from "antd";
-import {
-    UserOutlined,
-    FormOutlined,
-    SolutionOutlined,
-} from "@ant-design/icons";
+import dynamic from "next/dynamic";
+import { Layout } from "antd";
+
 import { useMediaQuery } from "react-responsive";
-import Link from "next/link";
-import { useSelector } from "react-redux";
-import { useRouter } from "next/router";
-import antNavStyle from "../../styles/modules/componentStyles/AntNav.module.css";
+
+import customLayoutStyle from "../../styles/modules/componentStyles/CustomLayout.module.css";
 
 const { Sider } = Layout;
 
-const SideBar = ({ type }) => {
-    const [collapsed, setCollapsed] = useState(true);
-    // const [showMobileSideBar, setShowMobileSideBar] = useState(false);
-    const isTabletOrMobile = useMediaQuery({ maxWidth: 767 });
-
-    const { schools } = useSelector((state) => state);
-
-    const router = useRouter();
-    const { id } = router.query;
-
-    // useEffect(() => {
-    //     if (window.innerWidth > 767) setShowMobileSideBar(true);
-    //     else if (window.innerWidth < 767) setShowMobileSideBar(false);
-    // }, []);
+const SideBar = ({ children }) => {
+    const [collapsed, setCollapsed] = useState(false);
+    const isBetweenTabletOrBigScreen = useMediaQuery({ maxWidth: 992 });
 
     useEffect(() => {
-        if (!isTabletOrMobile) {
+        if (isBetweenTabletOrBigScreen) {
+            setCollapsed(true);
+        } else if (!isBetweenTabletOrBigScreen) {
             setCollapsed(false);
         }
-    }, [isTabletOrMobile]);
-
-    // useEffect(() => {
-    //     const handleResize = () => {
-    //         if (window.innerWidth > 767) {
-    //             setShowMobileSideBar(true);
-    //             setCollapsed(false);
-    //         } else if (window.innerWidth < 767) {
-    //             setCollapsed(true);
-    //             setShowMobileSideBar(false);
-    //         }
-    //     };
-
-    //     window.addEventListener("resize", handleResize);
-
-    //     return () => {
-    //         window.removeEventListener("resize", handleResize);
-    //     };
-    // }, []);
+    }, [isBetweenTabletOrBigScreen]);
 
     const onCollapse = (isCollapsed) => {
         setCollapsed(isCollapsed);
     };
 
-    console.log("iscollapse", isTabletOrMobile);
-
     return (
         <Sider
-            // theme="light"
-            collapsible={!isTabletOrMobile}
-            collapsed={!isTabletOrMobile ? collapsed : isTabletOrMobile}
+            collapsible
+            collapsed={collapsed}
             onCollapse={onCollapse}
-            className={antNavStyle["sidebar-sider"]}
+            collapsedWidth={80}
+            className={customLayoutStyle["sidebar-sider"]}
             width={200}
         >
-            {/* <img
-                alt="hi"
-                className="logo"
-                src="https://www.skysens.io/images/white-logo.png"
-                width={50}
-                height={50}
-            /> */}
-            {!isTabletOrMobile ? (
-                <div className={antNavStyle["header-div"]}>
-                    {!collapsed ? "Scholar X" : "SX"}
-                </div>
-            ) : (
-                <div className={antNavStyle["header-div"]}>SX</div>
-            )}
-            {type === "inside" && schools[id] ? (
-                <Menu
-                    theme="dark"
-                    mode="inline"
-                    // onClick={(e) => setCurrent(e.key)}
-                    selectedKeys={
-                        router.asPath.includes("tests")
-                            ? `/schools/${id}/tests`
-                            : router.asPath
-                    }
-                    defaultSelectedKeys={[`/schools/${id}/edit`]}
-                    className={antNavStyle["sidebar-menu"]}
-                >
-                    <Menu.Item
-                        key={`/schools/${id}/tests`}
-                        icon={<UserOutlined />}
-                    >
-                        <Link href={`/schools/${id}/tests`}>
-                            <a>{schools[id].schoolName}</a>
-                        </Link>
-                    </Menu.Item>
-                    <Menu.Item
-                        key={`/schools/${id}/edit`}
-                        icon={<SolutionOutlined />}
-                    >
-                        <Link href={`/schools/${id}/edit`}>
-                            <a>Edit Details</a>
-                        </Link>
-                    </Menu.Item>
+            {/* {!isBetweenTabletOrBigScreen ? ( */}
+            <div className={customLayoutStyle["header-div"]}>
+                {!collapsed ? "Scholar X" : "SX"}
+            </div>
+            {/* ) : (
+                <div className={customLayoutStyle["header-div"]}>SX</div>
+            )} */}
 
-                    <Menu.Item key="/schools" icon={<SolutionOutlined />}>
-                        <Link href="/schools">
-                            <a>All Schools</a>
-                        </Link>
-                    </Menu.Item>
-                </Menu>
-            ) : (
-                <Menu
-                    theme="dark"
-                    mode="inline"
-                    // onClick={(e) => setCurrent(e.key)}
-                    selectedKeys={router.asPath}
-                    // defaultSelectedKeys={["1"]}
-                    className={antNavStyle["sidebar-menu"]}
-                >
-                    <Menu.Item key="/admin" icon={<UserOutlined />}>
-                        <Link href="/admin">
-                            <a>Dashboard</a>
-                        </Link>
-                    </Menu.Item>
-                    <Menu.Item key="/schools/new" icon={<FormOutlined />}>
-                        <Link href="/schools/new">
-                            <a>Add School</a>
-                        </Link>
-                    </Menu.Item>
-                    <Menu.Item key="/schools" icon={<SolutionOutlined />}>
-                        <Link href="/schools">
-                            <a>Schools</a>
-                        </Link>
-                    </Menu.Item>
-                </Menu>
-            )}
+            {children}
         </Sider>
     );
 };
 
-export default SideBar;
+// export default SideBar;
+export default dynamic(() => Promise.resolve(SideBar), { ssr: false });

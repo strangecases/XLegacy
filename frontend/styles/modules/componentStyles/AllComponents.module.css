@@ -22,39 +22,83 @@
 }
 
 .add-other-tests-formItem {
-    width: 100%;
+    /* width: 100%; */
+    flex: 3 0;
 }
 
 .add-other-tests-button {
-    margin-bottom: 14px;
+    margin: 0 0 0px 8px;
+    flex: 1 2;
 }
 
-.add-other-tests-form {
-    display: inline;
+.add-other-tests-flex {
+    display: flex;
+    justify-content: center;
+    width: 90%;
+    margin: auto;
 }
 
 .all-spin-position {
     position: relative;
-    top: 21vh;
-    left: 45%;
+    top: 35vh;
+    display: flex;
+    justify-content: center;
 }
 
 .all-spin-position .all-spin-icon {
     font-size: 72px;
 }
 
+.all-vertical-align-zero {
+    vertical-align: 0;
+}
+
+.all-vertical-align-minus-two {
+    vertical-align: -0.2em;
+}
+
+.card-error-message {
+    color: white;
+    background-color: rgb(255 77 77);
+    text-align: center;
+}
+
+:global(.ant-card .ant-card-body) .card-error-background {
+    background-color: #fa7c7c;
+    transition: background-color 0.4s ease-in 0.1s;
+}
+
+.error-message {
+    color: white;
+    text-align: center;
+    margin-bottom: 2px;
+}
+
 @media screen and (max-width: 576px) {
-    .all-spin-position {
+    /* .all-spin-position {
         left: 41%;
-    }
+    } */
 
     .all-spin-position .all-spin-icon {
         font-size: 36px;
     }
+
+    .add-other-tests-flex {
+        flex-direction: column;
+    }
+
+    .add-other-tests-button {
+        overflow: hidden;
+        margin: 0 0 14px 0;
+    }
+
+    .add-other-tests-formItem {
+        margin-bottom: 20px;
+    }
 }
 
-@media screen and (min-width: 577px) and (max-width: 821px) {
+/* @media screen and (min-width: 577px) and (max-width: 821px) {
     .all-spin-position {
         left: 41%;
     }
-}
+} */

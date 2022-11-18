@@ -1,19 +1,21 @@
-import { Card, Form, Row, Col, Button, Spin } from "antd";
+import { Card, Form, Row, Col, Button } from "antd";
 import { SyncOutlined } from "@ant-design/icons";
 import { useForm } from "react-hook-form";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import CustomLayout from "../../components/nav/CustomLayout";
+import AdminCustomLayout from "../../components/nav/adminCustom/AdminCustomLayout";
 import AdminRoute from "../../components/routes/AdminRoute";
 import FormInput from "../../components/formitems/FormInput";
 import authStyles from "../../styles/modules/pageStyles/Auth.module.css";
-import AdminCard from "../../components/AdminCard";
+import AdminCard from "../../components/adminUtil/AdminCard";
 import allActions from "../../store/actions";
 import { adminDetailsEditSchema } from "../../yupUtil";
+import Spinner from "../../components/Spinner";
 
 const AdminIndex = () => {
     const { admin } = useSelector((state) => state.auth);
+    const { loginLoading } = useSelector((state) => state.load);
 
     const dispatch = useDispatch();
 
@@ -32,7 +34,7 @@ const AdminIndex = () => {
             setValue("email", admin.email);
             setValue("name", admin.name);
         }
-    }, [admin]);
+    }, [admin, setValue]);
 
     const onSubmit = async (data) => {
         dispatch(allActions.adminActions.editAdmin(admin._id, data));
@@ -40,7 +42,7 @@ const AdminIndex = () => {
 
     return (
         <AdminRoute>
-            {console.log(process.env.NEXT_PUBLIC_BACK_URL)}
+            {/* {console.log(process.env.NEXT_PUBLIC_BACK_URL)} */}
             {admin ? (
                 <Row gutter={[24, 16]} justify="center">
                     <Col xs={24} md={{ span: 20 }} lg={{ span: 15 }} span={15}>
@@ -123,6 +125,7 @@ const AdminIndex = () => {
                                             htmlType="submit"
                                             className={authStyles["width-100"]}
                                             disabled={!isDirty || isSubmitting}
+                                            loading={loginLoading}
                                         >
                                             {isSubmitting ? (
                                                 <SyncOutlined spin />
@@ -146,21 +149,12 @@ const AdminIndex = () => {
                     </Col>
                 </Row>
             ) : (
-                <Spin
-                    size="large"
-                    className={authStyles["admin-spin-position"]}
-                    indicator={
-                        <SyncOutlined
-                            spin
-                            className={authStyles["admin-spin-icon"]}
-                        />
-                    }
-                />
+                <Spinner />
             )}
         </AdminRoute>
     );
 };
 
-AdminIndex.getLayout = (page) => <CustomLayout>{page}</CustomLayout>;
+AdminIndex.getLayout = (page) => <AdminCustomLayout>{page}</AdminCustomLayout>;
 
 export default AdminIndex;

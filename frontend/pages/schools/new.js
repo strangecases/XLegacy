@@ -2,11 +2,12 @@ import { Col, Form, Row } from "antd";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
-import CustomLayout from "../../components/nav/CustomLayout";
-import { schoolSchema } from "../../yupUtil";
+// import { schoolSchema } from "../../yupUtil";
+import schoolSchema from "../../schoolYup";
 import SchoolForm from "../../components/schools/SchoolForm";
 import allActions from "../../store/actions";
 import AdminRoute from "../../components/routes/AdminRoute";
+import AdminCustomLayout from "../../components/nav/adminCustom/AdminCustomLayout";
 
 const SchoolNewForm = () => {
     const dispatch = useDispatch();
@@ -55,6 +56,8 @@ const SchoolNewForm = () => {
     );
 };
 
-SchoolNewForm.getLayout = (page) => <CustomLayout>{page}</CustomLayout>;
+SchoolNewForm.getLayout = (page) => (
+    <AdminCustomLayout>{page}</AdminCustomLayout>
+);
 
 export default SchoolNewForm;

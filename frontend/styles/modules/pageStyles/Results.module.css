@@ -27,7 +27,7 @@
 }
 
 .results-tabpane {
-    margin-top: -12px;
+    margin-top: -6px;
 }
 
 .results-tabpane-extra {
@@ -54,12 +54,18 @@
     min-height: 120px;
 }
 
+.results-tab :global(.ant-tabs-nav .ant-tabs-nav-list .ant-tabs-tab) {
+    padding: 6px 10px;
+}
+
 :global(.ant-row .ant-col) .backgroundQuestionAnswer {
-    background-color: #2fc331;
+    background-color: #74c775;
+    border-color: #74c775;
     color: rgb(255, 255, 255);
 }
 
 :global(.ant-row .ant-col) .backgroundRedAnswer {
     background-color: rgb(236, 94, 94);
+    border-color: rgb(236, 94, 94);
     color: white;
 }

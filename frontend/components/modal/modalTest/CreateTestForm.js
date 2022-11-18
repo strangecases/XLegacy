@@ -20,7 +20,7 @@ const CreateTestForm = () => {
 
     const {
         handleSubmit,
-        formState: { errors, isDirty, isSubmitting },
+        formState: { errors, isDirty },
         control,
         setValue,
     } = useForm({
@@ -35,14 +35,14 @@ const CreateTestForm = () => {
                 ? "0"
                 : selectedClass
         );
-    }, [selectedClass]);
+    }, [selectedClass, setValue]);
 
     const onSubmit = async (data) => {
         dispatch(allActions.testActions.createTest(id, data));
     };
 
     const onHandleCancel = () => {
-        console.log("Clicked cancel button");
+        // console.log("Clicked cancel button");
         dispatch(allActions.modalActions.visibleTestNo());
     };
 
@@ -51,7 +51,6 @@ const CreateTestForm = () => {
             onOk={handleSubmit(onSubmit)}
             handleCancel={onHandleCancel}
             isDirty={isDirty}
-            isSubmitting={isSubmitting}
             title="Create Test"
         >
             {/* <div className="container col-md-10 offset-md-1">

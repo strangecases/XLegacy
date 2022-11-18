@@ -5,7 +5,6 @@ import modalStyle from "../../styles/modules/componentStyles/Modal.module.css";
 const ModalCreateTest = ({
     children,
     onOk,
-    isSubmitting,
     isDirty,
     title,
     handleCancel,
@@ -19,7 +18,12 @@ const ModalCreateTest = ({
         popSchoolVisible,
     } = useSelector((state) => state.modals);
 
+    const { modalOkLoading, deleteLoading } = useSelector(
+        (state) => state.load
+    );
+
     let visible = false;
+    let loading = false;
 
     // if (path === "test") {
     //     visible = modalTestVisible;
@@ -39,20 +43,25 @@ const ModalCreateTest = ({
     switch (path) {
         case "test":
             visible = modalTestVisible;
+            loading = modalOkLoading;
             break;
         case "section":
             visible = modalSectionVisible;
+            loading = modalOkLoading;
             break;
         case "deleteTest":
             visible = popTestVisible;
+            loading = deleteLoading;
             isDirty = true;
             break;
         case "deleteSection":
             visible = popSectionVisible;
+            loading = deleteLoading;
             isDirty = true;
             break;
         case "deleteSchool":
             visible = popSchoolVisible;
+            loading = deleteLoading;
             isDirty = true;
             break;
         default:
@@ -66,9 +75,10 @@ const ModalCreateTest = ({
     return (
         <Modal
             title={title}
-            visible={visible}
+            // visible={visible}
+            open={visible}
             onOk={onOk}
-            confirmLoading={isSubmitting}
+            confirmLoading={loading}
             onCancel={handleCancel}
             okButtonProps={{ disabled: !isDirty }}
             className={

@@ -16,7 +16,7 @@ export const searchSchool = async (req, res) => {
         school = await School.findOne({
             schoolCode: req.query.schoolCode,
         });
-        console.log(school);
+        // console.log(school);
     }
     return res.json(school);
 };
@@ -40,7 +40,7 @@ export const createSchool = async (req, res) => {
     }
 
     const y = { ...x, otherTests: { [year]: [] } };
-    console.log(y);
+    // console.log(y);
 
     school.tests = y;
 
@@ -54,14 +54,14 @@ export const createSchool = async (req, res) => {
 export const showSchool = async (req, res) => {
     let school;
     let noOfClassTests = 4;
-    console.log(req.query);
+    // console.log(req.query);
     const { year, classNo, page, pageSize } = req.query;
 
     if (!year || !classNo) {
-        console.log(classNo);
+        // console.log(classNo);
         school = await School.findById(req.params.id);
     } else if (page && year && classNo) {
-        console.log("wwww");
+        // console.log("wwww");
         school = await School.findById(req.params.id)
             .populate(
                 {
@@ -84,7 +84,7 @@ export const showSchool = async (req, res) => {
 
     if (!school)
         throw new ExpressError("School not found, try again later", 400);
-    console.log(school);
+    // console.log(school);
     return res.json({ school, noOfClassTests });
 };
 
@@ -95,10 +95,17 @@ export const editSchool = async (req, res) => {
         req.body.type === "edit"
     ) {
         const { classNo, testId } = req.body;
-        console.log(req.body);
+        // console.log(req.body);
         const school = await School.findById(req.params.id);
         const test = await Test.findById(testId);
         const year = test.createdAt.getFullYear();
+
+        if (test.school.equals(req.params.id)) {
+            throw new ExpressError(
+                `This test is created here before look around class-${test.classNo}`,
+                400
+            );
+        }
 
         if (!school || !test) {
             throw new ExpressError(
@@ -111,12 +118,17 @@ export const editSchool = async (req, res) => {
             throw new ExpressError("This test is added previously", 400);
         }
 
+        if (school.otherTestsClassMsg) {
+            school.otherTestsClassMsg = "";
+        }
+
         const isClass = school.classes.find((cls) => {
             return parseInt(cls.classNo, 10) === test.classNo;
         });
 
         if (isClass === undefined) {
             school.classes.push({ classNo: test.classNo, groups: [] });
+            school.otherTestsClassMsg = `Class-${test.classNo} is added automatically to ${school.schoolName} school, if you dont want to add class-${test.classNo} you can delete it.`;
         }
 
         if (school.tests[classNo] && !school.tests[classNo][year]) {
@@ -147,32 +159,68 @@ export const editSchool = async (req, res) => {
             },
         });
         return res.json(school);
+    } else if (req.body.type === "otherTestsClassMsg") {
+        const school = await School.findById(req.params.id);
+        if (school.otherTestsClassMsg) {
+            school.otherTestsClassMsg = "";
+        }
+        await school.save();
+        return res.json(school);
     }
-    console.log("not reached");
+    // console.log("not reached");
+
+    if (req.body.classes.length > 16) {
+        throw new ExpressError("Classes exceed limit of 16");
+    }
+
+    req.body.classes.forEach((cls) => {
+        if (cls.groups && cls.groups.length > 10) {
+            throw new ExpressError("Groups exceed limit of 10");
+        }
+    });
+
+    const seen = new Set();
+    const hasDuplicates = req.body.classes.some((currentObject) => {
+        return seen.size === seen.add(currentObject.classNo).size;
+    });
+
+    if (hasDuplicates) {
+        throw new ExpressError(
+            "You added duplicate classes, please check",
+            400
+        );
+    }
+
     const schoolPrev = await School.findById(req.params.id);
     if (!schoolPrev)
         throw new ExpressError("Something went wrong, try again later", 400);
+
+    if (schoolPrev.otherTestsClassMsg) {
+        schoolPrev.otherTestsClassMsg = "";
+    }
 
     schoolPrev.classes.forEach((prevCls) => {
         const val = req.body.classes.find((cls) => {
             return parseInt(prevCls.classNo, 10) === cls.classNo;
         });
-        console.log(val);
+        // console.log(val);
+        // console.log(req.body.classes);
+        // console.log(schoolPrev.classes);
         if (val === undefined && schoolPrev.tests[prevCls.classNo]) {
             const years = Object.keys(schoolPrev.tests[prevCls.classNo]);
             years.forEach((year) => {
-                console.log(year);
-                console.log(schoolPrev.tests[prevCls.classNo][year]);
+                // console.log(year);
+                // console.log(schoolPrev.tests[prevCls.classNo][year]);
                 schoolPrev.tests[prevCls.classNo][year].forEach(
                     async (test) => {
-                        console.log(test);
+                        // console.log(test);
                         await Test.findByIdAndDelete(test);
                     }
                 );
             });
-            console.log(schoolPrev.tests);
+            // console.log(schoolPrev.tests);
             schoolPrev.tests = _.omit(schoolPrev.tests, prevCls.classNo);
-            console.log(schoolPrev.tests);
+            // console.log(schoolPrev.tests);
         }
     });
 
@@ -191,7 +239,6 @@ export const editSchool = async (req, res) => {
 
 export const deleteSchool = async (req, res) => {
     const school = await School.findByIdAndDelete(req.params.id);
-    console.log(school);
 
     if (!school)
         throw new ExpressError("Something went wrong, try again later", 400);

@@ -433,7 +433,7 @@ body .navbar {
 }
 
 .secondCardStyle {
-    min-height: 9rem;
+    /* min-height: 9rem; */
     border-radius: 10px;
     background: #e0aeff;
     border: #e0aeff;
@@ -450,7 +450,7 @@ body .navbar {
 
 .secondCardStyleMiddle {
     --secondCardScale: 0.9;
-    min-height: 9rem;
+    /* min-height: 9rem; */
     border-radius: 10px;
     background: #6b3693;
     border: #e0aeff;
@@ -498,6 +498,7 @@ body .navbar {
 
 .firstCardStyle {
     font-weight: 600;
+    font-size: 13px;
     border-radius: 8px;
     background-color: #ebf1f5;
     transform: translateX(-100%);
@@ -627,6 +628,14 @@ body .navbar {
     .parentRelativeTwo {
         left: 2rem;
     }
+
+    .homeHeading {
+        font-size: 0.9rem;
+    }
+
+    .paraText {
+        font-size: 0.6rem;
+    }
 }
 
 @media (max-width: 50em) {
@@ -643,6 +652,14 @@ body .navbar {
 
     .mainPage {
         align-items: center;
+    }
+
+    .homeHeading {
+        font-size: 1rem;
+    }
+
+    .paraText {
+        font-size: 0.7rem;
     }
 }
 
@@ -720,5 +737,17 @@ body .navbar {
                 scaleY(1);
             opacity: 1;
         }
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .firstRow {
+        padding: 20px 15px;
+    }
+}
+
+@media screen and (max-width: 350px) {
+    .firstRow {
+        padding: 20px 5px;
     }
 }

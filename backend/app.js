@@ -13,6 +13,9 @@ import section from "./routes/section.js";
 import auth from "./routes/auth.js";
 import exam from "./routes/exam.js";
 import school from "./routes/school.js";
+import principle from "./routes/principle.js";
+import teacher from "./routes/teacher.js";
+import student from "./routes/student.js";
 
 connectDB();
 
@@ -46,13 +49,16 @@ app.use(
     })
 );
 app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan("dev"));
 
 // routes
 
 app.use("/api", auth);
+app.use("/api/principle", principle);
+app.use("/api/teacher", teacher);
+app.use("/api/student", student);
 app.use("/api/schools", school);
 app.use("/api/schools", test);
 app.use("/api/tests", section);

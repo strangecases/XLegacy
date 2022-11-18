@@ -1,0 +1,29 @@
+.view-section-layout {
+    min-height: 100vh;
+    margin: auto;
+    overflow: hidden;
+}
+
+.view-section-card {
+    max-width: 767px;
+    margin: 20px auto;
+}
+
+.view-section-link-color {
+    color: red;
+}
+
+.view-section-select {
+    width: 100%;
+    margin-left: auto;
+    text-align: center;
+}
+
+.view-section-correct-answer {
+    color: #ff6a00;
+}
+
+.view-section-check-outlined {
+    color: green;
+    vertical-align: 0.1em;
+}
