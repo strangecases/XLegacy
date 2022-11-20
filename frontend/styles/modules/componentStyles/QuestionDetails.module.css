@@ -29,7 +29,7 @@
 }
 
 .question-detail-row {
-    max-height: 3.5em;
+    max-height: 10.5em;
 }
 
 .question-detail-tooltip {
@@ -115,6 +115,10 @@
 .question-detail-div-one-badge,
 .question-detail-div-one-button {
     width: 100%;
+}
+
+:global(.ant-form) .question-detail-card {
+    overflow-y: auto;
 }
 
 @media only screen and (max-width: 910px) {

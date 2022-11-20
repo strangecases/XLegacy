@@ -95,9 +95,9 @@ body::-webkit-scrollbar-track {
     border-radius: 4px;
 }
 
-.ant-form .scroll-bar-none:hover {
+/* .ant-form .scroll-bar-none:hover {
     overflow-y: auto;
-}
+} */
 
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
@@ -147,6 +147,10 @@ li {
 .ant-card .ant-card-body {
     padding: 14px;
     margin: 5px;
+}
+
+.scroll-bar-none .ant-card-body {
+    padding: 16px 14px 0 14px;
 }
 
 .inner-card-padding-small .ant-card-body {
