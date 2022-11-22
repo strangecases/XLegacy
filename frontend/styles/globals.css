@@ -95,10 +95,6 @@ body::-webkit-scrollbar-track {
     border-radius: 4px;
 }
 
-/* .ant-form .scroll-bar-none:hover {
-    overflow-y: auto;
-} */
-
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
     /* -webkit-appearance: none; */
@@ -149,10 +145,6 @@ li {
     margin: 5px;
 }
 
-.scroll-bar-none .ant-card-body {
-    padding: 16px 14px 0 14px;
-}
-
 .inner-card-padding-small .ant-card-body {
     padding: 6px;
     margin: 5px;
@@ -160,6 +152,10 @@ li {
 
 .inner-card-padding-none .ant-card-body {
     padding: 0px;
+}
+
+.inner-card-padding-two .ant-card-body {
+    padding: 2px;
 }
 
 .inner-card-padding-small-marginbottom .ant-card-body {
@@ -291,7 +287,8 @@ li {
 
 .ant-col .test-delete:hover {
     font-size: 22px;
-    color: rgb(240, 41, 41);
+    /* color: rgb(240, 41, 41); */
+    color: #ec5e5e;
 }
 
 .ant-col .hover-icon-delete-small:hover {

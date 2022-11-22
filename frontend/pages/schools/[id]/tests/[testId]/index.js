@@ -195,7 +195,7 @@ const TestId = () => {
                                             <Tooltip
                                                 title="Delete Section"
                                                 placement="topLeft"
-                                                color="red"
+                                                color="#ec5e5e"
                                                 overlayClassName="tooltip-mobile-display-none"
                                             >
                                                 <CloseCircleFilled

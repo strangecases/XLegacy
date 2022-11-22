@@ -52,7 +52,7 @@ const DeleteTestForm = ({ type = "" }) => {
             <Tooltip
                 title="Delete Test"
                 placement="right"
-                color="red"
+                color="#ec5e5e"
                 overlayClassName="tooltip-mobile-display-none"
             >
                 <CloseCircleFilled
