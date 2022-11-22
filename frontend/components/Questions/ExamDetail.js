@@ -15,7 +15,7 @@ import {
 } from "antd";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { useForm, Controller } from "react-hook-form";
-import { useEffect, useCallback, useRef } from "react";
+import { useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { EDIT_ANSWER } from "../../store/types";
@@ -35,10 +35,10 @@ const ExamDetail = () => {
     const { id, testId } = router.query;
 
     const dispatch = useDispatch();
-    const grew = useRef(0);
-    useEffect(() => {
-        grew.current += 1;
-    });
+    // const grew = useRef(0);
+    // useEffect(() => {
+    //     grew.current += 1;
+    // });
 
     const { handleSubmit, control, setValue } = useForm({
         mode: "onBlur",
@@ -404,7 +404,7 @@ const ExamDetail = () => {
                                             }}
                                             type="primary"
                                         >
-                                            Submit {grew.current}
+                                            Submit
                                         </Button>
                                     </Popconfirm>
                                 </Col>
