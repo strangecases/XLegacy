@@ -320,7 +320,6 @@ const QuestionDetail = () => {
                 } else {
                     d.questionNo -= 1;
                 }
-                console.log(d);
                 return d;
             });
             // console.log("2", questionList);
@@ -406,12 +405,13 @@ const QuestionDetail = () => {
         <>
             <SegmentedSections />
             {/* {console.log(errors)} */}
+
             <Form
                 onFinish={handleSubmit(onSubmit, onError)}
                 className={questionDetailStyle["question-detail-form"]}
             >
                 <Card
-                    className={`scroll-bar-none ${
+                    className={`${
                         questionDetailStyle["question-detail-card"]
                     } ${
                         !errors?.question?.message
@@ -424,107 +424,149 @@ const QuestionDetail = () => {
                     <Skeleton
                         active
                         loading={sectionLoading}
-                        paragraph={{ rows: 0 }}
+                        paragraph={{ rows: 1 }}
                         title={{ width: "100%" }}
                     />
                     {!sectionLoading && (
-                        <Row
-                            gutter={16}
-                            className={
-                                questionDetailStyle["question-detail-row"]
-                            }
-                        >
-                            <Col xs={6} sm={4} lg={3} span={3}>
-                                <Controller
-                                    // value={setValue(
-                                    //     "questionNo",
-                                    //     selectedQuestion,
-                                    //     { shouldDirty: false }
-                                    // )}
-                                    control={control}
-                                    name="questionNo"
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            className={
-                                                questionDetailStyle[
-                                                    "question-detail-center"
-                                                ]
-                                            }
-                                            readOnly
-                                        />
-                                    )}
-                                />
-                            </Col>
-                            <Col xs={13} sm={16} lg={17} span={17}>
-                                <FormItem
-                                    control={control}
-                                    errors={errors}
-                                    name="question"
-                                    placeholder="Enter Question"
-                                    type="text"
-                                />
-                            </Col>
-                            <Col xs={5} sm={4} md={4} lg={3} span={3}>
-                                <Row
-                                    gutter={{
-                                        xs: 32,
-                                        sm: 16,
-                                        md: 28,
-                                        lg: 32,
-                                    }}
-                                >
-                                    <Col
-                                        xs={8}
-                                        sm={8}
-                                        md={6}
-                                        lg={8}
-                                        xl={5}
-                                        span={8}
+                        <>
+                            <Row
+                                gutter={{ xs: 10, sm: 16 }}
+                                className={
+                                    questionDetailStyle["question-detail-row"]
+                                }
+                            >
+                                <Col xs={5} sm={4} lg={3} span={3}>
+                                    <Controller
+                                        // value={setValue(
+                                        //     "questionNo",
+                                        //     selectedQuestion,
+                                        //     { shouldDirty: false }
+                                        // )}
+                                        control={control}
+                                        name="questionNo"
+                                        render={({ field }) => (
+                                            <Input
+                                                {...field}
+                                                className={
+                                                    questionDetailStyle[
+                                                        "question-detail-center"
+                                                    ]
+                                                }
+                                                readOnly
+                                            />
+                                        )}
+                                    />
+                                </Col>
+                                <Col xs={19} sm={16} lg={18} span={17}>
+                                    <FormItem
+                                        control={control}
+                                        errors={errors}
+                                        name="question"
+                                        placeholder="Enter Question"
+                                        type="text"
+                                    />
+                                </Col>
+                                <Col xs={0} sm={4} md={4} lg={3} span={3}>
+                                    <Row
+                                        gutter={{
+                                            xs: 32,
+                                            sm: 16,
+                                            md: 28,
+                                            lg: 32,
+                                        }}
                                     >
-                                        <Tooltip
-                                            title="Save Question"
-                                            placement="bottom"
-                                            color="#71a832"
-                                            overlayClassName="tooltip-mobile-display-none"
+                                        <Col
+                                            xs={8}
+                                            sm={8}
+                                            md={6}
+                                            lg={8}
+                                            xl={5}
+                                            span={8}
                                         >
-                                            <CheckCircleFilled
-                                                onClick={handleSubmit(
-                                                    onSubmit,
-                                                    onError
-                                                )}
-                                                className={`test-submit-delete test-submit ${questionDetailStyle["question-detail-tooltip"]} 
+                                            <Tooltip
+                                                title="Save Question"
+                                                placement="bottom"
+                                                color="#71a832"
+                                                overlayClassName="tooltip-mobile-display-none"
+                                            >
+                                                <CheckCircleFilled
+                                                    onClick={handleSubmit(
+                                                        onSubmit,
+                                                        onError
+                                                    )}
+                                                    className={`test-submit-delete test-submit ${questionDetailStyle["question-detail-tooltip"]} 
                                                
                                                 `}
-                                            />
-                                        </Tooltip>
-                                    </Col>
+                                                />
+                                            </Tooltip>
+                                        </Col>
 
-                                    <Col
-                                        xs={8}
-                                        sm={8}
-                                        md={6}
-                                        lg={8}
-                                        xl={5}
-                                        span={8}
-                                    >
-                                        <Tooltip
-                                            title="Delete Question"
-                                            placement="bottom"
-                                            color="#f20707"
-                                            overlayClassName="tooltip-mobile-display-none"
+                                        <Col
+                                            xs={8}
+                                            sm={8}
+                                            md={6}
+                                            lg={8}
+                                            xl={5}
+                                            span={8}
                                         >
-                                            <CloseCircleFilled
-                                                onClick={onDeleteQuestion}
-                                                className={`test-submit-delete test-delete ${questionDetailStyle["question-detail-tooltip"]}`}
-                                            />
-                                        </Tooltip>
-                                    </Col>
-                                </Row>
-                            </Col>
-                        </Row>
+                                            <Tooltip
+                                                title="Delete Question"
+                                                placement="bottom"
+                                                color="#ec5e5e"
+                                                overlayClassName="tooltip-mobile-display-none"
+                                            >
+                                                <CloseCircleFilled
+                                                    onClick={onDeleteQuestion}
+                                                    className={`test-submit-delete test-delete ${questionDetailStyle["question-detail-tooltip"]}`}
+                                                />
+                                            </Tooltip>
+                                        </Col>
+                                    </Row>
+                                </Col>
+                            </Row>
+                            <Row
+                                gutter={8}
+                                className={
+                                    questionDetailStyle[
+                                        "small-screen-delete-save"
+                                    ]
+                                }
+                            >
+                                <Col xs={12} sm={0} offset={0}>
+                                    <Button
+                                        className={
+                                            questionDetailStyle[
+                                                "question-detail-button"
+                                            ]
+                                        }
+                                        type="dashed"
+                                        onClick={handleSubmit(
+                                            onSubmit,
+                                            onError
+                                        )}
+                                    >
+                                        Save question
+                                    </Button>
+                                </Col>
+
+                                <Col xs={12} sm={0}>
+                                    <Button
+                                        className={
+                                            questionDetailStyle[
+                                                "question-detail-button"
+                                            ]
+                                        }
+                                        onClick={onDeleteQuestion}
+                                        danger
+                                    >
+                                        Delete
+                                    </Button>
+                                </Col>
+                            </Row>
+                        </>
                     )}
                 </Card>
+
                 <Card
                     className={
                         questionDetailStyle["question-detail-inner-card"]
@@ -547,7 +589,7 @@ const QuestionDetail = () => {
                                             <Col
                                                 xs={24}
                                                 sm={24}
-                                                md={16}
+                                                md={19}
                                                 lg={16}
                                                 span={16}
                                             >
@@ -587,7 +629,7 @@ const QuestionDetail = () => {
                                                                 />
                                                             </Col>
                                                             <Col
-                                                                xs={16}
+                                                                xs={18}
                                                                 md={18}
                                                                 lg={19}
                                                                 offset={1}
@@ -636,7 +678,7 @@ const QuestionDetail = () => {
                                                                 />
                                                             </Col>
                                                             <Col
-                                                                xs={16}
+                                                                xs={18}
                                                                 md={18}
                                                                 lg={19}
                                                                 offset={1}
@@ -684,7 +726,7 @@ const QuestionDetail = () => {
                                                                 />
                                                             </Col>
                                                             <Col
-                                                                xs={16}
+                                                                xs={18}
                                                                 md={18}
                                                                 lg={19}
                                                                 offset={1}
@@ -732,7 +774,7 @@ const QuestionDetail = () => {
                                                                 />
                                                             </Col>
                                                             <Col
-                                                                xs={16}
+                                                                xs={18}
                                                                 md={18}
                                                                 lg={19}
                                                                 offset={1}
@@ -790,7 +832,6 @@ const QuestionDetail = () => {
                                             type="link"
                                             disabled={!saveSection}
                                         >
-                                            {" "}
                                             view
                                         </Button>
                                     </Link>

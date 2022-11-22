@@ -25,3 +25,7 @@
 .exam-detail-outlined-display {
     display: none;
 }
+
+.exam-detail-radio-label {
+    width: 100%;
+}

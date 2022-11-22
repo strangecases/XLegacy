@@ -26,11 +26,12 @@
 .question-detail-card {
     margin-block: 0;
     padding: 16px 0 0 10px;
+    max-height: 15em;
 }
 
-.question-detail-row {
-    max-height: 3.5em;
-}
+/* .question-detail-row {
+    max-height: 10.5em;
+} */
 
 .question-detail-tooltip {
     vertical-align: -0.2em;
@@ -115,6 +116,29 @@
 .question-detail-div-one-badge,
 .question-detail-div-one-button {
     width: 100%;
+}
+
+:global(.ant-form) .question-detail-card {
+    overflow-y: auto;
+}
+
+.question-detail-card :global(.ant-card-body) {
+    padding: 10px;
+}
+
+.question-detail-button {
+    width: 100%;
+    overflow: hidden;
+}
+
+@media only screen and (min-width: 576px) {
+    .question-detail-card :global(.ant-card-body) {
+        padding: 16px 14px 0 14px;
+    }
+
+    .small-screen-delete-save {
+        display: none;
+    }
 }
 
 @media only screen and (max-width: 910px) {

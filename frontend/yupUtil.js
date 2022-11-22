@@ -70,8 +70,8 @@ export const registerSchema = yup
 export const questionSchema = yup.object().shape({
     question: yup
         .string()
-        .min(10, "question should be minimum 10 characters")
-        .max(100, "question should be maximum 100 characters")
+        .min(10, "question is minimum 10 characters")
+        .max(100, "question is maximum 100 characters")
         .required("question is required"),
     options: yup.object().shape({
         a: yup

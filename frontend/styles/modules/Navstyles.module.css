@@ -203,7 +203,7 @@ body .navbar {
     padding: 20px;
     display: block;
     width: 83vw;
-    min-height: 22vh;
+    /* min-height: 22vh; */
     margin: 1.5rem auto 4rem auto;
     color: rgba(255, 255, 255, 0.838);
     transform: translateY(50px);
@@ -677,7 +677,7 @@ body .navbar {
 
     .homeText {
         max-width: 38vw;
-        min-height: 25vh;
+        /* min-height: 25vh; */
         margin: auto;
     }
 

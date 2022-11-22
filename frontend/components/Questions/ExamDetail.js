@@ -15,7 +15,7 @@ import {
 } from "antd";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { useForm, Controller } from "react-hook-form";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { EDIT_ANSWER } from "../../store/types";
@@ -24,8 +24,6 @@ import SegmentedSections from "./SegmentedSections";
 import examDetailStyle from "../../styles/modules/componentStyles/ExamDetails.module.css";
 
 const ExamDetail = () => {
-    const [question, setQuestion] = useState({});
-
     const { questions } = useSelector((state) => state);
     const { answers } = useSelector((state) => state);
     const { questionsLoading } = useSelector((state) => state.load);
@@ -37,6 +35,10 @@ const ExamDetail = () => {
     const { id, testId } = router.query;
 
     const dispatch = useDispatch();
+    // const grew = useRef(0);
+    // useEffect(() => {
+    //     grew.current += 1;
+    // });
 
     const { handleSubmit, control, setValue } = useForm({
         mode: "onBlur",
@@ -71,24 +73,12 @@ const ExamDetail = () => {
     };
 
     useEffect(() => {
-        if (
-            selectedQuestion &&
-            questions &&
-            questions[selectedQuestion] &&
-            questions[selectedQuestion].options
-        ) {
-            setQuestion(questions[selectedQuestion]);
-        } else {
-            setQuestion({});
-        }
-    }, [selectedQuestion, questions]);
-
-    useEffect(() => {
         if (answers[selectedQuestion]) {
             setValue("answer", answers[selectedQuestion]);
         } else {
             setValue("answer", "");
         }
+        setValue("questionNo", selectedQuestion);
     }, [selectedQuestion, answers, setValue]);
 
     useEffect(() => {
@@ -130,18 +120,18 @@ const ExamDetail = () => {
                         title={{ width: "100%" }}
                     />
                     {!questionsLoading && (
-                        <Row gutter={16}>
-                            <Col xs={6} sm={4} md={5} lg={3} span={3}>
+                        <Row gutter={{ xs: 10, sm: 16 }}>
+                            <Col xs={5} sm={4} md={5} lg={3} span={3}>
                                 <Controller
                                     className={
                                         examDetailStyle[
                                             "exam-detail-input-position"
                                         ]
                                     }
-                                    value={setValue(
-                                        "questionNo",
-                                        selectedQuestion
-                                    )}
+                                    // value={setValue(
+                                    //     "questionNo",
+                                    //     selectedQuestion
+                                    // )}
                                     control={control}
                                     name="questionNo"
                                     render={({ field }) => (
@@ -157,13 +147,14 @@ const ExamDetail = () => {
                                     )}
                                 />
                             </Col>
-                            <Col xs={16} md={18} lg={21} span={21}>
+                            <Col xs={19} sm={20} md={19} lg={21} span={21}>
                                 <Card
                                     type="inner"
                                     bordered={false}
                                     className="exam-detail-inner-card"
                                 >
-                                    {question.question}
+                                    {questions[selectedQuestion]?.question ||
+                                        "No Data"}
                                 </Card>
                             </Col>
                         </Row>
@@ -182,8 +173,7 @@ const ExamDetail = () => {
                             bordered={false}
                             className="inner-card-padding"
                         >
-                            {!isQuestionsEmpty &&
-                            questions[selectedQuestion].question ? (
+                            {!isQuestionsEmpty ? (
                                 <Controller
                                     defaultValue="c"
                                     control={control}
@@ -198,7 +188,7 @@ const ExamDetail = () => {
                                             }
                                         >
                                             <Row>
-                                                <Col span={20}>
+                                                <Col span={24}>
                                                     <Space
                                                         direction="vertical"
                                                         className={
@@ -212,9 +202,8 @@ const ExamDetail = () => {
                                                             <Col
                                                                 xs={24}
                                                                 sm={18}
-                                                                md={17}
-                                                                lg={16}
-                                                                span={16}
+                                                                md={20}
+                                                                lg={15}
                                                             >
                                                                 <label
                                                                     htmlFor="select-a"
@@ -229,14 +218,23 @@ const ExamDetail = () => {
                                                                         className="option-card inner-card-padding-zero"
                                                                     >
                                                                         <Radio
-                                                                            className="hiii2"
+                                                                            className={`hiii2 ${examDetailStyle["exam-detail-radio-label"]}`}
                                                                             value="a"
                                                                             id="select-a"
+                                                                            disabled={
+                                                                                !questions[
+                                                                                    selectedQuestion
+                                                                                ]
+                                                                                    ?.question
+                                                                            }
                                                                         >
-                                                                            {question.options &&
-                                                                                question
-                                                                                    .options
-                                                                                    .a}
+                                                                            {
+                                                                                questions[
+                                                                                    selectedQuestion
+                                                                                ]
+                                                                                    ?.options
+                                                                                    ?.a
+                                                                            }
                                                                         </Radio>
                                                                     </Card>
                                                                 </label>
@@ -246,9 +244,8 @@ const ExamDetail = () => {
                                                             <Col
                                                                 xs={24}
                                                                 sm={18}
-                                                                md={17}
-                                                                lg={16}
-                                                                span={16}
+                                                                md={20}
+                                                                lg={15}
                                                             >
                                                                 <label
                                                                     htmlFor="select-b"
@@ -263,14 +260,23 @@ const ExamDetail = () => {
                                                                         className="option-card"
                                                                     >
                                                                         <Radio
-                                                                            className="hiii2"
+                                                                            className={`hiii2 ${examDetailStyle["exam-detail-radio-label"]}`}
                                                                             value="b"
                                                                             id="select-b"
+                                                                            disabled={
+                                                                                !questions[
+                                                                                    selectedQuestion
+                                                                                ]
+                                                                                    ?.question
+                                                                            }
                                                                         >
-                                                                            {question.options &&
-                                                                                question
-                                                                                    .options
-                                                                                    .b}
+                                                                            {
+                                                                                questions[
+                                                                                    selectedQuestion
+                                                                                ]
+                                                                                    ?.options
+                                                                                    ?.b
+                                                                            }
                                                                         </Radio>
                                                                     </Card>
                                                                 </label>
@@ -280,9 +286,8 @@ const ExamDetail = () => {
                                                             <Col
                                                                 xs={24}
                                                                 sm={18}
-                                                                md={17}
-                                                                lg={16}
-                                                                span={16}
+                                                                md={20}
+                                                                lg={15}
                                                             >
                                                                 <label
                                                                     htmlFor="select-c"
@@ -297,14 +302,23 @@ const ExamDetail = () => {
                                                                         className="option-card"
                                                                     >
                                                                         <Radio
-                                                                            className="hiii2"
+                                                                            className={`hiii2 ${examDetailStyle["exam-detail-radio-label"]}`}
                                                                             value="c"
                                                                             id="select-c"
+                                                                            disabled={
+                                                                                !questions[
+                                                                                    selectedQuestion
+                                                                                ]
+                                                                                    ?.question
+                                                                            }
                                                                         >
-                                                                            {question.options &&
-                                                                                question
-                                                                                    .options
-                                                                                    .c}
+                                                                            {
+                                                                                questions[
+                                                                                    selectedQuestion
+                                                                                ]
+                                                                                    ?.options
+                                                                                    ?.c
+                                                                            }
                                                                         </Radio>
                                                                     </Card>
                                                                 </label>
@@ -314,9 +328,8 @@ const ExamDetail = () => {
                                                             <Col
                                                                 xs={24}
                                                                 sm={18}
-                                                                md={17}
-                                                                lg={16}
-                                                                span={16}
+                                                                md={20}
+                                                                lg={15}
                                                             >
                                                                 <label
                                                                     htmlFor="select-d"
@@ -331,14 +344,23 @@ const ExamDetail = () => {
                                                                         className="option-card"
                                                                     >
                                                                         <Radio
-                                                                            className="hiii2"
+                                                                            className={`hiii2 ${examDetailStyle["exam-detail-radio-label"]}`}
                                                                             value="d"
                                                                             id="select-d"
+                                                                            disabled={
+                                                                                !questions[
+                                                                                    selectedQuestion
+                                                                                ]
+                                                                                    ?.question
+                                                                            }
                                                                         >
-                                                                            {question.options &&
-                                                                                question
-                                                                                    .options
-                                                                                    .d}
+                                                                            {
+                                                                                questions[
+                                                                                    selectedQuestion
+                                                                                ]
+                                                                                    ?.options
+                                                                                    ?.d
+                                                                            }
                                                                         </Radio>
                                                                     </Card>
                                                                 </label>
