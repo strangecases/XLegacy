@@ -1,6 +1,6 @@
 html,
 body {
-    font-family: "Montserrat", "Roboto", sans-serif;
+    font-family: "Montserrat", "Roboto", sans-serif !important;
     font-weight: 400;
     /* overflow-x: hidden !important; */
 }

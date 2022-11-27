@@ -222,6 +222,6 @@ const Info = () => {
     );
 };
 
-Info.getLayout = (page) => <ExamNavNew type="intro">{page}</ExamNavNew>;
+Info.getLayout = (page) => <ExamNavNew>{page}</ExamNavNew>;
 
 export default Info;

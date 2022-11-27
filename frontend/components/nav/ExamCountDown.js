@@ -1,46 +1,35 @@
 import React, { useState, useEffect } from "react";
-import { Statistic } from "antd";
 import { useRouter } from "next/router";
-import Countdown from "react-countdown";
+import Countdown, { zeroPad } from "react-countdown";
 import { useDispatch, useSelector } from "react-redux";
 import allActions from "../../store/actions";
+import examNavNewStyle from "../../styles/modules/componentStyles/ExamNavNew.module.css";
 
 const ExamCountDown = ({ time = 40 }) => {
     const [countDownColor, setCountDownColor] = useState("green");
 
     const router = useRouter();
     const { id, testId } = router.query;
-    // const { answers } = useSelector((state) => state);
     const { examId } = useSelector((state) => state.exam);
 
     const dispatch = useDispatch();
 
     const renderer = ({ hours, minutes, seconds }) => {
-        const onFinish = () => {
-            dispatch(allActions.examActions.onSectionSubmit(id, testId));
-        };
-
-        const onChange = (val) => {
-            if (4.95 * 60 * 1000 < val && val < 5 * 60 * 1000) {
-                // console.log("ffddfdee");
-                setCountDownColor("red");
-            }
-            if (2.85 * 1000 < val && val < 3 * 1000) {
-                dispatch(allActions.customActions.examSaved(true));
-            }
-        };
         return (
-            <Statistic.Countdown
-                onChange={onChange}
-                onFinish={onFinish}
-                value={
-                    Date.now() +
-                    hours * 60 * 60 * 1000 +
-                    minutes * 60 * 1000 +
-                    seconds * 1000
-                }
-                valueStyle={{ color: countDownColor }}
-            />
+            <div
+                style={{ color: countDownColor }}
+                className={examNavNewStyle["exam-nav-count"]}
+            >
+                {zeroPad(hours)}
+                <span className={examNavNewStyle["exam-nav-count-margin"]}>
+                    :
+                </span>
+                {zeroPad(minutes)}
+                <span className={examNavNewStyle["exam-nav-count-margin"]}>
+                    :
+                </span>
+                {zeroPad(seconds)}
+            </div>
         );
     };
 
@@ -50,9 +39,6 @@ const ExamCountDown = ({ time = 40 }) => {
         date: Date.now(),
         delay: time * 60 * 1000,
     });
-
-    // console.log(data);
-    // console.log(Object.keys(answers).length, answers);
 
     useEffect(() => {
         const wantedDelay = time * 60 * 1000;
@@ -88,12 +74,24 @@ const ExamCountDown = ({ time = 40 }) => {
             onComplete={() => {
                 if (localStorage.getItem("end_date") != null)
                     localStorage.removeItem("end_date");
+
+                dispatch(allActions.examActions.onSectionSubmit(id, testId));
+
                 // if (answers && Object.keys(answers).length !== 0) {
                 //     console.log(Object.keys(answers).length, answers);
                 //     dispatch(
                 //         allActions.examActions.onSectionSubmit(id, testId)
                 //     );
                 // }
+            }}
+            onTick={({ total }) => {
+                if (total === 5 * 60 * 1000) {
+                    setCountDownColor("red");
+                }
+
+                if (total === 2 * 1000) {
+                    dispatch(allActions.customActions.examSaved(true));
+                }
             }}
         />
     );

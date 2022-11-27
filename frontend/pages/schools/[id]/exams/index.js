@@ -11,6 +11,6 @@ const Exams = () => {
     );
 };
 
-Exams.getLayout = (page) => <ExamNavNew type="intro">{page}</ExamNavNew>;
+Exams.getLayout = (page) => <ExamNavNew>{page}</ExamNavNew>;
 
 export default Exams;

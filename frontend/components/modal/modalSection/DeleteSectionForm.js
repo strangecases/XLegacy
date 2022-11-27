@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import allActions from "../../../store/actions";
-import ModalCreateTest from "../ModalCreate";
+import ModalCreate from "../ModalCreate";
 
 const DeleteSectionForm = () => {
     const { selectedSectionNo } = useSelector((state) => state.custom);
@@ -45,7 +45,7 @@ const DeleteSectionForm = () => {
                 />
             </Tooltip> */}
 
-            <ModalCreateTest
+            <ModalCreate
                 onOk={onSubmit}
                 title="Delete Section"
                 handleCancel={onHandleCancel}
@@ -53,7 +53,7 @@ const DeleteSectionForm = () => {
             >
                 <p>Warning! You sure u want to delete this section with</p>
                 <p>section number : {selectedSectionNo}</p>
-            </ModalCreateTest>
+            </ModalCreate>
         </>
     );
 };

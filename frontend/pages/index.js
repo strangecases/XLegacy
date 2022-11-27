@@ -187,7 +187,7 @@ const NavBar = () => {
                 <div className={navStyles.bgOne}>
                     <div className={navStyles.containerCard}>
                         <Row
-                            gutter={[20, 16]}
+                            gutter={[20, 20]}
                             ref={rowRef}
                             align="middle"
                             justify="center"
@@ -209,11 +209,12 @@ const NavBar = () => {
                                     } ${navStyles.firstCardStyle}`}
                                 >
                                     <span
-                                        className={
-                                            isRowVisible
-                                                ? navStyles.cardBody
-                                                : ""
-                                        }
+                                        className={`
+                                       ${
+                                           isRowVisible
+                                               ? navStyles.cardBody
+                                               : undefined
+                                       } ${navStyles.cardMax}`}
                                     >
                                         ScholarX is a online examination tool
                                         designed to conduct scholarship test,
@@ -232,16 +233,18 @@ const NavBar = () => {
                                         />
                                     }
                                     className={` ${
-                                        isRowVisible &&
-                                        navStyles.firstCardStyleTwo
+                                        isRowVisible
+                                            ? navStyles.firstCardStyleTwo
+                                            : undefined
                                     } ${navStyles.firstCardStyle}`}
                                 >
                                     <span
-                                        className={
+                                        className={`
+                                        ${
                                             isRowVisible
                                                 ? navStyles.cardBody
                                                 : undefined
-                                        }
+                                        } ${navStyles.cardMax}`}
                                     >
                                         Schools or organizations can manage all
                                         the tests in a well designed structural
@@ -266,11 +269,12 @@ const NavBar = () => {
                                     } ${navStyles.firstCardStyle}`}
                                 >
                                     <span
-                                        className={
-                                            isRowVisible
-                                                ? navStyles.cardBody
-                                                : undefined
-                                        }
+                                        className={`
+                                            ${
+                                                isRowVisible
+                                                    ? navStyles.cardBody
+                                                    : undefined
+                                            } ${navStyles.cardMax}`}
                                     >
                                         ScholarX makes it easy to incorporate
                                         tests from others i.e you can attach
@@ -423,9 +427,12 @@ const NavBar = () => {
                     >
                         <Row
                             align="middle"
-                            justify="center"
-                            gutter={[16, 8]}
-                            className={navStyles.firstRow}
+                            justify="space-around"
+                            gutter={[
+                                { xs: 0, sm: 16 },
+                                { xs: 16, sm: 0 },
+                            ]}
+                            className={navStyles.secondRow}
                         >
                             <Col xs={24} sm={24} md={7} span={8}>
                                 <Card
@@ -435,10 +442,12 @@ const NavBar = () => {
                                             : undefined
                                     }`}
                                 >
-                                    <p className={navStyles.cardParagraph}>
-                                        ScholarX conducts scholarship tests for
-                                        students (VII - XII) and grants
-                                        scholarships of upto 10,000rs.
+                                    <p
+                                        className={`${navStyles.cardParagraph} ${navStyles.cardMax}`}
+                                    >
+                                        ScholarX conducts scholar ship tests for
+                                        students (VII - XII) and grants price of
+                                        upto 10,000rs.
                                     </p>
                                 </Card>
                             </Col>
@@ -452,12 +461,14 @@ const NavBar = () => {
                                             : undefined
                                     }`}
                                 >
-                                    <p className={navStyles.cardParagraph}>
+                                    <p
+                                        className={`${navStyles.cardParagraph} ${navStyles.cardMax} ${navStyles.cardMaxTwo}`}
+                                    >
                                         ScholarX can only afford to do this by
                                         collecting entrance fees and
                                         re-distributing the collected fees as
                                         scholarships to a lot of students who
-                                        perform well in wide range of tests.{" "}
+                                        perform well in wide range of tests.
                                     </p>
                                 </Card>
                             </Col>
@@ -469,7 +480,9 @@ const NavBar = () => {
                                             : undefined
                                     }`}
                                 >
-                                    <p className={navStyles.cardParagraph}>
+                                    <p
+                                        className={`${navStyles.cardParagraph} ${navStyles.cardMax}`}
+                                    >
                                         70% of collected entrance fee will go
                                         back to students and the remaining 30%
                                         is used to run our servers
@@ -482,7 +495,7 @@ const NavBar = () => {
             </div>
 
             <div className={`${navStyles.orderCounter}`}>
-                <div className={` ${navStyles.containerCard}`} ref={ballRef}>
+                <div className={navStyles.containerCardNoMargin} ref={ballRef}>
                     <h2>How to use Scholar X ?</h2>
                     <h3
                         className={

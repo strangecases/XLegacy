@@ -1,15 +1,22 @@
 import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import examNavNewStyle from "../../styles/modules/componentStyles/ExamNavNew.module.css";
 import ExamCountDown from "./ExamCountDown";
 import { stringOverflow } from "../../utils";
 
-const ExamNavNew = ({ children, type = "exam" }) => {
+const ExamNavNew = ({ children, type = "intro" }) => {
+    const [name, setName] = useState("");
+
     const { tests } = useSelector((state) => state);
     const { examData } = useSelector((state) => state.exam);
 
     const router = useRouter();
     const { testId } = router.query;
+
+    useEffect(() => {
+        if (examData) setName(examData.studentName);
+    }, [examData]);
 
     return (
         <>
@@ -30,8 +37,7 @@ const ExamNavNew = ({ children, type = "exam" }) => {
                         )}
 
                         <div className={examNavNewStyle["exam-student-name"]}>
-                            {examData &&
-                                stringOverflow(examData.studentName, 12)}
+                            {stringOverflow(name, 12)}
                         </div>
                     </>
                 )}

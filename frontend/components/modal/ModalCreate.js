@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { Modal } from "antd";
 import modalStyle from "../../styles/modules/componentStyles/Modal.module.css";
 
-const ModalCreateTest = ({
+const ModalCreate = ({
     children,
     onOk,
     isDirty,
@@ -94,4 +94,4 @@ const ModalCreateTest = ({
     );
 };
 
-export default ModalCreateTest;
+export default ModalCreate;

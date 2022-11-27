@@ -121,6 +121,6 @@ const ExamsId = () => {
     );
 };
 
-ExamsId.getLayout = (page) => <ExamNavNew>{page}</ExamNavNew>;
+ExamsId.getLayout = (page) => <ExamNavNew type="exam">{page}</ExamNavNew>;
 
 export default ExamsId;

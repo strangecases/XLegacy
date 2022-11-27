@@ -15,6 +15,7 @@ body .navbar {
     padding: 0;
     position: fixed;
     width: 100%;
+    max-width: 1400px;
     z-index: 1001;
     top: 0;
 }
@@ -38,9 +39,14 @@ body .navbar {
 .bgThree {
     background-image: linear-gradient(rgb(242, 255, 247), white);
 }
-.firstRow {
-    min-height: 600px;
+.firstRow,
+.secondRow {
+    min-height: 500px;
     color: #fff;
+    padding: 20px 20px 50px 20px;
+}
+
+.secondRow {
     padding: 20px;
 }
 
@@ -191,6 +197,10 @@ body .navbar {
     width: min(90%, 85.5vw);
 }
 
+.containerCardNoMargin {
+    margin: auto;
+}
+
 .mainPage {
     min-height: 600px;
     display: flex;
@@ -216,6 +226,7 @@ body .navbar {
 }
 
 .homeTextDisplay {
+    margin: 2.5rem auto 4rem auto;
     opacity: 0;
 }
 
@@ -324,11 +335,44 @@ body .navbar {
         forwards;
 }
 
+.cardMax {
+    --max-lines: 4;
+    --line-height: 1.5;
+
+    max-height: calc(var(--max-lines) * 1em * var(--line-height));
+    line-height: var(--line-height);
+
+    overflow: hidden;
+    position: relative;
+}
+
+.cardMax::before {
+    content: "";
+    position: absolute;
+    height: calc(0.8em * var(--line-height));
+    width: 100%;
+    bottom: 0;
+    pointer-events: none;
+    background: linear-gradient(to bottom, transparent, #e0aeff);
+}
+
+.cardMaxTwo {
+    --max-lines: 7;
+}
+
+.cardMaxTwo::before {
+    background: linear-gradient(to bottom, transparent, #6b3693);
+}
+
 .cardBody {
     display: inline-block;
     transform: translateY(10px);
     opacity: 0;
     animation: card-body 1s ease-in 4s forwards;
+}
+
+.cardBody::before {
+    background: linear-gradient(to bottom, transparent, #ebf1f5);
 }
 
 @keyframes card-body {
@@ -434,6 +478,7 @@ body .navbar {
 
 .secondCardStyle {
     /* min-height: 9rem; */
+    --cardScale: 1;
     border-radius: 10px;
     background: #e0aeff;
     border: #e0aeff;
@@ -449,7 +494,8 @@ body .navbar {
 }
 
 .secondCardStyleMiddle {
-    --secondCardScale: 0.9;
+    --secondCardScale: 1;
+
     /* min-height: 9rem; */
     border-radius: 10px;
     background: #6b3693;
@@ -480,7 +526,7 @@ body .navbar {
         opacity: 0;
     }
     100% {
-        transform: scale(0.9);
+        transform: scale(var(--cardScale));
         opacity: 1;
     }
 }
@@ -681,6 +727,10 @@ body .navbar {
         margin: auto;
     }
 
+    .homeTextDisplay {
+        margin: auto;
+    }
+
     .imggChalkOne {
         left: 30px;
     }
@@ -707,6 +757,15 @@ body .navbar {
     .secondCardStyleMiddle {
         --secondCardScale: 1;
     }
+
+    .secondCardStyle {
+        --cardScale: 0.9;
+    }
+
+    .cardMaxTwo {
+        --max-lines: 5;
+    }
+
     .orderCounter {
         padding: 6em 6em 6em 8em;
     }
@@ -742,7 +801,11 @@ body .navbar {
 
 @media screen and (max-width: 400px) {
     .firstRow {
-        padding: 20px 15px;
+        padding: 20px 5px 50px 5px;
+    }
+
+    .secondRow {
+        padding: 20px 5px;
     }
 }
 

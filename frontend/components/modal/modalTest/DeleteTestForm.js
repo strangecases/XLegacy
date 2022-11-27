@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { CloseCircleFilled } from "@ant-design/icons";
 import allActions from "../../../store/actions";
-import ModalCreateTest from "../ModalCreate";
+import ModalCreate from "../ModalCreate";
 
 const DeleteTestForm = ({ type = "" }) => {
     const { tests } = useSelector((state) => state);
@@ -61,7 +61,7 @@ const DeleteTestForm = ({ type = "" }) => {
                     className="test-delete test-submit-big"
                 />
             </Tooltip>
-            <ModalCreateTest
+            <ModalCreate
                 onOk={type !== "otherTests" ? onSubmit : onOtherTestSubmit}
                 title="Delete Test"
                 handleCancel={onHandleCancel}
@@ -79,7 +79,7 @@ const DeleteTestForm = ({ type = "" }) => {
                     </p>
                 )}
                 <p>{test.testTitle}</p>
-            </ModalCreateTest>
+            </ModalCreate>
         </>
     );
 };
