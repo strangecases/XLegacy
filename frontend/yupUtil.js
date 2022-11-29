@@ -8,6 +8,7 @@ export const testSchema = yup.object().shape({
     testTime: yup
         .number()
         .typeError("test time must be a number")
+        .integer("must be integer")
         .min(5, "test should be more than 5 mins")
         .max(100, "tests should not be more than 100 min")
         .required("test time is required"),
