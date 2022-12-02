@@ -17,8 +17,8 @@ const TopNavNew = ({ children }) => {
     const [current, setCurrent] = useState("");
     const [mount, setMount] = useState(false);
 
-    const { admin } = useSelector((state) => state.auth);
-    const { role } = useSelector((state) => state);
+    const { role, auth } = useSelector((state) => state);
+    const { admin } = auth;
 
     const dispatch = useDispatch();
 
@@ -67,6 +67,7 @@ const TopNavNew = ({ children }) => {
             ),
             key: "/login",
             icon: <LoginOutlined />,
+            className: antNavNewStyle["font-size-small"],
         },
         admin === null && {
             label: (
@@ -76,6 +77,7 @@ const TopNavNew = ({ children }) => {
             ),
             key: "/register",
             icon: <UserAddOutlined />,
+            className: antNavNewStyle["font-size-small"],
         },
         admin !== null && {
             label: admin ? stringOverflow(admin.name, 12) : "",

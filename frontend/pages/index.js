@@ -9,8 +9,9 @@ import allActions from "../store/actions";
 const { Search } = Input;
 
 const NavBar = () => {
-    const { admin } = useSelector((state) => state.auth);
-    const { searchLoading } = useSelector((state) => state.load);
+    const { auth, load } = useSelector((state) => state);
+    const { admin } = auth;
+    const { searchLoading } = load;
 
     const dispatch = useDispatch();
 

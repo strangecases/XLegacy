@@ -18,8 +18,8 @@ const Info = () => {
     const router = useRouter();
     const { id, testId } = router.query;
 
-    const { tests, schools } = useSelector((state) => state);
-    const { examInfoLoading } = useSelector((state) => state.load);
+    const { tests, schools, load } = useSelector((state) => state);
+    const { examInfoLoading } = load;
 
     const dispatch = useDispatch();
 

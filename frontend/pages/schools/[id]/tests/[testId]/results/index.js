@@ -24,9 +24,8 @@ const Results = () => {
     const router = useRouter();
     const { id, testId } = router.query;
 
-    const { tests } = useSelector((state) => state);
-    const { outOf, examsList } = useSelector((state) => state.exam);
-    const { schools } = useSelector((state) => state);
+    const { tests, schools, exam } = useSelector((state) => state);
+    const { outOf, examsList } = exam;
 
     const dispatch = useDispatch();
 

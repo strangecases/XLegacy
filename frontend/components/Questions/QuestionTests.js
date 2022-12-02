@@ -15,11 +15,8 @@ const QuestionTests = () => {
     const { id, testId } = router.query;
     const path = router.pathname;
 
-    const { tests } = useSelector((state) => state);
-    const { selectedSectionId, isQuestionsEmpty } = useSelector(
-        (state) => state.custom
-    );
-    const { questionsDrawer } = useSelector((state) => state);
+    const { tests, questionsDrawer, custom } = useSelector((state) => state);
+    const { selectedSectionId, isQuestionsEmpty } = custom;
 
     const dispatch = useDispatch();
 

@@ -9,8 +9,8 @@ import { classAbrv } from "../../../utils";
 const { Option } = Select;
 
 const TestFormGroup = ({ control, errors, path = "test" }) => {
-    const { schools } = useSelector((state) => state);
-    const { selectedClass } = useSelector((state) => state.custom);
+    const { schools, custom } = useSelector((state) => state);
+    const { selectedClass } = custom;
 
     const router = useRouter();
     const { id } = router.query;

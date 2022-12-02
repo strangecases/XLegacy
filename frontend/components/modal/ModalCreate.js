@@ -10,17 +10,17 @@ const ModalCreate = ({
     handleCancel,
     path = "test",
 }) => {
+    const { modals, load } = useSelector((state) => state);
+
     const {
         modalTestVisible,
         modalSectionVisible,
         popTestVisible,
         popSectionVisible,
         popSchoolVisible,
-    } = useSelector((state) => state.modals);
+    } = modals;
 
-    const { modalOkLoading, deleteLoading } = useSelector(
-        (state) => state.load
-    );
+    const { modalOkLoading, deleteLoading } = load;
 
     let visible = false;
     let loading = false;

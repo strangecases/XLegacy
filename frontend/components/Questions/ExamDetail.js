@@ -24,12 +24,9 @@ import SegmentedSections from "./SegmentedSections";
 import examDetailStyle from "../../styles/modules/componentStyles/ExamDetails.module.css";
 
 const ExamDetail = () => {
-    const { questions } = useSelector((state) => state);
-    const { answers } = useSelector((state) => state);
-    const { questionsLoading } = useSelector((state) => state.load);
-    const { selectedQuestion, isQuestionsEmpty } = useSelector(
-        (state) => state.custom
-    );
+    const { questions, answers, load, custom } = useSelector((state) => state);
+    const { questionsLoading } = load;
+    const { selectedQuestion, isQuestionsEmpty } = custom;
 
     const router = useRouter();
     const { id, testId } = router.query;

@@ -14,8 +14,9 @@ import { adminDetailsEditSchema } from "../../yupUtil";
 import Spinner from "../../components/Spinner";
 
 const AdminIndex = () => {
-    const { admin } = useSelector((state) => state.auth);
-    const { loginLoading } = useSelector((state) => state.load);
+    const { auth, load } = useSelector((state) => state);
+    const { admin } = auth;
+    const { loginLoading } = load;
 
     const dispatch = useDispatch();
 

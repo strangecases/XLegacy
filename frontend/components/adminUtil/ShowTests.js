@@ -15,11 +15,14 @@ const ShowTest = ({ type = "admin" }) => {
     const date = new Date();
     const fullYear = date.getFullYear();
 
-    const tests = useSelector((state) => Object.values(state.tests));
-    const { schools } = useSelector((state) => state);
-    const { totalTests, selectedClass, totalClassTests } = useSelector(
-        (state) => state.custom
-    );
+    const { schools, tests, custom } = useSelector((state) => {
+        return {
+            schools: state.schools,
+            tests: Object.values(state.tests),
+            custom: state.custom,
+        };
+    });
+    const { totalTests, selectedClass, totalClassTests } = custom;
 
     const router = useRouter();
     const { id } = router.query;

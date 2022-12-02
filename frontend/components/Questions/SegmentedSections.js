@@ -11,11 +11,8 @@ import { stringOverflow } from "../../utils";
 const SegmentedSections = () => {
     const [smallScreenData, setSmallScreenData] = useState({});
 
-    const { tests, questions } = useSelector((state) => state);
-
-    const { selectedSectionId, selectedSectionNo } = useSelector(
-        (state) => state.custom
-    );
+    const { tests, questions, custom } = useSelector((state) => state);
+    const { selectedSectionId, selectedSectionNo } = custom;
 
     const dispatch = useDispatch();
 

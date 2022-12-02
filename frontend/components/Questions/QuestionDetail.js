@@ -40,18 +40,14 @@ const QuestionDetail = () => {
 
     // const grew = useRef(0);
 
+    const { tests, questions, load, custom } = useSelector((state) => state);
+    const { questionSaveLoading, questionsLoading } = load;
     const {
         selectedQuestion,
-        // selectedSectionId,
         selectedSectionNo,
         isQuestionsFull,
         saveSection,
-    } = useSelector((state) => state.custom);
-    const { tests } = useSelector((state) => state);
-    const { questions } = useSelector((state) => state);
-    const { questionSaveLoading, questionsLoading } = useSelector(
-        (state) => state.load
-    );
+    } = custom;
 
     const router = useRouter();
     const { id, testId } = router.query;

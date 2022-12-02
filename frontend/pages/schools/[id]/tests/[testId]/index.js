@@ -30,8 +30,8 @@ import EditTestForm from "../../../../../components/modal/modalTest/EditTestForm
 import DeleteTestForm from "../../../../../components/modal/modalTest/DeleteTestForm";
 import DeleteSectionForm from "../../../../../components/modal/modalSection/DeleteSectionForm";
 import testsIndexStyle from "../../../../../styles/modules/pageStyles/TestsIndex.module.css";
-import axiosFetch from "../../../../../axiosFetch";
 import AdminCustomLayout from "../../../../../components/nav/adminCustom/AdminCustomLayout";
+import useAuthorization from "../../../../../hooks/use-authorization";
 
 const { Panel } = Collapse;
 
@@ -39,34 +39,19 @@ const TestId = () => {
     const router = useRouter();
     const { id, testId } = router.query;
 
-    const [adminIsAuthor, setAdminIsAuthor] = useState(false);
     const [copied, setCopied] = useState(false);
 
     // console.log(copied);
 
-    const { tests } = useSelector((state) => state);
-    const { schools } = useSelector((state) => state);
+    const { tests, schools } = useSelector((state) => state);
 
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        const fetchAdmin = async () => {
-            try {
-                if (testId !== undefined) {
-                    const { data } = await axiosFetch.get(
-                        `/api/admin-is-author/${testId}`
-                    );
-                    if (data.ok) {
-                        setAdminIsAuthor(true);
-                    }
-                }
-            } catch (err) {
-                // console.log(err);s
-                setAdminIsAuthor(false);
-            }
-        };
-        fetchAdmin();
-    }, [testId]);
+    const { ok: adminIsAuthor } = useAuthorization({
+        link: testId && `/api/admin-is-author/${testId}`,
+        routeLink: "",
+        messageShow: "",
+    });
 
     useEffect(() => {
         if (testId !== undefined) {

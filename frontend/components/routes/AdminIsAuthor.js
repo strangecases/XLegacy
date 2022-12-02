@@ -1,33 +1,16 @@
-import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { message } from "antd";
 import Spinner from "../Spinner";
-import axiosFetch from "../../axiosFetch";
+import useAuthorization from "../../hooks/use-authorization";
 
 const AdminIsAuthor = ({ children }) => {
-    const [ok, setOk] = useState(false);
-
     const router = useRouter();
     const { testId } = router.query;
 
-    useEffect(() => {
-        const fetchAdmin = async () => {
-            try {
-                const { data } = await axiosFetch.get(
-                    `/api/admin-is-author/${testId}`
-                );
-                if (data.ok) {
-                    setOk(true);
-                }
-            } catch (err) {
-                // console.log(err);
-                setOk(false);
-                message.error("you can not visit that page.", 2);
-                router.push("/admin");
-            }
-        };
-        if (testId) fetchAdmin();
-    }, [router, testId]);
+    const { ok } = useAuthorization({
+        link: testId && `/api/admin-is-author/${testId}`,
+        routeLink: "/admin",
+        messageShow: "you can not visit that page.",
+    });
 
     return <div>{ok ? <> {children} </> : <Spinner />}</div>;
 };

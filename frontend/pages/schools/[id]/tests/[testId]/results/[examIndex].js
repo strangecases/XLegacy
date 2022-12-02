@@ -17,10 +17,12 @@ const ExamIndex = () => {
     const router = useRouter();
     const { id, testId, examIndex } = router.query;
 
-    const { tests, questions } = useSelector((state) => state);
-    const { examResult } = useSelector((state) => state.exam);
-    const { questionsLoading } = useSelector((state) => state.load);
-    const { selectedSectionId } = useSelector((state) => state.custom);
+    const { tests, questions, exam, load, custom } = useSelector(
+        (state) => state
+    );
+    const { examResult } = exam;
+    const { questionsLoading } = load;
+    const { selectedSectionId } = custom;
 
     const dispatch = useDispatch();
 

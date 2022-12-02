@@ -15,17 +15,16 @@ import Link from "next/link";
 import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
-import axiosFetch from "../../../../../axiosFetch";
 import AdminRoute from "../../../../../components/routes/AdminRoute";
 import allActions from "../../../../../store/actions";
 import viewSectionStyle from "../../../../../styles/modules/pageStyles/ViewSection.module.css";
+import useAuthorization from "../../../../../hooks/use-authorization";
 
 const { Option } = Select;
 
 const ViewSections = () => {
     // const [questionss, setQuestionss] = useState([]);
     const [pageNo, setPageNo] = useState(1);
-    const [adminIsAuthor, setAdminIsAuthor] = useState(false);
 
     // const grew = useRef(0);
     const router = useRouter();
@@ -33,42 +32,15 @@ const ViewSections = () => {
 
     const dispatch = useDispatch();
 
-    const { tests, questions } = useSelector((state) => state);
-    const { questionsLoading } = useSelector((state) => state.load);
-    const { selectedSectionId, selectedSectionName } = useSelector(
-        (state) => state.custom
-    );
+    const { tests, questions, load, custom } = useSelector((state) => state);
+    const { questionsLoading } = load;
+    const { selectedSectionId, selectedSectionName } = custom;
 
-    useEffect(() => {
-        if (id && testId) {
-            dispatch(allActions.testActions.fetchTest(id, testId));
-        }
-
-        const fetchAdmin = async () => {
-            try {
-                if (testId !== undefined) {
-                    const { data } = await axiosFetch.get(
-                        `/api/admin-is-author/${testId}`
-                    );
-                    if (data.ok) {
-                        setAdminIsAuthor(true);
-                    }
-                }
-            } catch (err) {
-                // console.log(err);
-                setAdminIsAuthor(false);
-            }
-        };
-        fetchAdmin();
-
-        return () => {
-            dispatch(allActions.customActions.selectedSectionId(undefined));
-            dispatch(allActions.customActions.isQuestionsEmpty(false));
-            dispatch(allActions.customActions.isQuestionsFull(false));
-            dispatch(allActions.customActions.selectedSectionName(""));
-            dispatch(allActions.questionActions.emptyQuestions());
-        };
-    }, [id, testId, dispatch]);
+    const { ok: adminIsAuthor } = useAuthorization({
+        link: testId && `/api/admin-is-author/${testId}`,
+        routeLink: "",
+        messageShow: "",
+    });
 
     // useEffect(() => {
     //     if (questions[1].question && questions[1].answer) {
@@ -96,6 +68,14 @@ const ViewSections = () => {
                 )
             );
         }
+
+        return () => {
+            dispatch(allActions.customActions.selectedSectionId(undefined));
+            dispatch(allActions.customActions.isQuestionsEmpty(false));
+            dispatch(allActions.customActions.isQuestionsFull(false));
+            dispatch(allActions.customActions.selectedSectionName(""));
+            dispatch(allActions.questionActions.emptyQuestions());
+        };
     }, [tests, testId, dispatch]);
 
     useEffect(() => {

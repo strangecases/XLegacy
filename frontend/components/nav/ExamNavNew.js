@@ -8,8 +8,8 @@ import { stringOverflow } from "../../utils";
 const ExamNavNew = ({ children, type = "intro" }) => {
     const [name, setName] = useState("");
 
-    const { tests } = useSelector((state) => state);
-    const { examData } = useSelector((state) => state.exam);
+    const { tests, exam } = useSelector((state) => state);
+    const { examData } = exam;
 
     const router = useRouter();
     const { testId } = router.query;

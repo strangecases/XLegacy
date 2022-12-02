@@ -12,9 +12,10 @@ import examInfoStyle from "../../../../../styles/modules/pageStyles/ExamInfo.mod
 import Spinner from "../../../../../components/Spinner";
 
 const ExamsId = () => {
-    const { examId } = useSelector((state) => state.exam);
-    const { examSavedLoading } = useSelector((state) => state.load);
-    const { examSaved } = useSelector((state) => state.custom);
+    const { exam, load, custom } = useSelector((state) => state);
+    const { examId } = exam;
+    const { examSavedLoading } = load;
+    const { examSaved } = custom;
 
     const router = useRouter();
     const { id, testId } = router.query;

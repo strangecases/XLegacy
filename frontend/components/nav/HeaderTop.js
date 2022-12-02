@@ -16,9 +16,9 @@ const HeaderTop = ({ isTabletOrMobile = true }) => {
 
     const dispatch = useDispatch();
 
-    const { admin } = useSelector((state) => state.auth);
-    const { role } = useSelector((state) => state);
-    const { siderCollapse } = useSelector((state) => state.custom);
+    const { role, auth, custom } = useSelector((state) => state);
+    const { admin } = auth;
+    const { siderCollapse } = custom;
 
     // useEffect(() => {
     //     setAdminNameHydrate(admin.name);

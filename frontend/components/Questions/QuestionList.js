@@ -10,13 +10,8 @@ const QuestionList = () => {
     const { id, testId } = router.query;
     const path = router.pathname;
 
-    const { tests } = useSelector((state) => state);
-    const { questions } = useSelector((state) => state);
-    const { answers } = useSelector((state) => state);
-
-    const { selectedQuestion, selectedSectionId } = useSelector(
-        (state) => state.custom
-    );
+    const { tests, questions, answers, custom } = useSelector((state) => state);
+    const { selectedQuestion, selectedSectionId } = custom;
 
     const dispatch = useDispatch();
 

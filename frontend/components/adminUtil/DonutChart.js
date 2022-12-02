@@ -39,8 +39,8 @@ const DonutChart = () => {
 
             const outerArc = d3
                 .arc()
-                .innerRadius(radius * 0.82)
-                .outerRadius(radius * 1.02);
+                .innerRadius(radius * 0.8)
+                .outerRadius(radius * 1);
 
             const pieGenerator = d3
                 .pie()
